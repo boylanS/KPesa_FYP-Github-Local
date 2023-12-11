@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPesa Landing Page</title>
+</head>
+
+<body>
+    <div id="content_container">
+        <div id="form_container">
+            <div id="form_header_container">
+                <h2 id="form_header"> Login & Sign Up </h2>
+            </div>
+
+            <div id="form_content_container">
+                <div id="form_content_inner_container">
+                    <input type="text" id="fullName" placeholder="Full name">
+                    <input type="email" id="email" placeholder="Email">
+                    <input type="password" id="password" placeholder="New Password">
+
+                    <div id="button_container">
+                        <button onclick="login()">Login</button>
+                        <button onclick="register()">Register</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDg0TxmvYhXlsOE_ZcX4cqIYR4iudAfTn8",
+            authDomain: "kpesacrowdfunding.firebaseapp.com",
+            databaseURL: "https://kpesacrowdfunding-default-rtdb.firebaseio.com",
+            projectId: "kpesacrowdfunding",
+            storageBucket: "kpesacrowdfunding.appspot.com",
+            messagingSenderId: "974087398858",
+            appId: "1:974087398858:web:e5ada1937dfe81377c1b33"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        import { getDatabase, set, get, update, remove, ref, child }
+            from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"
+
+        import { getAuth }
+            from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"
+
+    </script>
+
+
+</body>
+
+
+<script src="index.js"></script>
+
+</html>
