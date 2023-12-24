@@ -1,11 +1,27 @@
+// setup materialize components
+document.addEventListener('DOMContentLoaded', function() {
+
+    //grabs anything with a close of modal, initialises 
+    var modals = document.querySelectorAll('.modal');
+    M.Modal.init(modals);
+
+
+    // anything collapsible is collapsed
+    var items = document.querySelectorAll('.collapsible');
+    M.Collapsible.init(items);
+  
+  });
+
+
+
+
+
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-import { getDatabase, set, get, update, remove, ref, child }
-    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"
+import {getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-import { getAuth, }
-    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"
-
+import {getFirestore, collection, getDocs} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 //Firebase configuration
 const firebaseConfig = {
@@ -22,15 +38,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Initialize variables
-const auth = getAuth(app)
-const database = firebase.database()
+const auth = firebase.auth();
+const database = firebase.database();
+const fs = getFirestore(app);
+
 
 // Set up register function
 function register() {
+    console.log("Attempting to register user")
     // Get all  input fields
-    email = document.getElementById('email').value
-    password = document.getElementById('password').value
-    fullName = document.getElementById('fullName').value
+    var email = document.getElementById('email').value
+    var password = document.getElementById('password').value
+    var fullName = document.getElementById('fullName').value
 
     // Validate input fields
     if (validate_email(email) == false || validate_password(password) == false) {
@@ -43,6 +62,10 @@ function register() {
         return
     }
 
+    const promise = auth.createUserWithEmailAndPassword(email, password);
+    promise.catch((err) => errorNotification(err.message))
+
+    /*
     // Move on with Auth
     auth.createUserWithEmailAndPassword(email, password)
         .then(function () {
@@ -71,5 +94,5 @@ function register() {
             var error_message = error.message
 
             alert(error_message)
-        })
+        })*/
 }
