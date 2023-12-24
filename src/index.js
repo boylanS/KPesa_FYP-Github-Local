@@ -8,7 +8,10 @@ import {
 } from "firebase/firestore"
 
 import{
-    getAuth, createUserWithEmailAndPassword
+    getAuth, 
+    createUserWithEmailAndPassword,
+    signOut,
+    signInWithEmailAndPassword
 } from "firebase/auth"
 
 
@@ -45,3 +48,37 @@ signupForm.addEventListener("submit", (e) => {
         console.log(err.message)
     })
 });
+
+// logging in and out
+
+const logoutButton = document.querySelector(".logout")
+logoutButton.addEventListener("click", ()=>{
+
+    signOut(auth)
+    .then(()=>{
+        console.log("the user signed out")
+    })
+    .catch((err) => {
+        console.log(err.message)
+    })
+
+})
+
+const loginForm = document.querySelector(".login")
+loginForm.addEventListener("submit",(e) => {
+
+    e.preventDefault()
+
+    const email = loginForm.email.value
+    const password = loginForm.password.value
+
+    signInWithEmailAndPassword(auth, email, password)
+    .then((cred) => {
+        console.log("user logged in:", cred.user)
+
+    .catch((err) => {
+        console.log(err.message)
+    })
+    })
+
+})
