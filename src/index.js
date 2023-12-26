@@ -30,55 +30,13 @@ initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
 
-//signing users up
+// setup materialize components
+document.addEventListener('DOMContentLoaded', function() {
 
-const signupForm = document.querySelector(".signup")
-signupForm.addEventListener("submit", (e) => {
-    e.preventDefault()
-
-    const email = signupForm.email.value;
-    const password = signupForm.password.value;
-
-    createUserWithEmailAndPassword(auth, email, password)
-    .then((cred) =>{
-        console.log("User created: ",cred.user);
-        signupForm.reset();
-    })
-    .catch((err) => {
-        console.log(err.message)
-    })
-});
-
-// logging in and out
-
-const logoutButton = document.querySelector(".logout")
-logoutButton.addEventListener("click", ()=>{
-
-    signOut(auth)
-    .then(()=>{
-        console.log("the user signed out")
-    })
-    .catch((err) => {
-        console.log(err.message)
-    })
-
-})
-
-const loginForm = document.querySelector(".login")
-loginForm.addEventListener("submit",(e) => {
-
-    e.preventDefault()
-
-    const email = loginForm.email.value
-    const password = loginForm.password.value
-
-    signInWithEmailAndPassword(auth, email, password)
-    .then((cred) => {
-        console.log("user logged in:", cred.user)
-
-    .catch((err) => {
-        console.log(err.message)
-    })
-    })
-
-})
+    var modals = document.querySelectorAll('.modal');
+    M.Modal.init(modals);
+  
+    var items = document.querySelectorAll('.collapsible');
+    M.Collapsible.init(items);
+  
+  });
