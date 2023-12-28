@@ -31,7 +31,7 @@ initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
 
-db.settings({ timestampsInSnapshots: true});
+//db.settings({ timestampsInSnapshots: true});
 
 //AUTHENTICATION JAVASCRIPT
 // signing users up
@@ -75,21 +75,21 @@ if (document.querySelector('.logout')){
 
 if (document.querySelector('.login')){
   const loginForm = document.querySelector('.login')
-loginForm.addEventListener('submit', (e) => {
-  e.preventDefault()
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault()
 
-  const email = loginForm.email.value
-  const password = loginForm.password.value
+    const email = loginForm.email.value
+    const password = loginForm.password.value
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(cred => {
-      console.log('user logged in:', cred.user)
-      loginForm.reset()
-    })
-    .catch(err => {
-      console.log(err.message)
-    })
-})
+    signInWithEmailAndPassword(auth, email, password)
+      .then(cred => {
+        console.log('user logged in:', cred.user)
+        loginForm.reset()
+      })
+      .catch(err => {
+        console.log(err.message)
+      })
+  })
 
 }
 
