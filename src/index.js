@@ -15,6 +15,7 @@ import{
 } from "firebase/auth"
 
 
+
 const firebaseConfig = {
     apiKey: "AIzaSyDg0TxmvYhXlsOE_ZcX4cqIYR4iudAfTn8",
     authDomain: "kpesacrowdfunding.firebaseapp.com",
@@ -30,13 +31,134 @@ initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
 
-// setup materialize components
-document.addEventListener('DOMContentLoaded', function() {
+db.settings({ timestampsInSnapshots: true});
 
-    var modals = document.querySelectorAll('.modal');
-    M.Modal.init(modals);
+//AUTHENTICATION JAVASCRIPT
+// signing users up
+if (document.querySelector(".signup")){
+  const signupForm = document.querySelector('.signup')
+signupForm.addEventListener('submit', (e) => {
+  e.preventDefault()
+
+  const email = signupForm.email.value
+  const password = signupForm.password.value
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(cred => {
+      console.log('user created:', cred.user)
+      signupForm.reset()
+      alert("that worked!")
+    })
+    .catch(err => {
+      console.log(err.message)
+    })
+})
+
+}
+
+
+// logging in and out
+if (document.querySelector('.logout')){
+  const logoutButton = document.querySelector('.logout')
+  logoutButton.addEventListener('click', () => {
+  signOut(auth)
+    .then(() => {
+      console.log('user signed out')
+    })
+    .catch(err => {
+      console.log(err.message)
+    })
+})
+}
+
+
+
+if (document.querySelector('.login')){
+  const loginForm = document.querySelector('.login')
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault()
+
+  const email = loginForm.email.value
+  const password = loginForm.password.value
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(cred => {
+      console.log('user logged in:', cred.user)
+      loginForm.reset()
+    })
+    .catch(err => {
+      console.log(err.message)
+    })
+})
+
+}
+
+//signup
+
+// signup
+/*
+const signupForm = signupContent.querySelector("#signup-form")
+const signupButton = signupForm.querySelector("#signupButton")
+signupButton.addEventListener("click", (e) => {
+  e.preventDefault();
   
-    var items = document.querySelectorAll('.collapsible');
-    M.Collapsible.init(items);
-  
+  // get user info
+  const email = signupForm['signup-email'].value;
+  const password = signupForm['signup-password'].value;
+
+  // sign up the user
+  auth.createUserWithEmailAndPassword(email, password).then(cred => {
+    console.log(cred.user);
+    // close the signup modal & reset form
+   // const modal = document.querySelector('#modal-signup');
+   // M.Modal.getInstance(modal).close();
+    signupForm.reset();
   });
+});*/
+
+/*
+const signupForm = document.querySelector('#modal-signup');
+signupForm.addEventListener("submit", (e) => {
+
+    alert("sign up")
+    e.preventDefault()
+
+    const email = signupForm.email.value;
+    const password = signupForm.password.value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((cred) =>{
+        console.log("User created: ",cred.user);
+        signupForm.reset();
+        alert("Sign up successful!");
+    })
+    .catch((err) => {
+        console.log(err.message)
+        alert(err.message)
+    })
+});*/
+
+// signup
+//const signupForm = document.querySelector('#signup-form');
+
+//signupForm.addEventListener("submit", alert("sign up"));
+
+/*
+signupForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+  
+  // get user info
+  const email = signupForm['signup-email'].value;
+  const password = signupForm['signup-password'].value;
+
+  // sign up the user
+  auth.createUserWithEmailAndPassword(email, password).then(cred => {
+    console.log(cred.user);
+    // close the signup modal & reset form
+    const modal = document.querySelector('#modal-signup');
+    M.Modal.getInstance(modal).close();
+    signupForm.reset();
+  });
+});*/
+
+

@@ -15,6 +15,7 @@ module.exports = {
                                               //we use the resolve method to resolve a new path
         filename: "bundle.js" //specifies file name for output
     },
+    devtool: "eval-source-map",
     watch:true //watch property set to true so when changes are made, webpack will bundle new code
 }
 
