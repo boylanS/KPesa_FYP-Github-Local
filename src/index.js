@@ -4,14 +4,15 @@ import {
     getFirestore, collection, onSnapshot,
     addDoc, deleteDoc, doc,
     query, where, orderBy, serverTimestamp,
-    getDoc, updateDoc
+    getDoc, updateDoc, getDocs
 } from "firebase/firestore"
 
 import{
     getAuth, 
     createUserWithEmailAndPassword,
     signOut,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    onAuthStateChanged
 } from "firebase/auth"
 
 
@@ -35,6 +36,20 @@ const auth = getAuth();
 
 //AUTHENTICATION JAVASCRIPT
 
+// listen for auth state changes
+
+onAuthStateChanged(auth, (user) =>{
+  if (user){
+    console.log("user logged in: ",user);
+  }
+  else{
+    console.log("user logged out.");
+  }
+
+
+
+
+});
 
 // signing users up
 
@@ -54,7 +69,7 @@ signupForm.addEventListener("submit", (e) => {
 
   // sign up the user
   createUserWithEmailAndPassword(auth, email, password).then(cred => {
-    console.log(cred.user);
+    //console.log(cred.user);
     // close the signup modal & reset form
     const modal = document.querySelector('#modal-signup');
     M.Modal.getInstance(modal).close();
@@ -64,22 +79,6 @@ signupForm.addEventListener("submit", (e) => {
 
 }
 
-// logging user out
-if (document.querySelector("#logout")){
-
-  const logout = document.querySelector("#logout");
-
-  logout.addEventListener("click", (e) => {
-
-    e.preventDefault();
-
-    signOut(auth).then(() => {
-      console.log("user signed out");
-    });
-
-  })
-
-}
 
 //logging user in
 if (document.querySelector("#modal-login")){
@@ -96,7 +95,7 @@ if (document.querySelector("#modal-login")){
     const password = loginForm["login-password"].value;
 
     signInWithEmailAndPassword(auth, email, password).then(cred => {
-      console.log(cred.user);
+      //console.log(cred.user);
 
       //close login modal and reset form
       const modal = document.querySelector('#modal-login');
@@ -110,6 +109,117 @@ if (document.querySelector("#modal-login")){
 
 
 };
+
+//logout
+if (document.querySelector("#logout")){
+  const logout = document.querySelector("#logout");
+  logout.addEventListener("click", (e) =>{
+    e.preventDefault();
+    signOut(auth);
+  })
+
+
+};
+  
+
+// FIRESTORE JAVASCRIPT
+
+//collection ref
+const colRef = collection(db, "campaigns");
+
+//queries
+
+const q = query(colRef, orderBy("createdAt"));
+
+// real time collection data
+
+onSnapshot(q, (snapshot) => {
+  let campaigns = []
+
+  // here, for each object in the array we are
+  //creating a new campaign object with the
+  //data attributes split up and identified and 
+  //the id pulled
+  snapshot.docs.forEach((doc) => {
+    campaigns.push({...doc.data(), id: doc.id})
+  })
+  console.log(campaigns)
+
+})
+
+//get collection data
+getDocs(colRef).then((snapshot) => {
+   
+  })
+  .catch(err => {
+    console.log(err.message)
+  });
+
+
+
+
+
+//Adding documents
+
+const addCampaignForm = document.querySelector(".add");
+addCampaignForm.addEventListener("submit",(e) =>{
+  e.preventDefault()
+
+  addDoc(colRef, {
+    bankCountry: addCampaignForm.bankCountry.value,
+    category: addCampaignForm.category.value,
+    country: addCampaignForm.country.value,
+    description: addCampaignForm.description.value,
+    image: addCampaignForm.image.value,
+    name: addCampaignForm.name.value,
+    raised: addCampaignForm.raised.value,
+    target: addCampaignForm.target.value,
+    createdAt: serverTimestamp()
+
+  })
+  .then(() => {
+    addCampaignForm.reset();
+  })
+})
+
+
+//Deleting documents
+
+const deleteCampaignForm = document.querySelector(".delete");
+deleteCampaignForm.addEventListener("submit", (e) =>{
+  e.preventDefault();
+
+  const docRef = doc(db, "campaigns", deleteCampaignForm.id.value)
+
+  deleteDoc(docRef)
+  .then(() => {
+    deleteCampaignForm.reset()
+  })
+})
+
+// get a single document
+
+const docRef = doc(db, "campaigns", "tcuu8dymVtGuDJqipsa3")
+
+onSnapshot(docRef, (doc) =>{
+  console.log(doc.data(), doc.id)
+})
+
+// updating a document
+
+const updateForm = document.querySelector(".update")
+updateForm.addEventListener("submit", (e) => {
+  e.preventDefault()
+
+  const docRef = doc(db, "campaigns", updateForm.id.value)
+
+  updateDoc(docRef, {
+    name: "updated name"
+  })
+  .then(() => {
+    updateForm.reset();
+  })
+})
 
 /*
   const signupForm = document.querySelector('.signup')
