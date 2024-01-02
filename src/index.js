@@ -159,6 +159,65 @@ getDocs(colRef).then((snapshot) => {
 
 
 
+//render campaign
+
+const campaignList = document.querySelector("#campaign-list");
+
+function renderCampaign(doc){
+  
+  let li = document.createElement("li");
+
+  let name = document.createElement("h2");
+
+  let description = document.createElement("p");
+
+  let image = document.createElement("IMG");
+
+  li.setAttribute("data-id", doc.id);
+
+  name.textContent = doc.data().name;
+  description.textContent = doc.data().description;
+  image.src = doc.data().image;
+
+  li.appendChild(name);
+  li.appendChild(description);
+  li.appendChild(image);
+
+  campaignList.appendChild(li);
+    
+  
+}
+
+getDocs(colRef).then((snapshot) => {
+  snapshot.docs.forEach(doc => {
+    renderCampaign(doc);
+  })
+
+})
+
+/*
+//displaying data
+getDocs(colRef).then((snapshot) => {
+  snapshot.forEach(doc => {
+    let data = doc.data();
+    let row = <tr>
+      <td>doc.id</td>
+   
+      <td>${data.category}</td>
+      <td>${data.description}</td>
+      <td>${data.target}</td>
+      <td>${data.raised}</td>
+    </tr>;
+    let table = document.getElementById("myTable")
+    table.innerHTML += row
+  })
+})
+.catch(err => {
+  console.log("Error: ${err}")
+})*/
+
+
+
 //Adding documents
 
 const addCampaignForm = document.querySelector(".add");
