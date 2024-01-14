@@ -35,7 +35,7 @@
                     <a href="forum.html" class="grey-text" id="logout">Community Forum</a>
                   </li>
                 <li class="logged-in" style="display: none;">
-                  <a href="createCampaign.html" class="grey-text modal-trigger">Create Guide</a>
+                  <a href="#" class="grey-text modal-trigger" data-target="modal-create">Create Guide</a>
                 </li>
                 <li class="logged-out" style="display: none;">
                   <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
@@ -49,43 +49,14 @@
         </nav>
       
 
-        <!-- hero section -->
-        <header class = "hero-section">
-          <div class = "content">
-            <div class="overlay"><p class="sub-heading">Empowering businesses <br>
-              Empowering communities <br>
-              Empowering her </p></div>
-          
-          </div>
-        </header>
 
         <br>
-        <ul id = "campaign-list"></ul>
+      
 
-        <table class = "campaignTable">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Description</th>
-              <th>Target</th>
-              <th>Raised</th>
-            </tr>
-          </thead>
-          <tbody id="myTable">
+        <h4>Start a Campaign</h4>
+        <br>
+        <form id="create-form">
 
-          </tbody>
-        </table>
-
-        <!-- campaign cards-->
-        <section class = "campaign"></section>
-
-        <div id = "mainMarketplace">
-
-
-        </div>
-
-        <form class="add">
           <label for="name">Campaign Name:</label>
           <input type="text" name="name" required>
           <label for="category">Category:</label>
@@ -100,43 +71,16 @@
           <input type="number" name="target" required>
           <label for="raised">Raised:</label>
           <input type="number" name="raised" required>
-          <input type="text" name="imageSrc" required>
           <label for="bankCountry">Bank Country:</label>
           <input type="text" name="bankCountry" required>
           
           <button>add a new campaign</button>
         </form>
       
-        <form class="delete">
-          <label for="id">Document id:</label>
-          <input type="text" name="id" required>
-      
-          <button>delete a campaign</button>
-        </form>
-
-        <form class = "update">
-          <label for="id">Document id:</label>
-          <input type="text" name="id" required>
-
-          <button>update a campaign</button>
-        </form>
+    
       
       
-        <!-- SIGN UP MODAL -
-
-       <div id="modal-signup" class="modal">
-          <div class="modal-content">
-            <h4>Sign up</h4><br /> 
-            <form class="signup" id = "signup-form">
-              <label for ="email">email:</label>
-              <input type="email" name = "email">
-              <label for="password">password:</label>
-              <input type="password" name = "password">
-              <button type="submit">signup</button>
-          </form>
-       
-          </div>
-        </div>-->
+  
 
           <!-- SIGN UP MODAL -->
   <div id="modal-signup" class="modal">
@@ -201,50 +145,8 @@
           </div>
         </div>
       
-        <!-- GUIDE LIST -->
-        <div class="container" style="margin-top: 40px;">
-          <ul class="collapsible z-depth-0 guides" style="border: none;">
-            <li>
-              <div class="collapsible-header grey lighten-4">Guide title</div>
-              <div class="collapsible-body white">Lorem ipsum dolor sit amet.</div>
-            </li>
-            <li>
-              <div class="collapsible-header grey lighten-4">Guide title</div>
-              <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
-            </li>
-            <li>
-              <div class="collapsible-header grey lighten-4">Guide title</div>
-              <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
-            </li>
-            <li>
-              <div class="collapsible-header grey lighten-4">Guide title</div>
-              <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
-            </li>
-          </ul>
-        </div>
-        
-    <!--<h1>Getting started with Firebase</h1>
+       
     
-    <h2>Firebase auth</h2>
-
-    <form class="signup">
-        <label for ="email">email:</label>
-        <input type="email" name = "email">
-        <label for="password">password:</label>
-        <input type="password" name = "password">
-        <button>signup</button>
-    </form>
-
-    <form class="login">
-        <label for ="email">email:</label>
-        <input type="email" name = "email">
-        <label for="password">password:</label>
-        <input type="password" name = "password">
-        <button>login</button>
-    </form>
-
-    <button class="logout">logout</button>-->
-
   
 
 

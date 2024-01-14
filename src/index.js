@@ -42,20 +42,36 @@ onAuthStateChanged(auth, (user) =>{
   if (user){
     db.collection
     console.log("user logged in: ",user);
+    setupUI(user);
 
-    //get collection data
-    getDocs(colRef).then((snapshot) => {
+    if (document.querySelector("#campaign-list")){
+      campaignList.innerHTML= "";
+      //get collection data
+
+      //onSnapshot ensures the collection will update
+      //in real time
+      getDocs(colRef).onSnapshot((snapshot) => {
         snapshot.docs.forEach(doc => {
           renderCampaign(doc);
         })
-})
-  .catch(err => {
-    console.log(err.message)
-});
+      })
+      .catch(err => {
+        console.log(err.message)
+      });
+    }
+    
+
+  
   }
   else{
     console.log("user logged out.");
-    renderCampaign([]);
+
+    setupUI();
+
+    if (document.querySelector("#campaign-list")){
+      renderCampaign([]);
+    }
+
   }
 
 
@@ -180,6 +196,7 @@ function renderCampaign(doc){
 
   if (doc.length != 0){
 
+
     let li = document.createElement("li");
 
     let name = document.createElement("h2");
@@ -242,33 +259,39 @@ getDocs(colRef).then((snapshot) => {
 
 
 //Adding documents
+if (document.querySelector("#create-form")){ 
+  const addCampaignForm = document.querySelector("#create-form");
+  addCampaignForm.addEventListener("submit",(e) =>{
+    e.preventDefault()
 
-const addCampaignForm = document.querySelector(".add");
-addCampaignForm.addEventListener("submit",(e) =>{
-  e.preventDefault()
-
-  addDoc(colRef, {
-    bankCountry: addCampaignForm.bankCountry.value,
-    category: addCampaignForm.category.value,
-    country: addCampaignForm.country.value,
-    description: addCampaignForm.description.value,
-    image: addCampaignForm.image.value,
-    name: addCampaignForm.name.value,
-    raised: addCampaignForm.raised.value,
-    target: addCampaignForm.target.value,
-    createdAt: serverTimestamp()
+    addDoc(colRef, {
+      bankCountry: addCampaignForm.bankCountry.value,
+      category: addCampaignForm.category.value,
+      country: addCampaignForm.country.value,
+      description: addCampaignForm.description.value,
+      image: addCampaignForm.image.value,
+      name: addCampaignForm.name.value,
+      raised: addCampaignForm.raised.value,
+      target: addCampaignForm.target.value,
+      createdAt: serverTimestamp()
 
   })
   .then(() => {
     addCampaignForm.reset();
+  }).catch(err => {
+    console.log(err.message);
   })
 })
+
+}
+
 
 
 //Deleting documents
 
-const deleteCampaignForm = document.querySelector(".delete");
-deleteCampaignForm.addEventListener("submit", (e) =>{
+if (document.querySelector(".delete")){ 
+  const deleteCampaignForm = document.querySelector(".delete");
+  deleteCampaignForm.addEventListener("submit", (e) =>{
   e.preventDefault();
 
   const docRef = doc(db, "campaigns", deleteCampaignForm.id.value)
@@ -278,6 +301,10 @@ deleteCampaignForm.addEventListener("submit", (e) =>{
     deleteCampaignForm.reset()
   })
 })
+
+}
+
+
 
 // get a single document
 
@@ -289,8 +316,9 @@ onSnapshot(docRef, (doc) =>{
 
 // updating a document
 
-const updateForm = document.querySelector(".update")
-updateForm.addEventListener("submit", (e) => {
+if (document.querySelector(".update")){ 
+  const updateForm = document.querySelector(".update")
+  updateForm.addEventListener("submit", (e) => {
   e.preventDefault()
 
   const docRef = doc(db, "campaigns", updateForm.id.value)
@@ -302,6 +330,41 @@ updateForm.addEventListener("submit", (e) => {
     updateForm.reset();
   })
 })
+
+}
+
+// HIDING NAV BAR LINKS
+
+const loggedOutLinks = document.querySelectorAll(".logged-out");
+
+const loggedInLinks = document.querySelectorAll(".logged-in");
+
+const accountDetails = document.querySelector(".account-details");
+
+const setupUI = (user) => {
+  if (user) {
+    //account information
+
+    const html = `
+    <div> Logged in as ${user.email}</div>
+    `
+
+    accountDetails.innerHTML = html;
+    //toggle UI elements
+    loggedInLinks.forEach(item => item.style.display = "block");
+    loggedOutLinks.forEach(item => item.style.display = "none");
+
+  }
+  else{
+    //hide account info
+    accountDetails.innerHTML = "";
+
+    //toggle UI elements
+    loggedInLinks.forEach(item => item.style.display = "none");
+    loggedOutLinks.forEach(item => item.style.display = "block");
+
+  }
+}
 
 /*
   const signupForm = document.querySelector('.signup')
