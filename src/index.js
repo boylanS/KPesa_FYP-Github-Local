@@ -40,10 +40,22 @@ const auth = getAuth();
 
 onAuthStateChanged(auth, (user) =>{
   if (user){
+    db.collection
     console.log("user logged in: ",user);
+
+    //get collection data
+    getDocs(colRef).then((snapshot) => {
+        snapshot.docs.forEach(doc => {
+          renderCampaign(doc);
+        })
+})
+  .catch(err => {
+    console.log(err.message)
+});
   }
   else{
     console.log("user logged out.");
+    renderCampaign([]);
   }
 
 
@@ -148,12 +160,13 @@ onSnapshot(q, (snapshot) => {
 })
 
 //get collection data
+/*
 getDocs(colRef).then((snapshot) => {
    
   })
   .catch(err => {
     console.log(err.message)
-  });
+  });*/
 
 
 
@@ -164,36 +177,46 @@ getDocs(colRef).then((snapshot) => {
 const campaignList = document.querySelector("#campaign-list");
 
 function renderCampaign(doc){
+
+  if (doc.length != 0){
+
+    let li = document.createElement("li");
+
+    let name = document.createElement("h2");
+
+    let description = document.createElement("p");
+
+    let image = document.createElement("IMG");
+
+    li.setAttribute("data-id", doc.id);
+
+    name.textContent = doc.data().name;
+    description.textContent = doc.data().description;
+    image.src = doc.data().image;
+
+    li.appendChild(name);
+    li.appendChild(description);
+    li.appendChild(image);
+
+    campaignList.appendChild(li);
+
+  } else{
+    campaignList.innerHTML=
+    '<h5 class ="center-align">Login to view campaigns</h5>';
+  }
   
-  let li = document.createElement("li");
 
-  let name = document.createElement("h2");
-
-  let description = document.createElement("p");
-
-  let image = document.createElement("IMG");
-
-  li.setAttribute("data-id", doc.id);
-
-  name.textContent = doc.data().name;
-  description.textContent = doc.data().description;
-  image.src = doc.data().image;
-
-  li.appendChild(name);
-  li.appendChild(description);
-  li.appendChild(image);
-
-  campaignList.appendChild(li);
     
   
 }
 
+/*
 getDocs(colRef).then((snapshot) => {
   snapshot.docs.forEach(doc => {
     renderCampaign(doc);
   })
 
-})
+})*/
 
 /*
 //displaying data
