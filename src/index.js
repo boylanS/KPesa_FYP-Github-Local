@@ -298,12 +298,17 @@ const accountDetails = document.querySelector(".account-details");
 const setupUI = (user) => {
   if (user) {
     //account information
-
-    const html = `
-    <div> Logged in as ${user.email}</div>
-    `
-
+    const userRef = doc(db, "users", user.uid)
+    getDoc(userRef).then((doc) =>{
+      const html = `
+      <div> Logged in as ${user.email}</div>
+      <div>${doc.data().bio}</div>
+      `
     accountDetails.innerHTML = html;
+    })
+
+
+  
     //toggle UI elements
     loggedInLinks.forEach(item => item.style.display = "block");
     loggedOutLinks.forEach(item => item.style.display = "none");
