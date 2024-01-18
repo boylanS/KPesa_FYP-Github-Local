@@ -1,11 +1,19 @@
+// IMPORTING FIREBASE FUNCTIONS
+
+//Firebase App
+
 import {initializeApp} from "firebase/app";
+
+//Firestore Functions
 
 import {
     getFirestore, collection, onSnapshot,
-    addDoc, deleteDoc, doc,
+    addDoc, deleteDoc, doc, setDoc,
     query, where, orderBy, serverTimestamp,
     getDoc, updateDoc, getDocs
 } from "firebase/firestore"
+
+//Auth Functions
 
 import{
     getAuth, 
@@ -15,7 +23,7 @@ import{
     onAuthStateChanged
 } from "firebase/auth"
 
-
+//Firebase configuration for KPesa Database
 
 const firebaseConfig = {
     apiKey: "AIzaSyDg0TxmvYhXlsOE_ZcX4cqIYR4iudAfTn8",
@@ -27,12 +35,12 @@ const firebaseConfig = {
     appId: "1:974087398858:web:e5ada1937dfe81377c1b33"
   };
 
+//Initialises firebase app
 initializeApp(firebaseConfig);
 
+//Defines database and auth references
 const db = getFirestore();
 const auth = getAuth();
-
-//db.settings({ timestampsInSnapshots: true});
 
 //AUTHENTICATION JAVASCRIPT
 
@@ -50,20 +58,15 @@ onAuthStateChanged(auth, (user) =>{
 
       //onSnapshot ensures the collection will update
       //in real time
-      getDocs(colRef).onSnapshot((snapshot) => {
-        snapshot.docs.forEach(doc => {
+      onSnapshot(colRef, (snapshot) => {
+        snapshot.docs.forEach(doc =>{
           renderCampaign(doc);
         })
       })
-      .catch(err => {
-        console.log(err.message)
-      });
+      
     }
-    
 
-  
-  }
-  else{
+  }else{
     console.log("user logged out.");
 
     setupUI();
@@ -74,35 +77,33 @@ onAuthStateChanged(auth, (user) =>{
 
   }
 
-
-
-
 });
 
 // signing users up
-
-
 if (document.querySelector("#modal-signup")){
-const signupForm = document.querySelector('#signup-form');
+  const signupForm = document.querySelector('#signup-form');
 
-//signupForm.addEventListener("submit", alert("sign up"));
-
-
-signupForm.addEventListener("submit", (e) => {
-    e.preventDefault();
+  signupForm.addEventListener("submit", (e) => {
+     e.preventDefault();
   
   // get user info
-  const email = signupForm['signup-email'].value;
-  const password = signupForm['signup-password'].value;
+    const email = signupForm['signup-email'].value;
+    const password = signupForm['signup-password'].value;
 
   // sign up the user
-  createUserWithEmailAndPassword(auth, email, password).then(cred => {
-    //console.log(cred.user);
-    // close the signup modal & reset form
-    const modal = document.querySelector('#modal-signup');
-    M.Modal.getInstance(modal).close();
-    signupForm.reset();
-  });
+    createUserWithEmailAndPassword(auth, email, password).then(async cred => {
+      
+      return await setDoc(doc(db, "users",cred.user.uid),{
+        bio: signupForm["signup-bio"].value
+      })
+   
+    }).then(() => {
+       // close the signup modal & reset form
+       const modal = document.querySelector('#modal-signup');
+       M.Modal.getInstance(modal).close();
+       signupForm.reset();
+
+    });
 });
 
 }
@@ -111,7 +112,6 @@ signupForm.addEventListener("submit", (e) => {
 //logging user in
 if (document.querySelector("#modal-login")){
   
-
   const loginForm = document.querySelector("#login-form");
 
   loginForm.addEventListener("submit", (e) => {
@@ -123,7 +123,6 @@ if (document.querySelector("#modal-login")){
     const password = loginForm["login-password"].value;
 
     signInWithEmailAndPassword(auth, email, password).then(cred => {
-      //console.log(cred.user);
 
       //close login modal and reset form
       const modal = document.querySelector('#modal-login');
@@ -175,18 +174,6 @@ onSnapshot(q, (snapshot) => {
 
 })
 
-//get collection data
-/*
-getDocs(colRef).then((snapshot) => {
-   
-  })
-  .catch(err => {
-    console.log(err.message)
-  });*/
-
-
-
-
 
 //render campaign
 
@@ -222,41 +209,8 @@ function renderCampaign(doc){
     '<h5 class ="center-align">Login to view campaigns</h5>';
   }
   
-
-    
   
 }
-
-/*
-getDocs(colRef).then((snapshot) => {
-  snapshot.docs.forEach(doc => {
-    renderCampaign(doc);
-  })
-
-})*/
-
-/*
-//displaying data
-getDocs(colRef).then((snapshot) => {
-  snapshot.forEach(doc => {
-    let data = doc.data();
-    let row = <tr>
-      <td>doc.id</td>
-   
-      <td>${data.category}</td>
-      <td>${data.description}</td>
-      <td>${data.target}</td>
-      <td>${data.raised}</td>
-    </tr>;
-    let table = document.getElementById("myTable")
-    table.innerHTML += row
-  })
-})
-.catch(err => {
-  console.log("Error: ${err}")
-})*/
-
-
 
 //Adding documents
 if (document.querySelector("#create-form")){ 
@@ -365,130 +319,3 @@ const setupUI = (user) => {
 
   }
 }
-
-/*
-  const signupForm = document.querySelector('.signup')
-signupForm.addEventListener('submit', (e) => {
-  e.preventDefault()
-
-  const email = signupForm.email.value
-  const password = signupForm.password.value
-
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(cred => {
-      console.log('user created:', cred.user)
-      signupForm.reset()
-      alert("that worked!")
-    })
-    .catch(err => {
-      console.log(err.message)
-    })
-})
-
-}
-
-
-// logging in and out
-if (document.querySelector('.logout')){
-  const logoutButton = document.querySelector('.logout')
-  logoutButton.addEventListener('click', () => {
-  signOut(auth)
-    .then(() => {
-      console.log('user signed out')
-    })
-    .catch(err => {
-      console.log(err.message)
-    })
-})
-}
-
-
-
-if (document.querySelector('.login')){
-  const loginForm = document.querySelector('.login')
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault()
-
-    const email = loginForm.email.value
-    const password = loginForm.password.value
-
-    signInWithEmailAndPassword(auth, email, password)
-      .then(cred => {
-        console.log('user logged in:', cred.user)
-        loginForm.reset()
-      })
-      .catch(err => {
-        console.log(err.message)
-      })
-  })
-
-}
-*/
-//signup
-
-// signup
-/*
-const signupForm = signupContent.querySelector("#signup-form")
-const signupButton = signupForm.querySelector("#signupButton")
-signupButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  
-  // get user info
-  const email = signupForm['signup-email'].value;
-  const password = signupForm['signup-password'].value;
-
-  // sign up the user
-  auth.createUserWithEmailAndPassword(email, password).then(cred => {
-    console.log(cred.user);
-    // close the signup modal & reset form
-   // const modal = document.querySelector('#modal-signup');
-   // M.Modal.getInstance(modal).close();
-    signupForm.reset();
-  });
-});*/
-
-/*
-const signupForm = document.querySelector('#modal-signup');
-signupForm.addEventListener("submit", (e) => {
-
-    alert("sign up")
-    e.preventDefault()
-
-    const email = signupForm.email.value;
-    const password = signupForm.password.value;
-
-    createUserWithEmailAndPassword(auth, email, password)
-    .then((cred) =>{
-        console.log("User created: ",cred.user);
-        signupForm.reset();
-        alert("Sign up successful!");
-    })
-    .catch((err) => {
-        console.log(err.message)
-        alert(err.message)
-    })
-});*/
-
-// signup
-//const signupForm = document.querySelector('#signup-form');
-
-//signupForm.addEventListener("submit", alert("sign up"));
-
-/*
-signupForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-  
-  // get user info
-  const email = signupForm['signup-email'].value;
-  const password = signupForm['signup-password'].value;
-
-  // sign up the user
-  auth.createUserWithEmailAndPassword(email, password).then(cred => {
-    console.log(cred.user);
-    // close the signup modal & reset form
-    const modal = document.querySelector('#modal-signup');
-    M.Modal.getInstance(modal).close();
-    signupForm.reset();
-  });
-});*/
-
