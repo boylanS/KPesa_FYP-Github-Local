@@ -52,8 +52,8 @@ onAuthStateChanged(auth, (user) =>{
     console.log("user logged in: ",user);
     setupUI(user);
 
-    if (document.querySelector("#campaign-list")){
-      campaignList.innerHTML= "";
+    if (document.querySelector("#campaignDiv")){
+      campaignDiv.innerHTML= "";
       //get collection data
 
       //onSnapshot ensures the collection will update
@@ -71,7 +71,7 @@ onAuthStateChanged(auth, (user) =>{
 
     setupUI();
 
-    if (document.querySelector("#campaign-list")){
+    if (document.querySelector("#campaignDiv")){
       renderCampaign([]);
     }
 
@@ -178,12 +178,12 @@ onSnapshot(q, (snapshot) => {
 //render campaign
 
 const campaignList = document.querySelector("#campaign-list");
+const campaignDiv = document.querySelector(".float-container");
 
 function renderCampaign(doc){
 
   if (doc.length != 0){
-
-
+/*
     let li = document.createElement("li");
 
     let name = document.createElement("h2");
@@ -202,10 +202,85 @@ function renderCampaign(doc){
     li.appendChild(description);
     li.appendChild(image);
 
-    campaignList.appendChild(li);
+    campaignList.appendChild(li); */
+    
+
+    //WORKS WITH THE LIST 
+
+    let floatContainer = document.createElement("div");
+    floatContainer.setAttribute("class","float-child");
+
+   // let li = document.createElement("li");
+   // li.setAttribute("display","inline-block");
+   // li.setAttribute("padding","100px");
+
+    let card = document.createElement("div");
+    card.setAttribute("class","card");
+    let image = document.createElement("IMG");
+    image.setAttribute("style","width:100%");
+    let container = document.createElement("div");
+    container.setAttribute("class","container");
+    let name = document.createElement("h4");
+    let description = document.createElement("p");
+
+    //li.setAttribute("data-id", doc.id);
+
+    name.textContent = doc.data().name;
+    description.textContent = doc.data().description;
+    image.src = doc.data().image;
+
+    container.appendChild(name);
+    container.appendChild(description);
+
+     card.appendChild(image);
+     card.appendChild(container);
+
+     floatContainer.appendChild(card);
+     campaignDiv.appendChild(floatContainer);
+
+   // campaignDiv.appendChild(card);
+
+    //li.appendChild(card);
+
+    //campaignList.appendChild(li);
+
+
+
+    //TRYING TO GET DIV WORKING
+/*
+    let floatContainer = document.createElement("div");
+    floatContainer.setAttribute("class","float-child");
+
+    let cardDiv = document.createElement("div");
+    cardDiv.setAttribute("class","card");
+    let imageDiv = document.createElement("IMG");
+    imageDiv.setAttribute("style","width:100%");
+    let containerSmall = document.createElement("div");
+    containerSmall.setAttribute("class","container");
+    let nameDiv = document.createElement("h4");
+    let descriptionDiv = document.createElement("p");
+
+    floatContainer.setAttribute("data-id", doc.id);
+
+    //nameDiv.textContent = doc.data().name;
+    //descriptionDiv.textContent = doc.data().description;
+    //imageDiv.src = doc.data().image;
+
+    containerSmall.appendChild(name);
+    containerSmall.appendChild(description);
+
+    cardDiv.appendChild(image);
+    cardDiv.appendChild(containerSmall);
+
+    floatContainer.appendChild(cardDiv);
+
+    //li.appendChild(card);
+
+    campaignDiv.appendChild(floatContainer);
+*/
 
   } else{
-    campaignList.innerHTML=
+    campaignDiv.innerHTML=
     '<h5 class ="center-align">Login to view campaigns</h5>';
   }
   
