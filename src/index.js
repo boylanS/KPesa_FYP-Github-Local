@@ -44,7 +44,7 @@ const auth = getAuth();
 
 //initialising doc ID
 
-//const currentCampaignRef = doc(db, "currentCampaign", "1")
+ const currentCampaignRef = doc(db, "currentCampaign", "1")
 
 //AUTHENTICATION JAVASCRIPT
 
@@ -215,9 +215,9 @@ function renderCampaign(doc){
     description.textContent = doc.data().description;
     image.src = doc.data().image;
 
-  /*  updateDoc(currentCampaignRef, {
-      id: doc.id
-    });*/
+    updateDoc(currentCampaignRef, {
+      currentId: doc.id
+    });
 
     //currentCampaign = doc.id;
 
