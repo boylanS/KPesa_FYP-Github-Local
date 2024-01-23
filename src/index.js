@@ -42,6 +42,10 @@ initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
 
+//initialising doc ID
+
+//const currentCampaignRef = doc(db, "currentCampaign", "1")
+
 //AUTHENTICATION JAVASCRIPT
 
 // listen for auth state changes
@@ -183,36 +187,12 @@ const campaignDiv = document.querySelector(".float-container");
 function renderCampaign(doc){
 
   if (doc.length != 0){
-/*
-    let li = document.createElement("li");
-
-    let name = document.createElement("h2");
-
-    let description = document.createElement("p");
-
-    let image = document.createElement("IMG");
-
-    li.setAttribute("data-id", doc.id);
-
-    name.textContent = doc.data().name;
-    description.textContent = doc.data().description;
-    image.src = doc.data().image;
-
-    li.appendChild(name);
-    li.appendChild(description);
-    li.appendChild(image);
-
-    campaignList.appendChild(li); */
-    
 
     //WORKS WITH THE LIST 
 
     let floatContainer = document.createElement("div");
     floatContainer.setAttribute("class","float-child");
 
-   // let li = document.createElement("li");
-   // li.setAttribute("display","inline-block");
-   // li.setAttribute("padding","100px");
 
     let card = document.createElement("div");
     card.setAttribute("class","card");
@@ -222,6 +202,12 @@ function renderCampaign(doc){
     container.setAttribute("class","container");
     let name = document.createElement("h4");
     let description = document.createElement("p");
+    let pageButton = document.createElement("button");
+
+    let tempID = document.createElement("p");
+    pageButton.textContent = "Read more";
+    pageButton.setAttribute("href","/itempage.html");
+
 
     //li.setAttribute("data-id", doc.id);
 
@@ -229,8 +215,19 @@ function renderCampaign(doc){
     description.textContent = doc.data().description;
     image.src = doc.data().image;
 
+  /*  updateDoc(currentCampaignRef, {
+      id: doc.id
+    });*/
+
+    //currentCampaign = doc.id;
+
+    pageButton.addEventListener("click", () => {
+      renderCampaignPage();
+    });
+
     container.appendChild(name);
     container.appendChild(description);
+    container.appendChild(pageButton);
 
      card.appendChild(image);
      card.appendChild(container);
@@ -238,46 +235,7 @@ function renderCampaign(doc){
      floatContainer.appendChild(card);
      campaignDiv.appendChild(floatContainer);
 
-   // campaignDiv.appendChild(card);
-
-    //li.appendChild(card);
-
-    //campaignList.appendChild(li);
-
-
-
-    //TRYING TO GET DIV WORKING
-/*
-    let floatContainer = document.createElement("div");
-    floatContainer.setAttribute("class","float-child");
-
-    let cardDiv = document.createElement("div");
-    cardDiv.setAttribute("class","card");
-    let imageDiv = document.createElement("IMG");
-    imageDiv.setAttribute("style","width:100%");
-    let containerSmall = document.createElement("div");
-    containerSmall.setAttribute("class","container");
-    let nameDiv = document.createElement("h4");
-    let descriptionDiv = document.createElement("p");
-
-    floatContainer.setAttribute("data-id", doc.id);
-
-    //nameDiv.textContent = doc.data().name;
-    //descriptionDiv.textContent = doc.data().description;
-    //imageDiv.src = doc.data().image;
-
-    containerSmall.appendChild(name);
-    containerSmall.appendChild(description);
-
-    cardDiv.appendChild(image);
-    cardDiv.appendChild(containerSmall);
-
-    floatContainer.appendChild(cardDiv);
-
-    //li.appendChild(card);
-
-    campaignDiv.appendChild(floatContainer);
-*/
+  
 
   } else{
     campaignDiv.innerHTML=
@@ -285,6 +243,56 @@ function renderCampaign(doc){
   }
   
   
+}
+
+//Rendering campaign page function
+
+function renderCampaignPage(){
+  window.location.href = "campaignPage.html";
+  //window.onload = function(){
+   //fillPage();
+  //}
+  
+}
+
+if (document.querySelector("#singleCampaignPage")){
+
+ /* const currentCampaignInfo = doc(db, "currentCampaign", "1");
+  const currentCampaignSnap = await getDoc(currentCampaignInfo);
+
+  if (currentCampaignSnap.exists()){
+    console.log("Document data:", campaignSnap.data());
+    fillPage(campaignSnap.data().id)
+  } else{
+    console.log("no such document");
+  }*/
+
+  alert("something runs");
+  
+}
+
+
+async function fillPage(currentCampaign){
+  //alert("running")
+  if (currentCampaign != null){
+    alert("current campaign"+currentCampaign);
+    const currentCampaignDoc = doc(db, "campaigns", currentCampaign);
+    const campaignSnap = await getDoc(currentCampaignDoc);
+
+    if (campaignSnap.exists()){
+      console.log("Document data:", campaignSnap.data().name);
+    } else{
+      console.log("no such document");
+    }
+    //alert(currentCampaignDoc.data().name);
+    //console.log(currentCampaignDoc.name);
+
+  }
+  //alert("it worked!");
+  
+
+
+ 
 }
 
 //Adding documents
@@ -361,6 +369,8 @@ if (document.querySelector(".update")){
 })
 
 }
+
+
 
 // HIDING NAV BAR LINKS
 
