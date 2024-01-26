@@ -44,8 +44,12 @@ const auth = getAuth();
 
 //initialising doc ID
 
- const currentCampaignRef = doc(db, "currentCampaign", "1")
+ const currentCampaignRef = doc(db, "currentCampaign", "1");
 
+
+//localStorage.setItem("currentCampaign","DzN8ySvSq344slRZqAff")
+
+ var currentCampaignId = "DzN8ySvSq344slRZqAff";
 //AUTHENTICATION JAVASCRIPT
 
 // listen for auth state changes
@@ -208,20 +212,19 @@ function renderCampaign(doc){
     pageButton.textContent = "Read more";
     pageButton.setAttribute("href","/itempage.html");
 
-
     //li.setAttribute("data-id", doc.id);
-
     name.textContent = doc.data().name;
     description.textContent = doc.data().description;
     image.src = doc.data().image;
-
-    updateDoc(currentCampaignRef, {
-      currentId: doc.id
-    });
+    let idCurrent = doc.id;
+  
 
     //currentCampaign = doc.id;
 
     pageButton.addEventListener("click", () => {
+      localStorage.setItem("currentCampaign", idCurrent);
+      currentCampaignId = idCurrent;
+      //alert(localStorage.getItem("currentCampaign"));
       renderCampaignPage();
     });
 
@@ -249,41 +252,46 @@ function renderCampaign(doc){
 
 function renderCampaignPage(){
   window.location.href = "campaignPage.html";
-  //window.onload = function(){
-   //fillPage();
-  //}
   
 }
 
 if (document.querySelector("#singleCampaignPage")){
-
- /* const currentCampaignInfo = doc(db, "currentCampaign", "1");
-  const currentCampaignSnap = await getDoc(currentCampaignInfo);
-
-  if (currentCampaignSnap.exists()){
-    console.log("Document data:", campaignSnap.data());
-    fillPage(campaignSnap.data().id)
-  } else{
-    console.log("no such document");
-  }*/
-
-  alert("something runs");
-  
+  fillPage();
 }
 
-
-async function fillPage(currentCampaign){
+function fillPage(){
   //alert("running")
-  if (currentCampaign != null){
+  let currentCampaign = localStorage.getItem("currentCampaign");
+    if (currentCampaign != null){
     alert("current campaign"+currentCampaign);
     const currentCampaignDoc = doc(db, "campaigns", currentCampaign);
-    const campaignSnap = await getDoc(currentCampaignDoc);
+    const campaignSnap = getDoc(currentCampaignDoc);
 
-    if (campaignSnap.exists()){
+    onSnapshot(currentCampaignDoc, (doc) =>{
+      console.log(doc.data(), doc.id)
+      let titleDiv = document.querySelector("#campaignName");
+      let title = document.createElement("h2");
+      title.textContent = doc.data().name;
+      titleDiv.appendChild(title);
+      alert("this also runs");
+
+    })
+
+    
+
+    let titleDiv = document.querySelector("#campaignName");
+
+    let title = document.createElement("h2");
+   // title.textContent = campaignSnap.data().name;
+ 
+
+
+    //alert("this much has run");
+   /* if (campaignSnap.exists()){
       console.log("Document data:", campaignSnap.data().name);
     } else{
       console.log("no such document");
-    }
+    }*/
     //alert(currentCampaignDoc.data().name);
     //console.log(currentCampaignDoc.name);
 
