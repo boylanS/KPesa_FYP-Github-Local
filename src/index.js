@@ -294,6 +294,29 @@ function fillPage(){
       onSnapshot(collectionRef, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
           console.log("data: ",doc.data());
+          let rewardDiv = document.querySelector("#rewards");
+          let rewardList = rewardDiv.querySelector("#rewardList");
+
+          let listElement = document.createElement("li");
+
+          let rewardContainer = document.createElement("div");
+
+          let rewardName = document.createElement("h2");
+          let donation = document.createElement("h3");
+          let descriptionReward = document.createElement("p");
+
+          rewardName.textContent = doc.data().name;
+          donation.textContent = doc.data().donation;
+          descriptionReward.textContent = doc.data().description;
+
+          rewardContainer.appendChild(rewardName);
+          rewardContainer.appendChild(donation);
+          rewardContainer.appendChild(descriptionReward);
+
+          listElement.appendChild(rewardContainer);
+          rewardList.appendChild(listElement);
+
+          alert("code running");
         });
       });
 
