@@ -255,25 +255,60 @@ function renderCampaignPage(){
   
 }
 
+//Will fill page if it is identified as the single campaign page
 if (document.querySelector("#singleCampaignPage")){
   fillPage();
 }
 
 function fillPage(){
-  //alert("running")
+  
   let currentCampaign = localStorage.getItem("currentCampaign");
     if (currentCampaign != null){
-    alert("current campaign"+currentCampaign);
+    //alert("current campaign"+currentCampaign);
+
+    //Calls the current campaign doc from the database
     const currentCampaignDoc = doc(db, "campaigns", currentCampaign);
-    const campaignSnap = getDoc(currentCampaignDoc);
+    //const campaignSnap = getDoc(currentCampaignDoc);
 
     onSnapshot(currentCampaignDoc, (doc) =>{
-      console.log(doc.data(), doc.id)
+      //console.log(doc.data(), doc.id)
+
       let titleDiv = document.querySelector("#campaignName");
       let title = document.createElement("h2");
       title.textContent = doc.data().name;
       titleDiv.appendChild(title);
-      alert("this also runs");
+
+      let bioDiv = document.querySelector("#campaignBio");
+      let bio = document.createElement("p");
+      bio.textContent = doc.data().description;
+      bioDiv.appendChild(bio);
+
+      /*const subColRef = collection(db,"campaigns", currentCampaign,"rewards");
+
+      const qSnap = getDocs(subColRef);
+
+      console.log(qSnap.docs);*/
+
+      let collectionRef = collection(db, "campaigns",currentCampaign,"rewards");
+
+      onSnapshot(collectionRef, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          console.log("data: ",doc.data());
+        });
+      });
+
+      /*let rewards = doc.data().collection("rewards");
+      let rewardDiv = document.querySelector("#rewards");
+      let rewardText = document.createElement("p");
+      rewardText.textContent = rewards;
+      rewardDiv.appendChild(rewardText);
+
+      console.log(rewards);*/
+
+
+
+
+     // alert("this also runs");
 
     })
 
