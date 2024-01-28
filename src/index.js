@@ -255,7 +255,6 @@ function renderCampaignPage(){
   
 }
 
-
 //Will fill page if it is identified as the single campaign page
 if (document.querySelector("#singleCampaignPage")){
   fillPage();
@@ -278,7 +277,61 @@ function fillPage(){
       let title = document.createElement("h2");
       title.textContent = doc.data().name;
       titleDiv.appendChild(title);
-      alert("this also runs");
+
+      let bioDiv = document.querySelector("#campaignBio");
+      let bio = document.createElement("p");
+      bio.textContent = doc.data().description;
+      bioDiv.appendChild(bio);
+
+      /*const subColRef = collection(db,"campaigns", currentCampaign,"rewards");
+
+      const qSnap = getDocs(subColRef);
+
+      console.log(qSnap.docs);*/
+
+      let collectionRef = collection(db, "campaigns",currentCampaign,"rewards");
+
+      onSnapshot(collectionRef, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          console.log("data: ",doc.data());
+          let rewardDiv = document.querySelector("#rewards");
+          let rewardList = rewardDiv.querySelector("#rewardList");
+
+          let listElement = document.createElement("li");
+
+          let rewardContainer = document.createElement("div");
+
+          let rewardName = document.createElement("h2");
+          let donation = document.createElement("h3");
+          let descriptionReward = document.createElement("p");
+
+          rewardName.textContent = doc.data().name;
+          donation.textContent = doc.data().donation;
+          descriptionReward.textContent = doc.data().description;
+
+          rewardContainer.appendChild(rewardName);
+          rewardContainer.appendChild(donation);
+          rewardContainer.appendChild(descriptionReward);
+
+          listElement.appendChild(rewardContainer);
+          rewardList.appendChild(listElement);
+
+          alert("code running");
+        });
+      });
+
+      /*let rewards = doc.data().collection("rewards");
+      let rewardDiv = document.querySelector("#rewards");
+      let rewardText = document.createElement("p");
+      rewardText.textContent = rewards;
+      rewardDiv.appendChild(rewardText);
+
+      console.log(rewards);*/
+
+
+
+
+     // alert("this also runs");
 
     })
 
