@@ -150,7 +150,9 @@ if (document.querySelector("#logout")){
   const logout = document.querySelector("#logout");
   logout.addEventListener("click", (e) =>{
     e.preventDefault();
-    signOut(auth);
+
+
+   
   })
 
 
@@ -223,6 +225,7 @@ function renderCampaign(doc){
 
     pageButton.addEventListener("click", () => {
       localStorage.setItem("currentCampaign", idCurrent);
+      localStorage.setItem("currentCampaignName",doc.data().name)
       currentCampaignId = idCurrent;
       //alert(localStorage.getItem("currentCampaign"));
       renderCampaignPage();
@@ -316,7 +319,7 @@ function fillPage(){
           listElement.appendChild(rewardContainer);
           rewardList.appendChild(listElement);
 
-          alert("code running");
+          //alert("code running");
         });
       });
 
@@ -360,6 +363,88 @@ function fillPage(){
 
  
 }
+
+//Donation modal
+if (document.querySelector("#donationButton")){
+  const donate = document.querySelector("#donationButton");
+  donate.addEventListener("click", (e) =>{
+    e.preventDefault();
+    processDonation();
+  })
+
+
+};
+
+
+//Processing the donation
+function processDonation(){
+  // signing users up
+  if (document.querySelector("#modal-donate")){
+    const donationHeading = document.querySelector("#donationHeading");
+    const campaignDonate = localStorage.getItem("currentCampaignName");
+    donationHeading.innerText = "Donate to "+ campaignDonate;
+    const donateForm = document.querySelector('#donateForm');
+
+    let collectionRef = collection(db, "campaigns",localStorage.getItem("currentCampaign"),"rewards");
+
+      onSnapshot(collectionRef, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          console.log("data: ",doc.data());
+          let rewardDiv = document.querySelector("#donateForm");
+
+         /* let rewardRadio = document.createElement("input");
+          rewardRadio.setAttribute("type","radio");
+          rewardRadio.setAttribute("name","reward");*/
+          let rewardName = doc.data().name;
+         /* rewardRadio.setAttribute("id",rewardName);
+          rewardRadio.setAttribute("value",rewardName);
+          let rewardLabel = document.createElement("label");
+          rewardLabel.setAttribute("for",rewardName);
+
+          rewardDiv.appendChild(rewardRadio);
+          rewardDiv.appendChild(rewardLabel);*/
+
+          //let rewardDropdown = document.querySelector("rewardDropdown");
+          let rewardDatalist = document.querySelector("#rewardDatalist");
+
+          let rewardOption = document.createElement("option");
+          rewardOption.setAttribute("value",rewardName);
+          rewardOption.textContent = rewardName;
+
+          rewardDatalist.appendChild(rewardOption);
+
+          //alert("code running");
+         } )});
+
+     donateForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const modal = document.querySelector('#modal-donate');
+      M.Modal.getInstance(modal).close();
+      donateForm.reset();
+
+    });
+    /*.then(() => {
+      // close the signup modal & reset form
+      const modal = document.querySelector('#modal-donate');
+      M.Modal.getInstance(modal).close();
+      donateForm.reset();
+   });*/
+  
+  // get user info
+   /* const email = signupForm['signup-email'].value;
+    const password = signupForm['signup-password'].value;*/
+
+  // sign up the user
+   /* createUserWithEmailAndPassword(auth, email, password).then(async cred => {
+      
+      return await setDoc(doc(db, "users",cred.user.uid),{
+        bio: signupForm["signup-bio"].value
+      })
+   
+   
+    });*/
+}};
+
 
 //Adding documents
 if (document.querySelector("#create-form")){ 

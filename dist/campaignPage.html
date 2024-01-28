@@ -24,7 +24,7 @@
         <!-- NAVBAR -->
         <nav class="z-depth-0 white">
           <div class="nav-wrapper container">
-            <a href="#" class="brand-logo">
+            <a href="index.html" class="brand-logo">
                 <img src="KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
               </a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
@@ -60,6 +60,8 @@
         <div id="rewards">
          <ul id = "rewardList"></ul>
         </div>
+
+        <button id = "donationButton" class="grey-text modal-trigger" data-target="modal-donate">Donate</button>
          
         <!-- Reward List -->
          <div class="container" style="margin-top: 40px;">
@@ -71,6 +73,55 @@
             </ul>
          </div>
 
+
+         <!-- DONATE MODAL -->
+  <div id="modal-donate" class="modal">
+    <div class="modal-content">
+      <h4 id = "donationHeading">Donate</h4><br />
+      <form id="donateForm" action="">
+
+        
+        <div class="input-field">
+          <input type="number" id="donationAmount" required />
+          <label for="donationAmount">Donation</label>
+        </div>
+
+
+        <div class="input-field">
+          <label for="donationCurrency">Select currency: </label>
+          <br>
+          <input list="currencies" name = "currency" id="currency">
+          <datalist id="currencies">
+            <option value = "pound">£</option>
+            <option value = "dollar">$</option>
+            <option value = "euro">€</option>
+          </datalist>
+        </div>
+
+        <div class="input-field">
+          <label for="donationReward">Select reward: </label>
+          <br>
+          <input list="rewardDatalist" name = "reward" id="reward">
+          <datalist id="rewardDatalist">
+            <option value = "None">None</option>
+            <option value = "One">One</option>
+
+          </datalist>
+        </div>
+
+       <!--- </div>
+        <p>Select your reward: </p>
+          <input type="radio" id="none" name="reward" value="None">
+          <label for="none">None</label><br>
+        <div class="input-field" id ="rewardsInput">
+          
+          <br>-->
+        </div>
+        </div>
+        
+        </form>
+    </div>
+  </div>
 
 
   
