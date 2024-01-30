@@ -101,21 +101,19 @@
         <div class="input-field">
           <label for="donationReward">Select reward: </label>
           <br>
-          <input list="rewardDatalist" name = "reward" id="reward">
+          <input list="rewardDatalist" name = "reward" id="reward" required>
           <datalist id="rewardDatalist">
             <option value = "None">None</option>
-            <option value = "One">One</option>
 
           </datalist>
         </div>
 
-       <!--- </div>
-        <p>Select your reward: </p>
-          <input type="radio" id="none" name="reward" value="None">
-          <label for="none">None</label><br>
-        <div class="input-field" id ="rewardsInput">
-          
-          <br>-->
+        <div class="input-field">
+          <input type="number" id="tipAmount" />
+          <label for="tipAmount">Tip</label>
+        </div>  
+
+        <button class="btn yellow darken-2 z-depth-0">Donate</button>
         </div>
         </div>
         

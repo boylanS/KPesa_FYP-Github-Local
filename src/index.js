@@ -20,7 +20,7 @@ import{
     createUserWithEmailAndPassword,
     signOut,
     signInWithEmailAndPassword,
-    onAuthStateChanged
+    onAuthStateChanged,
 } from "firebase/auth"
 
 //Firebase configuration for KPesa Database
@@ -150,9 +150,8 @@ if (document.querySelector("#logout")){
   const logout = document.querySelector("#logout");
   logout.addEventListener("click", (e) =>{
     e.preventDefault();
+    signOut(auth);
 
-
-   
   })
 
 
@@ -378,7 +377,6 @@ if (document.querySelector("#donationButton")){
 
 //Processing the donation
 function processDonation(){
-  // signing users up
   if (document.querySelector("#modal-donate")){
     const donationHeading = document.querySelector("#donationHeading");
     const campaignDonate = localStorage.getItem("currentCampaignName");
@@ -391,20 +389,8 @@ function processDonation(){
         querySnapshot.forEach((doc) => {
           console.log("data: ",doc.data());
           let rewardDiv = document.querySelector("#donateForm");
-
-         /* let rewardRadio = document.createElement("input");
-          rewardRadio.setAttribute("type","radio");
-          rewardRadio.setAttribute("name","reward");*/
           let rewardName = doc.data().name;
-         /* rewardRadio.setAttribute("id",rewardName);
-          rewardRadio.setAttribute("value",rewardName);
-          let rewardLabel = document.createElement("label");
-          rewardLabel.setAttribute("for",rewardName);
-
-          rewardDiv.appendChild(rewardRadio);
-          rewardDiv.appendChild(rewardLabel);*/
-
-          //let rewardDropdown = document.querySelector("rewardDropdown");
+      
           let rewardDatalist = document.querySelector("#rewardDatalist");
 
           let rewardOption = document.createElement("option");
@@ -413,36 +399,62 @@ function processDonation(){
 
           rewardDatalist.appendChild(rewardOption);
 
-          //alert("code running");
          } )});
 
      donateForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const modal = document.querySelector('#modal-donate');
-      M.Modal.getInstance(modal).close();
-      donateForm.reset();
+        e.preventDefault();
+        if (auth.currentUser) {
+          //store a record of the donation under the user information in firestore database
+          const userID = auth.currentUser.uid;
+          var processingTimeDate = new Date();
+          var date = processingTimeDate.getFullYear()+"-"+(processingTimeDate.getMonth()+1)+"-"+processingTimeDate.getDate();
+          var time = processingTimeDate.getHours() + ":" + processingTimeDate.getMinutes() + ":" + processingTimeDate.getSeconds();
+          const processingTime = date+"_"+time;
+          const donationID = userID+"_"+campaignDonate+"_"+processingTime;
+          const userRef = doc(db, "users", userID, "donations",donationID)
 
-    });
-    /*.then(() => {
-      // close the signup modal & reset form
-      const modal = document.querySelector('#modal-donate');
-      M.Modal.getInstance(modal).close();
-      donateForm.reset();
-   });*/
-  
-  // get user info
-   /* const email = signupForm['signup-email'].value;
-    const password = signupForm['signup-password'].value;*/
-
-  // sign up the user
-   /* createUserWithEmailAndPassword(auth, email, password).then(async cred => {
+          setDoc(userRef, {
+            donationAmount: donateForm.donationAmount.value,
+            donationTo: campaignDonate,
+            donationCurrency: donateForm.currency.value,
+            reward: donateForm.reward.value,
+            tip: donateForm.tipAmount.value,
+            processedAt: processingTime
+        
+        }).then(() => {
       
-      return await setDoc(doc(db, "users",cred.user.uid),{
-        bio: signupForm["signup-bio"].value
+        
+        }).catch(err => {
+          console.log(err.message);
+        })
+
+        //store a record of the donation under the campaign information in firestore database
+        const campaignID = localStorage.getItem("currentCampaign");
+        //const campRef = collection(db, "campaigns", campaignID, "donations")
+        const campRef = doc(db, "campaigns", campaignID, "donations",donationID)
+
+        setDoc(campRef, {
+          donationAmount: donateForm.donationAmount.value,
+          donationFrom: userID,
+          donationCurrency: donateForm.currency.value,
+          reward: donateForm.reward.value,
+          tip: donateForm.tipAmount.value,
+          processedAt: processingTime
+      
+      }).then(() => {
+        const modal = document.querySelector('#modal-donate');
+        M.Modal.getInstance(modal).close();
+        donateForm.reset();
+      }).catch(err => {
+        console.log(err.message);
       })
-   
-   
-    });*/
+
+
+
+
+      }
+      })
+       
 }};
 
 
@@ -451,7 +463,7 @@ if (document.querySelector("#create-form")){
   const addCampaignForm = document.querySelector("#create-form");
   addCampaignForm.addEventListener("submit",(e) =>{
     e.preventDefault()
-
+    
     addDoc(colRef, {
       bankCountry: addCampaignForm.bankCountry.value,
       category: addCampaignForm.category.value,
@@ -462,7 +474,6 @@ if (document.querySelector("#create-form")){
       raised: addCampaignForm.raised.value,
       target: addCampaignForm.target.value,
       createdAt: serverTimestamp()
-
   })
   .then(() => {
     addCampaignForm.reset();
