@@ -23,6 +23,14 @@ import{
     onAuthStateChanged,
 } from "firebase/auth"
 
+//Storage Functions
+
+import{
+  getStorage, ref,
+  uploadBytes, getDownloadURL
+
+} from "firebase/storage"
+
 //Firebase configuration for KPesa Database
 
 const firebaseConfig = {
@@ -38,9 +46,10 @@ const firebaseConfig = {
 //Initialises firebase app
 initializeApp(firebaseConfig);
 
-//Defines database and auth references
+//Defines database, auth and storage references
 const db = getFirestore();
 const auth = getAuth();
+const storage = getStorage();
 
 //initialising doc ID
 
@@ -463,13 +472,62 @@ if (document.querySelector("#create-form")){
   const addCampaignForm = document.querySelector("#create-form");
   addCampaignForm.addEventListener("submit",(e) =>{
     e.preventDefault()
+    const imageSrc = ref(storage,localStorage.getItem("imageStorageRef"));
+    let imageURL = "";
     
-    addDoc(colRef, {
+    getDownloadURL(imageSrc)
+    .then((url) => {
+      imageURL = url.toString();
+      console.log("The url is: "+imageURL);
+      console.log("The type is: "+ typeof imageURL)
+
+      addDoc(colRef, {
+        bankCountry: addCampaignForm.bankCountry.value,
+        category: addCampaignForm.category.value,
+        country: addCampaignForm.country.value,
+        description: addCampaignForm.description.value,
+        image: imageURL,
+        name: addCampaignForm.name.value,
+        raised: addCampaignForm.raised.value,
+        target: addCampaignForm.target.value,
+        createdAt: serverTimestamp()
+    })
+    .then(() => {
+      addCampaignForm.reset();
+    }).catch(err => {
+      console.log(err.message);
+    })
+
+
+    }) .catch((error) => {
+      // A full list of error codes is available at
+      // https://firebase.google.com/docs/storage/web/handle-errors
+      switch (error.code) {
+        case 'storage/object-not-found':
+          // File doesn't exist
+          break;
+        case 'storage/unauthorized':
+          // User doesn't have permission to access the object
+          break;
+        case 'storage/canceled':
+          // User canceled the upload
+          break;
+  
+        // ...
+  
+        case 'storage/unknown':
+          // Unknown error occurred, inspect the server response
+          break;
+      }
+    });
+    //const imageURL = URL.createObjectURL(imageSrc);
+    
+   /* addDoc(colRef, {
       bankCountry: addCampaignForm.bankCountry.value,
       category: addCampaignForm.category.value,
       country: addCampaignForm.country.value,
       description: addCampaignForm.description.value,
-      image: addCampaignForm.image.value,
+      image: imageURL,
       name: addCampaignForm.name.value,
       raised: addCampaignForm.raised.value,
       target: addCampaignForm.target.value,
@@ -479,11 +537,150 @@ if (document.querySelector("#create-form")){
     addCampaignForm.reset();
   }).catch(err => {
     console.log(err.message);
-  })
+  })*/
 })
 
 }
 
+
+//tring to work out image upload
+
+if (document.querySelector("#imageUpload")){
+  const inp = document.querySelector(".inp");
+  const progressbar = document.querySelector(".progress");
+  const img = document.querySelector(".img");
+  const fileData = document.querySelector(".filedata");
+  const loading = document.querySelector(".loading");
+  let file;
+  let fileName;
+  let progress;
+  let isLoading = false;
+  let uploadedFileName;
+  
+  inp.addEventListener("click", () => {
+    inp.click();
+  });
+
+  var currentFile;
+
+  //let selectImageBtn = document.querySelector("#selectImageBtn");
+  inp.addEventListener("change", function() {
+    if (this.files && this.files[0]) {
+
+      var img = document.querySelector("#campaignImage");
+
+      img.onload = () => {
+        URL.revokeObjectURL(img.src);
+      }
+
+      img.src = URL.createObjectURL(this.files[0]);
+      file = this.files[0];
+      fileName = Math.round(Math.random() * 9999) + file.name;
+      if (fileName) {
+        fileData.style.display = "block";
+      }
+      fileData.innerHTML = fileName;
+      console.log(file, fileName);
+
+    }
+
+  });
+
+  let uploadImageBtn = document.querySelector("#uploadBtn");
+  uploadImageBtn.addEventListener("click", () => {
+    loading.style.display = "block";
+    const storageRef = ref(storage, "campaignImages");
+    const folderRef = ref(storageRef, fileName);
+    const fileRef = "campaignImages/"+fileName;
+    const docRef = ref(storage, fileRef);
+    console.log("The ref is: "+docRef);
+   // const uploadtask = uploadBytes(folderRef, file);
+    localStorage.setItem("imageStorageRef",docRef);
+
+    uploadBytes(folderRef, file).then((snapshot) =>  {
+        console.log("Snapshot", snapshot.ref.name);
+        progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        progress = Math.round(progress);
+        progressbar.style.width = progress + "%";
+        progressbar.innerHTML = progress + "%";
+        uploadedFileName = snapshot.ref.name;
+      },
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        storage
+          .ref("campaignImages")
+          .child(uploadedFileName)
+          .getDownloadURL()
+          .then((url) => {
+            console.log("URL", url);
+            if (!url) {
+              img.style.display = "none";
+            } else {
+              img.style.display = "block";
+              loading.style.display = "none";
+            }
+            img.setAttribute("src", url);
+          });
+        console.log("File Uploaded Successfully");
+      }
+    );
+
+  })
+}
+
+
+//Getting data from user uploaded image
+function getImageData(e) {
+  file = e.target.files[0];
+  fileName = Math.round(Math.random() * 9999) + file.name;
+  if (fileName) {
+    fileData.style.display = "block";
+  }
+  fileData.innerHTML = fileName;
+  console.log(file, fileName);
+};
+
+//uploading image to storage
+
+function uploadImage() {
+  loading.style.display = "block";
+  const storageRef = storage.ref().child("myimages");
+  const folderRef = storageRef.child(fileName);
+  const uploadtask = folderRef.put(file);
+  uploadtask.on(
+    "state_changed",
+    (snapshot) => {
+      console.log("Snapshot", snapshot.ref.name);
+      progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      progress = Math.round(progress);
+      progressbar.style.width = progress + "%";
+      progressbar.innerHTML = progress + "%";
+      uploadedFileName = snapshot.ref.name;
+    },
+    (error) => {
+      console.log(error);
+    },
+    () => {
+      storage
+        .ref("myimages")
+        .child(uploadedFileName)
+        .getDownloadURL()
+        .then((url) => {
+          console.log("URL", url);
+          if (!url) {
+            img.style.display = "none";
+          } else {
+            img.style.display = "block";
+            loading.style.display = "none";
+          }
+          img.setAttribute("src", url);
+        });
+      console.log("File Uploaded Successfully");
+    }
+  );
+};
 
 
 //Deleting documents

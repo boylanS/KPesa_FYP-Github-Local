@@ -55,6 +55,20 @@
 
         <h4>Start a Campaign</h4>
         <br>
+
+        <div id="imageUpload">
+          <input type="file" class="inp" />
+          <button  id = "selectImageBtn" class="selectImage">Select Images</button>
+          <span class="filedata"></span>
+          <br>
+          <img id="campaignImage" src="#" width="100px" height = "100px">
+          <div class="progressBar">
+            <div class="progress"></div>
+          </div>
+          <button class="upload" id="uploadBtn">Upload</button>
+          <span class="loading">Loading...</span>
+          <img class="img" />
+        </div>
         <form id="create-form">
 
           <label for="name">Campaign Name:</label>
@@ -127,7 +141,7 @@
           </div>
         </div>
       
-        <!-- CREATE GUIDE MODAL -->
+        <!-- CREATE GUIDE MODAL -
         <div id="modal-create" class="modal">
           <div class="modal-content">
             <h4>Create Guide</h4><br />
@@ -143,7 +157,7 @@
               <button class="btn yellow darken-2 z-depth-0">Create</button>
             </form>
           </div>
-        </div>
+        </div>-->
       
        
     
