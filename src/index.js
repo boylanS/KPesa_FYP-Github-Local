@@ -294,11 +294,34 @@ function fillPage(){
       bio.textContent = doc.data().description;
       bioDiv.appendChild(bio);
 
+      let categoryDiv = document.querySelector("#campaignCategory");
+      let category = document.createElement("h6");
+      category.textContent = doc.data().category;
+      categoryDiv.appendChild(category);
+
+      
+      let imageDiv = document.querySelector("#campaignImage");
+      let imageSrc = doc.data().image;
+
+      imageDiv.setAttribute("src",imageSrc);
+      let userUID = doc.data().user;
+      
+
       /*const subColRef = collection(db,"campaigns", currentCampaign,"rewards");
 
       const qSnap = getDocs(subColRef);
 
       console.log(qSnap.docs);*/
+
+     /*   const userRefCamp = doc(db,"users",userUID);
+
+      getDoc(doc(db,"users",userUID))
+        .then((doc) => {
+          let userDiv = document.querySelector("#campaignOwner");
+          let user = document.createElement("h6");
+          user.textContent = doc.data().user;
+          userDiv.appendChild(user);
+        })*/
 
       let collectionRef = collection(db, "campaigns",currentCampaign,"rewards");
 
@@ -330,6 +353,16 @@ function fillPage(){
           //alert("code running");
         });
       });
+
+      //const userRefCamp = doc(db,"users",userUID);
+
+     /* getDoc(doc(db,"users",userUID))
+        .then((doc) => {
+          let userDiv = document.querySelector("#campaignOwner");
+          let user = document.createElement("h6");
+          user.textContent = doc.data().user;
+          userDiv.appendChild(user);
+        })*/
 
       /*let rewards = doc.data().collection("rewards");
       let rewardDiv = document.querySelector("#rewards");
@@ -469,6 +502,7 @@ function processDonation(){
 
 //Adding documents
 if (document.querySelector("#create-form")){ 
+
   const addCampaignForm = document.querySelector("#create-form");
   addCampaignForm.addEventListener("submit",(e) =>{
     e.preventDefault()
@@ -479,7 +513,7 @@ if (document.querySelector("#create-form")){
     .then((url) => {
       imageURL = url.toString();
       console.log("The url is: "+imageURL);
-      console.log("The type is: "+ typeof imageURL)
+      console.log("The type is: "+ typeof imageURL);
 
       addDoc(colRef, {
         bankCountry: addCampaignForm.bankCountry.value,
@@ -490,7 +524,8 @@ if (document.querySelector("#create-form")){
         name: addCampaignForm.name.value,
         raised: addCampaignForm.raised.value,
         target: addCampaignForm.target.value,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
+        user: auth.currentUser.uid,
     })
     .then(() => {
       addCampaignForm.reset();

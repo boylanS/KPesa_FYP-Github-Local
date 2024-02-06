@@ -1,3 +1,166 @@
+body {
+  font-family: Arial, Helvetica, sans-serif"
+}
+
+button { 
+  color:#F0F6FA; 
+  background-color:#1C1C57; 
+  border:1px solid; 
+  border-color: #1C1C57; 
+  padding: 10px;
+  text-align: center;
+  border-radius: 4px;
+  font-weight: bold
+}
+
+button:hover{
+  background-color:#57BEFF;
+}
+
+.footer{
+  margin-top: 150px;
+  width: 100%;
+  padding: 100px 10%;
+  background: #1C1C57;
+  color: #F0F6FA;
+  display: flex;
+  text-align: center;
+}
+
+.footer div{
+  text-align: center;
+}
+
+.footer input{
+  width: 40%;
+  height: 45px;
+  border-radius: 4px;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  outline: none;
+  border: none;
+  background-color: #F0F6FA;
+
+
+}
+
+.footer div h3{
+  font-weight: 300;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+  color: #F0F6FA;
+}
+
+.col-1, .col-3{
+  width: 25%;
+}
+
+.col-2{
+  width: 50%;
+  align-items:center;
+}
+
+.col-1 a{
+  display: block;
+  text-decoration: none;
+  color: #F0F6FA;
+  margin-bottom: 10px;
+}
+
+.col-1 a:hover{
+  color: #57BEFF
+}
+
+.col-2 button{
+  background: transparent;
+  border: 2px solid #F0F6FA;
+  color: #F0F6FA;
+  border-radius: 30px;
+  padding: 10px 30px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.col-2 button:hover{
+  color: #F0F6FA;
+  border: 2px solid #F0F6FA;
+  background-color: #F0F6FA;
+  color: #1C1C57;
+
+}
+
+.social-icons {
+  margin-top: 30px;
+}
+
+.social-icons i{
+  font-size: 22px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.entireNav {
+  box-shadow: 1px 1px  rgba(0,0,0,.2);
+}
+
+#campaignName h2, h3 {
+  font-weight: bold;
+  color:  #1C1C57;
+}
+
+#singleCampaignPage i{
+  color: #1C1C57;
+  font-size: 25px;
+}
+
+#singleCampaignPage i:hover{
+  color: #57BEFF
+}
+
+#singleCampaignPage .column{
+  float: left;
+  width: 50%;
+  padding: 5px 50px;
+}
+
+#singleCampaignPage .row:after{
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#singleCampaignPage #campaignCategory{
+  border-radius: 10px;
+  overflow: none;
+  background-color: #F0F6FA;
+  color: #1C1C57;
+  display: inline-block;
+  padding: 4px 4px;
+  border: 2px solid #1C1C57;
+  
+}
+
+#singleCampaignPage #campaignCategory h6{
+  font-weight: bolder;
+  text-align: center;
+  color: #1C1C57;
+  padding: 2px;
+
+}
+
+
+#singleCampaignPage #campaignOwner{
+
+  width: 100%;
+  border-radius: px;
+  background-color: #1C1C57;
+  color: #074b78;
+
+  
+}
+
+
 /* hero section */
 
 .hero-section{
@@ -89,15 +252,14 @@ position: relative;
 
 .float-child {
     float: left;
-    background-color:#F0F6FA;
+    background-color:#fff;
     padding: 20px;
     display: inline-block;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     width: 33%;
 }  
 .float-child:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+   
   }
 
   /* Dropdown Button */

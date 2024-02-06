@@ -13,40 +13,44 @@
 
       <!-- Compiled and minified CSS -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-</head>
+     <!-- Font Awesome Kit Link -->
+   <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
+  </head>
 <body>
 
     <body class="grey lighten-3">
 
-        <!-- NAVBAR -->
-        <nav class="z-depth-0 white">
-          <div class="nav-wrapper container">
-            <a href="#" class="brand-logo">
-                <img src="KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
-              </a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li class="logged-in" style="display: none;">
-                  <a href="#" class="grey-text modal-trigger" data-target="modal-account">Account</a>
+       <!-- NAVBAR -->
+       <div class = "entireNav">
+       <nav class="z-depth-0 white">
+        <div class="nav-wrapper container">
+          <a href="index.html" class="brand-logo">
+              <img src="KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
+            </a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+              <li class="logged-in" style="display: none;">
+                <a href="#" class="grey-text modal-trigger" data-target="modal-account">Account</a>
+              </li>
+              <li class="logged-in" style="display: none;">
+                <a href="#" class="grey-text" id="logout">Logout</a>
+              </li>
+              <li class="logged-in" style="display: none;">
+                  <a href="forum.html" class="grey-text" id="logout">Community Forum</a>
                 </li>
-                <li class="logged-in" style="display: none;">
-                  <a href="#" class="grey-text" id="logout">Logout</a>
-                </li>
-                <li class="logged-in" style="display: none;">
-                    <a href="forum.html" class="grey-text" id="logout">Community Forum</a>
-                  </li>
-                <li class="logged-in" style="display: none;">
-                  <a href="#" class="grey-text modal-trigger" data-target="modal-create">Create Guide</a>
-                </li>
-                <li class="logged-out" style="display: none;">
-                  <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
-                </li>
-                <li class="logged-out" style="display: none;">
-                  <a href="#" class="grey-text modal-trigger" data-target="modal-signup">Sign up</a>
-                </li>
-              </span>
-            </ul>
-          </div>
-        </nav>
+              <li class="logged-in" style="display: none;">
+                <a href="createCampaign.html" class="grey-text modal-trigger">Create Campaign</a>
+              </li>
+              <li class="logged-out" style="display: none;">
+                <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
+              </li>
+              <li class="logged-out" style="display: none;">
+                <a href="#" class="grey-text modal-trigger" data-target="modal-signup">Sign up</a>
+              </li>
+            </span>
+          </ul>
+        </div>
+      </nav>
+      </div>
       
 
 
@@ -160,7 +164,40 @@
         </div>-->
       
        
-    
+        <footer>
+          <div class = "footer">
+          <div class = "col-1">
+            <h3>USEFUL LINKS</h3>
+            <a href="#">Landing Page</a>
+            <a href="#">Campaigns</a>
+            <a href="#">Adding Campaigns</a>
+            <a href="#">Community Forum</a>
+          </div>
+          <div class = "col-2">
+              <h3>NEWSLETTER</h3>
+              <form>
+              
+                <input type="email" placeholder="Your Email Address" required>
+                <br>
+                <button type="submit">SUBSCRIBE NOW</button>
+              </form>
+          </div>
+          <div class = "col-3">
+            <h3>CONTACT</h3>
+            <p>123, XYZ Road, Dublin 02
+              <br>co. Dublin,
+              <br>Ireland
+            </p>
+            <div class="social-icons">
+              <i class="fa-brands fa-facebook"></i>
+              <i class="fa-brands fa-twitter"></i>
+              <i class="fa-brands fa-instagram"></i>
+              <i class="fa-brands fa-linkedin"></i>
+            </div>
+           
+          </div>
+        </div>
+        </footer>
   
 
 
