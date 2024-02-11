@@ -96,7 +96,162 @@ onAuthStateChanged(auth, (user) =>{
 
 });
 
-// signing users up
+//testing signing users up
+if (document.querySelector("#regForm")){
+  var currentTab = 0; // Current tab is set to be the first tab (0)
+  showTab(currentTab); // Display the current tab
+
+  const prevBtnPage = document.querySelector("#prevBtn");
+  const nextBtnPage = document.querySelector("#nextBtn");
+
+  prevBtnPage.addEventListener("click", () => {
+    nextPrev(-1);
+  })
+
+  nextBtnPage.addEventListener("click", () => {
+    nextPrev(1);
+  })
+
+  const regForm = document.querySelector("#regForm");
+
+  regForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+ 
+ // get user info
+   const email = regForm.email.value;
+   const password = regForm.password.value;
+
+ // sign up the user
+   createUserWithEmailAndPassword(auth, email, password).then(async cred => {
+     
+     return await setDoc(doc(db, "users",cred.user.uid),{
+      firstName: regForm.firstName.value,
+      lastName: regForm.lastName.value,
+      username: regForm.username.value,
+      country: regForm.country.value,
+      email: regForm.email.value,
+      bio: regForm.bio.value,
+     })
+  
+   }).then(() => {
+      // close the signup modal & reset form
+      //const modal = document.querySelector('#modal-signup');
+      //M.Modal.getInstance(modal).close();
+      regForm.reset();
+      alert("Sign up successful!");
+
+   });
+});
+
+
+
+}
+
+function showTab(n) {
+  // This function will display the specified tab of the form ...
+  var x = document.getElementsByClassName("tab");
+  x[n].style.display = "block";
+  // ... and fix the Previous/Next buttons:
+  if (n == 0) {
+    document.getElementById("prevBtn").style.display = "none";
+  } else {
+    document.getElementById("prevBtn").style.display = "inline";
+  }
+  if (n == (x.length - 1)) {
+    document.getElementById("nextBtn").innerHTML = "Submit";
+  } else {
+    document.getElementById("nextBtn").innerHTML = "Next";
+  }
+  // ... and run a function that displays the correct step indicator:
+  fixStepIndicator(n)
+}
+
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("tab");
+  // Exit the function if any field in the current tab is invalid:
+  if (n == 1 && !validateForm()) return false;
+  // Hide the current tab:
+  x[currentTab].style.display = "none";
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+  // if you have reached the end of the form... :
+  if (currentTab >= x.length) {
+    //...the form gets submitted:
+    const regForm = document.getElementById("regForm");
+    //document.getElementById("regForm").submit();
+     // get user info
+   const email = regForm.email.value;
+   const password = regForm.password.value;
+
+ // sign up the user
+   createUserWithEmailAndPassword(auth, email, password).then(async cred => {
+     
+     return await setDoc(doc(db, "users",cred.user.uid),{
+      firstName: regForm.firstName.value,
+      lastName: regForm.lastName.value,
+      username: regForm.username.value,
+      country: regForm.country.value,
+      email: regForm.email.value,
+      bio: regForm.bio.value,
+     })
+  
+   }).then(() => {
+      // close the signup modal & reset form
+      //const modal = document.querySelector('#modal-signup');
+      //M.Modal.getInstance(modal).close();
+      regForm.reset();
+      alert("Sign up successful!");
+      document.getElementById("regForm").submit();
+
+   });
+
+
+
+    return false;
+  }
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
+}
+
+function validateForm() {
+  // This function deals with validation of the form fields
+  var x, y, i, valid = true;
+  x = document.getElementsByClassName("tab");
+  y = x[currentTab].getElementsByTagName("input");
+  // A loop that checks every input field in the current tab:
+  for (i = 0; i < y.length; i++) {
+    // If a field is empty...
+    if (y[i].value == "") {
+      // add an "invalid" class to the field:
+      y[i].className += " invalid";
+      // and set the current valid status to false:
+      valid = false;
+    }
+  }
+  // If the valid status is true, mark the step as finished and valid:
+  if (valid) {
+    document.getElementsByClassName("step")[currentTab].className += " finish";
+  }
+  return valid; // return the valid status
+}
+
+function fixStepIndicator(n) {
+  // This function removes the "active" class of all steps...
+  var i, x = document.getElementsByClassName("step");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" active", "");
+  }
+  //... and adds the "active" class to the current step:
+  x[n].className += " active";
+}
+
+
+
+
+
+
+// signing users up working
 if (document.querySelector("#modal-signup")){
   const signupForm = document.querySelector('#signup-form');
 
@@ -159,6 +314,7 @@ if (document.querySelector("#logout")){
   const logout = document.querySelector("#logout");
   logout.addEventListener("click", (e) =>{
     e.preventDefault();
+    window.location.href = "index.html";
     signOut(auth);
 
   })
@@ -177,7 +333,7 @@ const colRef = collection(db, "campaigns");
 const q = query(colRef, orderBy("createdAt"));
 
 // real time collection data
-
+/*
 onSnapshot(q, (snapshot) => {
   let campaigns = []
 
@@ -191,7 +347,7 @@ onSnapshot(q, (snapshot) => {
   console.log(campaigns)
 
 })
-
+*/
 
 //render campaign
 
@@ -864,12 +1020,13 @@ if (document.querySelector(".delete")){
 
 
 // get a single document
+/*
 
 const docRef = doc(db, "campaigns", "tcuu8dymVtGuDJqipsa3")
 
 onSnapshot(docRef, (doc) =>{
   console.log(doc.data(), doc.id)
-})
+})*/
 
 // updating a document
 
