@@ -305,6 +305,8 @@ function fillPage(){
 
       imageDiv.setAttribute("src",imageSrc);
       let userUID = doc.data().user;
+
+      console.log("the user is: ",doc.data().user);
       
 
       /*const subColRef = collection(db,"campaigns", currentCampaign,"rewards");
@@ -313,7 +315,10 @@ function fillPage(){
 
       console.log(qSnap.docs);*/
 
-     /*   const userRefCamp = doc(db,"users",userUID);
+
+
+
+      /*
 
       getDoc(doc(db,"users",userUID))
         .then((doc) => {
@@ -335,8 +340,8 @@ function fillPage(){
 
           let rewardContainer = document.createElement("div");
 
-          let rewardName = document.createElement("h2");
-          let donation = document.createElement("h3");
+          let rewardName = document.createElement("h5");
+          let donation = document.createElement("h6");
           let descriptionReward = document.createElement("p");
 
           rewardName.textContent = doc.data().name;
@@ -398,6 +403,7 @@ function fillPage(){
     //console.log(currentCampaignDoc.name);
 
   }
+
   //alert("it worked!");
   
 
@@ -504,10 +510,83 @@ function processDonation(){
 if (document.querySelector("#create-form")){ 
 
   const addCampaignForm = document.querySelector("#create-form");
+
+  
+  const addRewardBtn = document.querySelector(".add");
+  const removeRewardBtn = document.querySelector(".remove");
+  localStorage.setItem("numberOfRewards",0);
+
+  addRewardBtn.addEventListener("click", () =>{
+    var newRewardForm = document.createElement("form");
+    var currentRewards = parseInt(localStorage.getItem("numberOfRewards"));
+    currentRewards = currentRewards + 1;
+    localStorage.setItem("numberOfRewards",currentRewards);
+    
+    var rewardFormName = "reward"+currentRewards;
+    newRewardForm.setAttribute("id",rewardFormName);
+
+    var rewardName = document.createElement("input");
+    rewardName.setAttribute("type","text");
+    rewardName.setAttribute("name","rewardName");
+    rewardName.setAttribute("class","name");
+    rewardName.setAttribute("siz",50);
+    rewardName.setAttribute("placeholder","Reward "+currentRewards+" Name");
+    newRewardForm.appendChild(rewardName);
+
+    var rewardAmount = document.createElement("input");
+    rewardAmount.setAttribute("type","number");
+    rewardAmount.setAttribute("name","rewardDonation");
+    rewardAmount.setAttribute("class","donation");
+    rewardAmount.setAttribute("siz",50);
+    rewardAmount.setAttribute("placeholder","Required Donation");
+    newRewardForm.appendChild(rewardAmount);
+
+    var rewardDesc = document.createElement("input");
+    rewardDesc.setAttribute("type","text");
+    rewardDesc.setAttribute("name","rewardDesc");
+    rewardDesc.setAttribute("class","desc");
+    rewardDesc.setAttribute("siz",150);
+    rewardDesc.setAttribute("placeholder","Reward "+currentRewards+" Description");
+    newRewardForm.appendChild(rewardDesc);
+
+    addCampaignForm.appendChild(newRewardForm);
+    document.getElementById("removeReward").style.visibility = "visible";
+
+  })
+
+  removeRewardBtn.addEventListener("click", () =>{
+
+    var input_tags = addCampaignForm.getElementsByTagName("input");
+    var deleteFormName = "#reward"+localStorage.getItem("numberOfRewards");
+    var rewardForm = addCampaignForm.querySelector(deleteFormName);
+    
+    console.log("number of inputs tags:", input_tags.length);
+    if (input_tags.length > 8) {
+     
+      addCampaignForm.removeChild(rewardForm);
+  
+      var currentRewards = parseInt(localStorage.getItem("numberOfRewards"));
+      currentRewards = currentRewards - 1;
+      localStorage.setItem("numberOfRewards",currentRewards);
+
+      if (currentRewards == 0){
+        document.getElementById("removeReward").style.visibility = "hidden";
+      }
+     
+    }else{
+      //let rewardBtn = addCampaignForm.querySelector("#removeReward");
+    }
+
+  })
+
   addCampaignForm.addEventListener("submit",(e) =>{
     e.preventDefault()
     const imageSrc = ref(storage,localStorage.getItem("imageStorageRef"));
     let imageURL = "";
+    const campaignName = addCampaignForm.name.value;
+    const campaignOwner = auth.currentUser.uid;
+    const idNew = campaignName+campaignOwner+(Math.round(Math.random() * 9999));
+    localStorage.setItem("newCampaign",idNew);
     
     getDownloadURL(imageSrc)
     .then((url) => {
@@ -515,7 +594,10 @@ if (document.querySelector("#create-form")){
       console.log("The url is: "+imageURL);
       console.log("The type is: "+ typeof imageURL);
 
-      addDoc(colRef, {
+      const colRef = collection(db, "campaigns");
+      const newCampRef = doc(db,"campaigns",idNew);
+
+      setDoc(newCampRef, {
         bankCountry: addCampaignForm.bankCountry.value,
         category: addCampaignForm.category.value,
         country: addCampaignForm.country.value,
@@ -529,6 +611,35 @@ if (document.querySelector("#create-form")){
     })
     .then(() => {
       addCampaignForm.reset();
+
+      const noOfRewards = localStorage.getItem("numberOfRewards");
+  
+      if (noOfRewards != 0){
+    
+        let rewardSubRef = collection(db, "campaigns",idNew,"rewards");
+    
+        for (let i = 1; i <= noOfRewards; i++){
+    
+          var rewardForm = document.querySelector("#reward"+i);
+    
+          addDoc(rewardSubRef, {
+            name: rewardForm.rewardName.value,
+            donation: rewardForm.rewardDonation.value,
+            description: rewardForm.rewardDesc.value,
+        })
+          .then(() => {
+            addCampaignForm.removeChild(rewardForm);
+    
+          }).catch(err => {
+            console.log(err.message);
+          })
+          
+    
+        }
+        
+      }
+    
+      document.getElementById("removeReward").style.visibility = "hidden";
     }).catch(err => {
       console.log(err.message);
     })
@@ -573,6 +684,9 @@ if (document.querySelector("#create-form")){
   }).catch(err => {
     console.log(err.message);
   })*/
+
+ 
+  
 })
 
 }

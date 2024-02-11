@@ -153,11 +153,23 @@ button:hover{
 #singleCampaignPage #campaignOwner{
 
   width: 100%;
-  border-radius: px;
+  border-radius: 4px;
   background-color: #1C1C57;
   color: #074b78;
 
   
+}
+
+#rewards div{
+  background-color: #F0F6FA;
+  border-radius: 4px;
+}
+
+#rewards h5{
+  color: #1C1C57;
+}
+#rewards h6{
+  color: #1C1C57;
 }
 
 
