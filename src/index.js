@@ -596,6 +596,7 @@ if (document.querySelector("#create-form")){
 
       const colRef = collection(db, "campaigns");
       const newCampRef = doc(db,"campaigns",idNew);
+      const serverCreationTime = serverTimestamp();
 
       setDoc(newCampRef, {
         bankCountry: addCampaignForm.bankCountry.value,
@@ -606,11 +607,11 @@ if (document.querySelector("#create-form")){
         name: addCampaignForm.name.value,
         raised: addCampaignForm.raised.value,
         target: addCampaignForm.target.value,
-        createdAt: serverTimestamp(),
+        createdAt: serverCreationTime,
         user: auth.currentUser.uid,
     })
     .then(() => {
-      addCampaignForm.reset();
+      //addCampaignForm.reset();
 
       const noOfRewards = localStorage.getItem("numberOfRewards");
   
@@ -628,7 +629,18 @@ if (document.querySelector("#create-form")){
             description: rewardForm.rewardDesc.value,
         })
           .then(() => {
+            const userIDCurrent = auth.currentUser.uid;
+            const newUserRef = doc(db,"users",userIDCurrent,"campaigns",idNew);
+
+            setDoc(newUserRef, {
+             name: addCampaignForm.name.value,
+            createdAt: serverCreationTime,
+           }).then(() =>  {
+            addCampaignForm.reset();
             addCampaignForm.removeChild(rewardForm);
+
+              })
+            
     
           }).catch(err => {
             console.log(err.message);
