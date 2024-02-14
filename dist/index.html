@@ -16,6 +16,12 @@
   
    <!-- Font Awesome Kit Link -->
    <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
+
+   <!-- Google Fonts -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
   </head>
 <body>
 
@@ -31,6 +37,9 @@
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li class="logged-in" style="display: none;">
                   <a href="#" class="grey-text modal-trigger" data-target="modal-account">Account</a>
+                </li>
+                <li class="logged-in" style="display: none;">
+                  <a href="campaignExplore.html" class="grey-text modal-trigger" >Campaigns</a>
                 </li>
                 <li class="logged-in" style="display: none;">
                   <a href="#" class="grey-text" id="logout">Logout</a>
@@ -52,9 +61,81 @@
           </div>
         </nav>
         </div>
+
+        <div class="banner">
+          <div class="app-text">
+            <h3>Reward-based Crowdfunding for Female Entrepreneurs</h3>
+            <h2>Empowering Businesses Empowering Communities Empowering Her </h2>
+           <p>KPesa aims to empower female entrepreneurs operating in micro, small and medium enterprises by providing a platform to access finance through reward-based crowdfunding and build a community of entrepreneurs and supporters.</p>
+           <div class="btn-group">
+            <button class = "signupButton">Sign up now</button>
+           </div>
+      
+          </div>
+          <div class = "landingPagePicture">
+            <img src = "/img/KpesaLandingImage.png" width="35%">
+          </div>
+        </div>
+        <br>
+
+
+        <div class="howItWorks">
+          <ul>
+            <li>
+              <i class="fa-solid fa-rocket fa-2xl" style="color: #1c1c57;" ></i>
+              <h1>Launch your crowdfunding campaign</h1>
+              <p>Give your business a platform by launching a crowdfunding campaign on KPesa.</p>
+            </li>
+
+            <li>
+
+              <i class="fa-solid fa-trophy fa-2xl" style="color: #1c1c57;"></i>
+              <h1>Engage supporters through rewards</h1>
+              <p>Drive engagement by offering rewards to donors and supporters.</p>
+            </li>
+
+            <li>
+              <i class="fa-solid fa-hand-holding-heart fa-2xl" style="color: #1c1c57;"></i>
+              <h1>Build connections in the community</h1>
+              <p>Grow your knowledge and your network in our community forum.</p>
+            </li>
+
+
+
+           
+          </ul>
+        </div>
+
+         <!-- hero section --->
+      <div class = "splitSection">
+        <div class = "hero-section">
+          <div class = "content">
+            <div class="overlay"></div>
+          
+          </div>
+        </div>
+        <div class = "textSplit">
+          <h3>Growing a Community to Empower Female Entrepreneurs Everywhere</h3>
+          <button class = "altButton">Join our Community Forum</button>
+        </div>
+      </div>
+
+      <div class="recentCampaigns">
+        <br>
+      <h2>New Campaigns</h2>
+      <p>Check out some of our most recent campaigns!</p>
+
+      <div class = "landingPageCampaigns" id = "landingPageCampaigns">
+
+
+      </div>
+    </div>
+
+   
+      
       
 
-        <!-- hero section -->
+        <!-- hero section -
         <header class = "hero-section">
           <div class = "content">
             <div class="overlay"><p class="sub-heading">Empowering businesses <br>
@@ -62,7 +143,7 @@
               Empowering her </p></div>
           
           </div>
-        </header>
+        </header>-
 
         <br>
 
@@ -90,9 +171,9 @@
           <tbody id="myTable">
 
           </tbody>
-        </table>
+        </table>-->
 
-        <!-- campaign cards-->
+        <!-- campaign cards-
         <section class = "campaign"></section>
 
         <div id = "mainMarketplace">
@@ -100,7 +181,7 @@
 
         </div>
 
-        <!---
+        
         <form class="add">
           <label for="name">Campaign Name:</label>
           <input type="text" name="name" required>
@@ -135,8 +216,8 @@
           <input type="text" name="id" required>
 
           <button>update a campaign</button>
-        </form>
-      -->
+        </form>-->
+     
       
         <!-- SIGN UP MODAL -
 
@@ -223,7 +304,7 @@
           </div>
         </div>
       -->
-        <!-- GUIDE LIST -->
+        <!-- GUIDE LIST -
         <div class="container" style="margin-top: 40px;">
           <ul class="collapsible z-depth-0 guides" style="border: none;">
             <li>
@@ -243,7 +324,9 @@
               <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
             </li>
           </ul>
-        </div>
+        </div>-->
+        
+
         
 
         <footer>
@@ -280,6 +363,8 @@
           </div>
         </div>
         </footer>
+
+      
 
     <!-- Compiled and minified JavaScript -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>

@@ -10,7 +10,7 @@ import {
     getFirestore, collection, onSnapshot,
     addDoc, deleteDoc, doc, setDoc,
     query, where, orderBy, serverTimestamp,
-    getDoc, updateDoc, getDocs
+    getDoc, updateDoc, getDocs, limit
 } from "firebase/firestore"
 
 //Auth Functions
@@ -98,6 +98,12 @@ onAuthStateChanged(auth, (user) =>{
 
 //testing signing users up
 if (document.querySelector("#regForm")){
+  const popup = document.querySelector(".popup");
+  const testBtn = document.querySelector("#testingPopup");
+
+  testBtn.addEventListener("click", () => {
+    openPopup();
+  })
   var currentTab = 0; // Current tab is set to be the first tab (0)
   showTab(currentTab); // Display the current tab
 
@@ -137,14 +143,47 @@ if (document.querySelector("#regForm")){
       // close the signup modal & reset form
       //const modal = document.querySelector('#modal-signup');
       //M.Modal.getInstance(modal).close();
-      regForm.reset();
-      alert("Sign up successful!");
+    
+      openPopup();
+
+      const continueBtn = popup.querySelector("#continueNewUser")
+
+      continueBtn.addEventListener("click", () => {
+        closePopup();
+        window.location.href = "index.html";
+        regForm.reset();
+  })
+     // openPopup();
+      //regForm.reset();
+     // alert("Sign up successful!");
+
+  
+     
+
 
    });
 });
 
 
 
+}
+
+function openPopup(){
+  const popup = document.querySelector(".popup");
+  popup.classList.add("open-popup");
+  //alert("open the popup");
+
+  const continueBtn = popup.querySelector("#continueNewUser")
+
+  continueBtn.addEventListener("click", () => {
+    closePopup();
+    window.location.href = "index.html";
+  })
+}
+
+function closePopup(){
+  const popup = document.querySelector("#popup");
+  popup.classList.remove("open-popup");
 }
 
 function showTab(n) {
@@ -200,9 +239,24 @@ function nextPrev(n) {
       // close the signup modal & reset form
       //const modal = document.querySelector('#modal-signup');
       //M.Modal.getInstance(modal).close();
-      regForm.reset();
-      alert("Sign up successful!");
-      document.getElementById("regForm").submit();
+      openPopup();
+      const modalBackground = document.querySelector(".modalBackdrop");
+
+      modalBackground.style.display = "block";
+
+      const continueBtn = popup.querySelector("#continueNewUser")
+
+      continueBtn.addEventListener("click", () => {
+        closePopup();
+        window.location.href = "index.html";
+        regForm.reset();
+        document.getElementById("regForm").submit();
+        modalBackground.style.display = "none";
+        window.location.href = "index.html";
+  })
+      //regForm.reset();
+      //alert("Sign up successful!");
+     
 
    });
 
@@ -660,6 +714,88 @@ function processDonation(){
       })
        
 }};
+
+// LANDING PAGE
+
+// DISPLAY THE TOP 3 MOST RECENT CAMPAIGNS
+
+if (document.querySelector(".landingPageCampaigns")){
+
+  const colRef = collection(db, "campaigns");
+  const landingQ = query(colRef, orderBy("createdAt", "desc"), limit(3));
+  console.log(landingQ);
+
+  const querySnapshot = onSnapshot(landingQ, (querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      renderCampaignLanding(doc);
+    })
+
+  }) 
+
+
+  
+}
+
+function renderCampaignLanding(doc) {
+  let landingPageDiv = document.getElementById("landingPageCampaigns");
+  if (doc.length != 0){
+
+    //WORKS WITH THE LIST 
+
+   
+
+    let floatContainer = document.createElement("div");
+    floatContainer.setAttribute("class","float-child");
+
+
+    let card = document.createElement("div");
+    card.setAttribute("class","card");
+    let image = document.createElement("IMG");
+    image.setAttribute("style","width:100%");
+    let container = document.createElement("div");
+    container.setAttribute("class","container");
+    let name = document.createElement("h4");
+    let description = document.createElement("p");
+    let pageButton = document.createElement("button");
+
+    let tempID = document.createElement("p");
+    pageButton.textContent = "Read more";
+    pageButton.setAttribute("href","/itempage.html");
+
+    //li.setAttribute("data-id", doc.id);
+    name.textContent = doc.data().name;
+    description.textContent = doc.data().description;
+    image.src = doc.data().image;
+    let idCurrent = doc.id;
+  
+
+    //currentCampaign = doc.id;
+
+    pageButton.addEventListener("click", () => {
+      localStorage.setItem("currentCampaign", idCurrent);
+      localStorage.setItem("currentCampaignName",doc.data().name)
+      currentCampaignId = idCurrent;
+      //alert(localStorage.getItem("currentCampaign"));
+      renderCampaignPage();
+    });
+
+    container.appendChild(name);
+    container.appendChild(description);
+    container.appendChild(pageButton);
+
+     card.appendChild(image);
+     card.appendChild(container);
+
+     floatContainer.appendChild(card);
+     landingPageDiv.appendChild(floatContainer);
+
+  
+
+  } else{
+    landingPageDiv.innerHTML=
+    '<h5 class ="center-align">Login to view campaigns</h5>';
+  }
+}
 
 
 //Adding documents

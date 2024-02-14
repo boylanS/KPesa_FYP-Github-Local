@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, Helvetica, sans-serif"
+  font-family: "Nunito", sans-serif;
 }
 
 button { 
@@ -104,6 +104,127 @@ button:hover{
   box-shadow: 1px 1px  rgba(0,0,0,.2);
 }
 
+/* LANDING PAGE */
+
+.banner{
+  width: 90%;
+  height: 70%;
+  left: 150px;
+  color: #fff;
+  align-items: center;
+
+}
+
+.app-text{
+  width: 60%;
+  float: left;
+  padding-left: 50px;
+  text-align: center;
+}
+
+.landingPagePicture{
+  padding-top: 40px;
+}
+
+.howItWorks{
+  text-align: center;
+  margin-top: 30px;
+  padding: 50px 90px;
+}
+
+.howItWorks ul{
+  display: inline-flex;
+  margin: 30px auto;
+  text-align: center;
+}
+
+.howItWorks h1{
+  font-size: 30px;
+  position: relative;
+  color: #1C1C57;
+  margin-top: 30px;
+  font-weight: 700;
+  line-height: 1;
+
+}
+
+.howItWorks li{
+  width: 33.33%;
+}
+
+.howItWorks p{
+  font-size: 19px;
+  margin: 30px 30px 30px 0;
+  letter-spacing: 1px;
+  color: #666666;
+
+}
+
+.recentCampaigns {
+  padding: 20px 5px 20px 5px;
+}
+
+.recentCampaigns h2{
+  font-size: 30px;
+  position: relative;
+  color: #1C1C57;
+  margin-top: 30px;
+  font-weight: 700;
+  line-height: 1;
+
+}
+
+.recentCampaigns p{
+  font-size: 19px;
+  margin: 30px 30px 30px 0;
+  letter-spacing: 1px;
+  color: #666666;
+}
+
+
+.app-text h3{
+  margin-top: 100px;
+  font-size: 14px;
+  color: #1C1C57;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.app-text h2{
+  font-size: 40px;
+  position: relative;
+  color: #1C1C57;
+  margin-top: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.app-text p{
+  font-size: 19px;
+  margin: 30px 30px 30px 0;
+  letter-spacing: 1px;
+  color: #666666;
+}
+
+.altButton {
+  color: #1C1C57;
+  background-color:#F0F6FA;
+  border:1px solid; 
+  border-color: #F0F6FA;
+  padding: 5px;
+  text-align: center;
+  border-radius: 4px;
+  font-weight: bold
+
+}
+
+.altButton:hover {
+  background-color: #57BEFF;
+  border-color: #57BEFF;
+  color: #F0F6FA;
+}
+
 #campaignName h2, h3 {
   font-weight: bold;
   color:  #1C1C57;
@@ -175,14 +296,20 @@ button:hover{
 
 /* hero section */
 
+.splitSection{
+  width: 100%;
+  align-items: center;
+}
+
 .hero-section{
-    width: 100%;
+    width: 50%;
     height: calc(100vh - 120px);
     background-image: url("../img/stockphoto1.jpg");
     background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
+    float: left;
 
 }
 
@@ -222,6 +349,23 @@ position: relative;
     font-weight: 600;
 
 
+}
+
+.textSplit{
+  background-color: #1C1C57;
+  color: #F0F6FA;
+  width: 50%;
+  float: left;
+  text-align: center;
+  height: calc(100vh - 120px);
+
+}
+
+.textSplit h3{
+  color: #F0F6FA;
+  font-size: 50px;
+  padding: 60px 60px;
+  font-weight: 700;
 }
 
 
@@ -445,3 +589,55 @@ input.invalid {
   background-color: #04AA6D;
 }
   
+
+/* Successful Sign Up Modal */
+
+.popup{
+  width: 600px;
+  background-color: #F0F6FA;
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%,-50%) scale(0.1);
+  text-align: center;
+  padding: 0 30px 30px;
+  visibility: hidden;
+  transition: transform 0.4s, top 0.4s;
+}
+
+.open-popup{
+  visibility: visible;
+  top: 80%;
+  transform: translate(-50%, -50%) scale(1);
+
+}
+
+.popup h2{
+  color: #1C1C57;
+  font-weight: bold;
+  font-size: 38px;
+  margin: 30px 0 10px;
+}
+
+.popup p{
+  color: #888888;
+}
+
+.popup #tick{
+  width: 100px;
+  margin-top: -50px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.2);
+  display: none;
+}
