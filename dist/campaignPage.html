@@ -14,17 +14,25 @@
       <!-- Compiled and minified CSS -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
-    
+     <!-- Font Awesome Kit Link -->
+   <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
+
+      <!-- Google Fonts -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
 </head>
 <body>
   <div id = "singleCampaignPage">
 
-    <body class="grey lighten-3">
+    <body class="white">
 
         <!-- NAVBAR -->
-        <nav class="z-depth-0 white">
+        <div class = "entireNav">
+         <nav class="z-depth-0 white">
           <div class="nav-wrapper container">
-            <a href="#" class="brand-logo">
+            <a href="index.html" class="brand-logo">
                 <img src="KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
               </a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
@@ -32,10 +40,16 @@
                   <a href="#" class="grey-text modal-trigger" data-target="modal-account">Account</a>
                 </li>
                 <li class="logged-in" style="display: none;">
+                  <a href="campaignExplore.html" class="grey-text modal-trigger" >Campaigns</a>
+                </li>
+                <li >
+                  <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
+                </li>
+                <li class="logged-in" style="display: none;">
                   <a href="#" class="grey-text" id="logout">Logout</a>
                 </li>
                 <li class="logged-in" style="display: none;">
-                    <a href="forum.html" class="grey-text" id="logout">Community Forum</a>
+                    <a href="forum.html" class="grey-text" id="logout">Community Campaign</a>
                   </li>
                 <li class="logged-in" style="display: none;">
                   <a href="createCampaign.html" class="grey-text modal-trigger">Create Guide</a>
@@ -50,18 +64,53 @@
             </ul>
           </div>
         </nav>
+        <ul id="dropdownCampaign" class="dropdown-content">
+          <li><a href="campaignExplore.html">Explore</a></li>
+          <li class = "logged-in" style="display: none;"><a href="createCampaign.html">Create</a></li>
+
+        </ul>
+      </div>
       
 
 
         <br>
 
-        <div id="campaignName"></div>
-        <div id="campaignBio"></div>
-        <div id="rewards">
-         <ul id = "rewardList"></ul>
+        <i class="fa-solid fa-chevron-left" onclick="history.back()"></i>
+
+        <div class="row">
+          <div class="column">
+
+            <div id="campaignName"></div>
+              <img id="campaignImage" src="#" width="100%">
+              <br>
+              <h3>About</h3>
+              <div id="campaignBio"></div>
+            </div>
+
+          <div class="column">
+            <div class="row">
+              <div id="campaignCategory">
+
+              </div>
+      
+            
+            </div>
+            <div id="rewards">
+              <h3>Rewards</h3>
+              <p>Rewards are incentives for donor, and carry a minimum required donation. You can choose to donate without availing of a reward.</p>
+             <p><b>Donations are not guaranteed by KPesa and are the responsibility of the campaign owner.</b></p>
+              <ul id = "rewardList"></ul>
+             </div>
+             <button id = "donationButton" >Donate</button>
+          </div>
         </div>
+    
+       
+       
+
+        
          
-        <!-- Reward List -->
+        <!-- Reward List -
          <div class="container" style="margin-top: 40px;">
             <ul class="collapsible z-depth-0 guides" style="border: none;" id="rewardList">
               <li>
@@ -69,7 +118,64 @@
                 <div class="collapsible-body white">Lorem ipsum dolor sit amet.</div>
               </li>
             </ul>
-         </div>
+         </div>-->
+
+
+         <!-- DONATE MODAL -->
+  <div id="modal-donate" class="modal">
+    <div class="modal-content">
+      <h4 id = "donationHeading">Donate</h4><br />
+      <form id="donateForm" action="">
+
+        
+        <div class="input-field">
+          <input type="number" id="donationAmount" required />
+          <label for="donationAmount">Donation</label>
+        </div>
+
+
+        <div class="input-field">
+          <label for="donationCurrency">Select currency: </label>
+          <br>
+          <input list="currencies" name = "currency" id="currency">
+          <datalist id="currencies">
+            <option value = "pound">£</option>
+            <option value = "dollar">$</option>
+            <option value = "euro">€</option>
+          </datalist>
+        </div>
+
+        <div class="input-field">
+          <label for="donationReward">Select reward: </label>
+          <br>
+          <input list="rewardDatalist" name = "reward" id="reward" required>
+          <datalist id="rewardDatalist">
+            <option value = "None">None</option>
+
+          </datalist>
+        </div>
+
+        <div class="input-field">
+          <input type="number" id="tipAmount" />
+          <label for="tipAmount">Tip</label>
+        </div>  
+
+        <button class="btn yellow darken-2 z-depth-0">Donate</button>
+        </div>
+        </div>
+        
+        </form>
+    </div>
+  </div>
+
+  
+  <div class="popupError" id = "popupError">
+    <img src="red-x-icon.png" id = "x" >
+    
+    <h2>You must be logged in to continue.</h2>
+    <p>Please log in or sign up for a KPesa account to proceed.</p>
+    <button type="button" id="continueDonate">Continue</button>
+  </div>
 
 
 
@@ -125,7 +231,7 @@
           </div>
         </div>
       
-        <!-- CREATE GUIDE MODAL -->
+        <!-- CREATE GUIDE MODAL -
         <div id="modal-create" class="modal">
           <div class="modal-content">
             <h4>Create Guide</h4><br />
@@ -141,9 +247,9 @@
               <button class="btn yellow darken-2 z-depth-0">Create</button>
             </form>
           </div>
-        </div>
+        </div>-->
       
-        <!-- GUIDE LIST -->
+        <!-- GUIDE LIST -
         <div class="container" style="margin-top: 40px;">
           <ul class="collapsible z-depth-0 guides" style="border: none;">
             <li>
@@ -163,9 +269,44 @@
               <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
             </li>
           </ul>
-        </div>
+        </div>-->
         
       </div>
+
+      <footer>
+        <div class = "footer">
+        <div class = "col-1">
+          <h3>USEFUL LINKS</h3>
+          <a href="#">Landing Page</a>
+          <a href="#">Campaigns</a>
+          <a href="#">Adding Campaigns</a>
+          <a href="#">Community Forum</a>
+        </div>
+        <div class = "col-2">
+            <h3>NEWSLETTER</h3>
+            <form>
+            
+              <input type="email" placeholder="Your Email Address" required>
+              <br>
+              <button type="submit">SUBSCRIBE NOW</button>
+            </form>
+        </div>
+        <div class = "col-3">
+          <h3>CONTACT</h3>
+          <p>123, XYZ Road, Dublin 02
+            <br>co. Dublin,
+            <br>Ireland
+          </p>
+          <div class="social-icons">
+            <i class="fa-brands fa-facebook"></i>
+            <i class="fa-brands fa-twitter"></i>
+            <i class="fa-brands fa-instagram"></i>
+            <i class="fa-brands fa-linkedin"></i>
+          </div>
+         
+        </div>
+      </div>
+      </footer>
 
     <!-- Compiled and minified JavaScript -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
