@@ -69,29 +69,31 @@ onAuthStateChanged(auth, (user) =>{
     console.log("user logged in: ",user);
     setupUI(user);
 
-    if (document.querySelector("#campaignDiv")){
-      campaignDiv.innerHTML= "";
-      //get collection data
-
-      //onSnapshot ensures the collection will update
-      //in real time
-      onSnapshot(colRef, (snapshot) => {
-        snapshot.docs.forEach(doc =>{
-          renderCampaign(doc);
-        })
-      })
-      
-    }
 
   }else{
     console.log("user logged out.");
 
     setupUI();
 
-    if (document.querySelector("#campaignDiv")){
+   /* if (document.querySelector("#campaignDiv")){
       renderCampaign([]);
-    }
+    }*/
 
+  }
+
+  
+  if (document.querySelector("#campaignDiv")){
+    campaignDiv.innerHTML= "";
+    //get collection data
+
+    //onSnapshot ensures the collection will update
+    //in real time
+    onSnapshot(colRef, (snapshot) => {
+      snapshot.docs.forEach(doc =>{
+        renderCampaign(doc);
+      })
+    })
+    
   }
 
 });
@@ -99,11 +101,7 @@ onAuthStateChanged(auth, (user) =>{
 //testing signing users up
 if (document.querySelector("#regForm")){
   const popup = document.querySelector(".popup");
-  const testBtn = document.querySelector("#testingPopup");
 
-  testBtn.addEventListener("click", () => {
-    openPopup();
-  })
   var currentTab = 0; // Current tab is set to be the first tab (0)
   showTab(currentTab); // Display the current tab
 
@@ -550,17 +548,37 @@ function fillPage(){
 
           let rewardContainer = document.createElement("div");
 
+          let rewardDivDonation = document.createElement("div");
+          rewardDivDonation.setAttribute("id","rewardDonationDiv");
+
+          let rewardDivDescription = document.createElement("div");
+          rewardDivDescription.setAttribute("id","rewardDescriptionDiv");
+          
+
           let rewardName = document.createElement("h5");
-          let donation = document.createElement("h6");
+          let donation = document.createElement("button");
+          donation.disabled = true;
+          donation.setAttribute("id","donationAmount");
+
+          let rewardButtonDivCenter = document.createElement("div");
+          rewardButtonDivCenter.setAttribute("class","center");
+          //let currency = document.createElement("currency");
           let descriptionReward = document.createElement("p");
 
+
           rewardName.textContent = doc.data().name;
-          donation.textContent = doc.data().donation;
+          const donationRounded = (Math.round(doc.data().donation * 100) / 100).toFixed(2);
+          donation.textContent = donationRounded + " "+ doc.data().currency;
           descriptionReward.textContent = doc.data().description;
 
-          rewardContainer.appendChild(rewardName);
-          rewardContainer.appendChild(donation);
-          rewardContainer.appendChild(descriptionReward);
+          rewardDivDescription.appendChild(rewardName);
+          rewardButtonDivCenter.appendChild(donation);
+          rewardDivDonation.appendChild(rewardButtonDivCenter);
+          rewardDivDescription.appendChild(descriptionReward);
+          rewardContainer.appendChild(rewardDivDonation);
+          rewardContainer.appendChild(rewardDivDescription);
+
+          rewardContainer.setAttribute("id","rewardContainer");
 
           listElement.appendChild(rewardContainer);
           rewardList.appendChild(listElement);
@@ -625,12 +643,39 @@ function fillPage(){
 if (document.querySelector("#donationButton")){
   const donate = document.querySelector("#donationButton");
   donate.addEventListener("click", (e) =>{
-    e.preventDefault();
-    processDonation();
+    if (auth.currentUser){
+      e.preventDefault();
+      console.log("the current user is:",auth.currentUser);
+      const donateForm = document.querySelector("#modal-donate");
+      M.Modal.getInstance(donateForm).open();
+     // processDonation();
+    }else{
+      openDonationPopup();
+      
+    }
+   
   })
 
 
 };
+
+function openDonationPopup(){
+  const popup = document.querySelector(".popupError");
+  popup.classList.add("open-popupError");
+  //alert("open the popup");
+
+  const continueBtn = popup.querySelector("#continueDonate")
+
+  continueBtn.addEventListener("click", () => {
+    closeDonationPopup();
+  })
+}
+
+
+function closeDonationPopup(){
+  const popup = document.querySelector(".popupError");
+  popup.classList.remove("open-popupError");
+}
 
 
 //Processing the donation
@@ -717,6 +762,41 @@ function processDonation(){
 
 // LANDING PAGE
 
+// sign up button
+
+if (document.querySelector(".signupButton")){
+  const signupButton = document.querySelector(".signupButton");
+
+  signupButton.addEventListener("click", () => {
+
+    if (auth.currentUser){
+      openLandingPopup();
+
+    }else{
+      window.location.href = "signup.html";
+    }
+
+
+  } )
+
+}
+
+function openLandingPopup() {
+  const popup = document.querySelector(".popupLanding");
+  popup.classList.add("open-popupLanding");
+  //alert("open the popup");
+
+  const continueBtn = popup.querySelector("#continueLanding")
+
+  continueBtn.addEventListener("click", () => {
+    closeLandingPopup();
+  })
+}
+
+function closeLandingPopup(){
+  const popup = document.querySelector("#popupLanding");
+  popup.classList.remove("open-popupLanding");
+}
 // DISPLAY THE TOP 3 MOST RECENT CAMPAIGNS
 
 if (document.querySelector(".landingPageCampaigns")){

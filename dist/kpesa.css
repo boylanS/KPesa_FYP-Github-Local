@@ -104,6 +104,13 @@ button:hover{
   box-shadow: 1px 1px  rgba(0,0,0,.2);
 }
 
+#dropdownCampaign {
+  top: 100% !important;
+}
+
+#dropdownCampaign a{
+  color: #666666;
+}
 /* LANDING PAGE */
 
 .banner{
@@ -161,14 +168,14 @@ button:hover{
 }
 
 .recentCampaigns {
-  padding: 20px 5px 20px 5px;
+  padding: 20px 50px 50px 50px;
+  width: 100%;
 }
 
 .recentCampaigns h2{
   font-size: 30px;
-  position: relative;
   color: #1C1C57;
-  margin-top: 30px;
+  margin-top: 10px;
   font-weight: 700;
   line-height: 1;
 
@@ -219,11 +226,90 @@ button:hover{
 
 }
 
+.landingNavigation {
+  margin-top: 40px;
+  float: right;
+  padding: 0px 100px 20px 20px;
+}
+
+.landingNavigation p{
+  font-size: 20px;
+  font-weight: bold;
+  color: #1C1C57;
+  float: left;
+
+
+}
+
+.landingNavigation a{
+  font-size: 20px;
+  font-weight: bold;
+  color: #1C1C57;
+}
+
+.landingNavigation a:hover{
+  color: #57BEFF;
+  cursor: pointer;
+  font-style: none;
+  text-decoration: none;
+}
+
+
 .altButton:hover {
   background-color: #57BEFF;
   border-color: #57BEFF;
   color: #F0F6FA;
 }
+
+/* Landing Page Popup */
+
+
+.popupLanding{
+  width: 600px;
+  background-color: white;
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%,-50%) scale(0.1);
+  text-align: center;
+  padding: 0 30px 30px;
+  visibility: hidden;
+  transition: transform 0.4s, top 0.4s;
+}
+
+.open-popupLanding{
+  visibility: visible;
+  top: 80%;
+  transform: translate(-50%, -50%) scale(1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+}
+
+
+
+.popupLanding h2{
+  color: #1C1C57;
+  font-weight: bold;
+  font-size: 38px;
+  margin: 30px 0 10px;
+}
+
+.popupLanding p{
+  color: #888888;
+}
+
+.popupLanding #landingLogo {
+
+  width: 150px;
+  background-color: white;
+
+
+}
+
+
+
+/* Campaign Page */
 
 #campaignName h2, h3 {
   font-weight: bold;
@@ -257,7 +343,6 @@ button:hover{
   background-color: #F0F6FA;
   color: #1C1C57;
   display: inline-block;
-  padding: 4px 4px;
   border: 2px solid #1C1C57;
   
 }
@@ -284,13 +369,110 @@ button:hover{
 #rewards div{
   background-color: #F0F6FA;
   border-radius: 4px;
+
 }
 
 #rewards h5{
   color: #1C1C57;
+  padding: 2px 10px;
 }
 #rewards h6{
   color: #1C1C57;
+  padding: 2px;
+}
+
+#rewardContainer{
+
+}
+
+#rewardContainer #rewardDonationDiv{
+  width: 50%;
+  float: right;
+  align-items: center;
+  top: 50%;
+  left: 50%;
+  margin-top: 25px;
+}
+
+#rewardContainer #rewardDescriptionDiv{
+  width: 50%;
+
+}
+
+#rewardContainer h5{
+  font-weight: 700;
+  
+}
+
+#rewardContainer h6{
+  font-weight: 500;
+  padding: 5px;
+  text-align: center;
+  
+}
+
+#rewardContainer p{
+  padding: 2px 10px;
+  
+}
+
+
+
+#donationAmount{
+  color:#1C1C57; 
+  background-color: white; 
+  padding: 5px;
+  text-align: center;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 20px;
+  align-items: center;
+}
+
+/* Donate Error Popup */
+
+
+.popupError{
+  width: 600px;
+  background-color: white;
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%,-50%) scale(0.1);
+  text-align: center;
+  padding: 0 30px 30px;
+  visibility: hidden;
+  transition: transform 0.4s, top 0.4s;
+}
+
+.open-popupError{
+  visibility: visible;
+  top: 80%;
+  transform: translate(-50%, -50%) scale(1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+}
+
+
+
+.popupError h2{
+  color: #1C1C57;
+  font-weight: bold;
+  font-size: 38px;
+  margin: 30px 0 10px;
+}
+
+.popupError p{
+  color: #888888;
+}
+
+.popupError #x {
+
+  width: 150px;
+  background-color: white;
+
+
 }
 
 
@@ -369,6 +551,23 @@ position: relative;
 }
 
 
+.campaignExplorePage h1{
+  font-size: 50px;
+  position: relative;
+  color: #1C1C57;
+  margin-top: 30px;
+  padding: 10px 10px 10px 40px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.campaignExplorePage p{
+  font-size: 19px;
+  padding: 10px 10px 10px 40px;
+  letter-spacing: 1px;
+  color: #666666;
+}
+
 
 /* campaign */
 
@@ -392,6 +591,16 @@ position: relative;
   /* On mouse-over, add a deeper shadow */
   .card:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+
+  .card h4{
+    color: #1C1C57;
+    font-weight: 700;
+
+  }
+
+  .card p{
+    color: #666666;
   }
   
   /* Add some padding inside the card container */
@@ -612,6 +821,8 @@ input.invalid {
   transform: translate(-50%, -50%) scale(1);
 
 }
+
+
 
 .popup h2{
   color: #1C1C57;

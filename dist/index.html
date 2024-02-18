@@ -41,6 +41,10 @@
                 <li class="logged-in" style="display: none;">
                   <a href="campaignExplore.html" class="grey-text modal-trigger" >Campaigns</a>
                 </li>
+
+                <li >
+                  <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
+                </li>
                 <li class="logged-in" style="display: none;">
                   <a href="#" class="grey-text" id="logout">Logout</a>
                 </li>
@@ -59,6 +63,12 @@
               </span>
             </ul>
           </div>
+
+          <ul id="dropdownCampaign" class="dropdown-content">
+            <li><a href="campaignExplore.html">Explore</a></li>
+            <li class = "logged-in" style="display: none;"><a href="createCampaign.html">Create</a></li>
+
+          </ul>
         </nav>
         </div>
 
@@ -120,9 +130,12 @@
         </div>
       </div>
 
+      <div><p style= "color: white">..</p></div>
+
+    
+
       <div class="recentCampaigns">
-        <br>
-      <h2>New Campaigns</h2>
+        <h2>New Campaigns</h2>
       <p>Check out some of our most recent campaigns!</p>
 
       <div class = "landingPageCampaigns" id = "landingPageCampaigns">
@@ -131,6 +144,11 @@
       </div>
     </div>
 
+    <div class = "landingNavigation">
+   
+   <p><a href="campaignExplore.html">Explore More  &nbsp &nbsp ></p> </a>
+   
+  </div>
    
       
       
@@ -325,6 +343,14 @@
             </li>
           </ul>
         </div>-->
+
+        <div class="popupLanding" id = "popupLanding">
+          <img src="KPesaLogoJPEG.jfif" id = "landingLogo" >
+          
+          <h2>You are logged in</h2>
+          <p>You have successfully created an account.</p>
+          <button type="button" id="continueLanding">Continue</button>
+        </div>
         
 
         
