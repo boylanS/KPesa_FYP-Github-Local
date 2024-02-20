@@ -352,6 +352,9 @@ if (document.querySelector("#modal-login")){
       const modal = document.querySelector('#modal-login');
       M.Modal.getInstance(modal).close();
       loginForm.reset();
+      loginForm.querySelector(".error").innerHTML = "";
+    }).catch(err => {
+      loginForm.querySelector(".error").innerHTML = "Error - email and/or password is incorrect.";
     })
 
 
@@ -1234,6 +1237,52 @@ if (document.querySelector(".delete")){
 }
 
 
+// FILL ACCOUNT PAGE INFO
+
+
+if (document.querySelector("#userAccountInfo")){
+
+  onAuthStateChanged(auth, (user) => {
+    fillAccountPage(user);
+  })
+
+
+}
+
+function fillAccountPage(user){
+
+  if (user) {
+    //account information
+    const userRef = doc(db, "users", user.uid)
+    getDoc(userRef).then((doc) =>{
+    let nameDiv = document.querySelector("#userFullName");
+    let name = document.createElement("h2");
+    name.textContent = doc.data().firstName+" "+doc.data().lastName;
+    nameDiv.appendChild(name);
+
+    let usernameDiv = document.querySelector("#username");
+    let username = document.createElement("h3");
+    username.textContent = doc.data().username;
+    usernameDiv.appendChild(username);
+
+    let bioDiv = document.querySelector("#userBio");
+    let bioTxt = document.createElement("p");
+    bioTxt.textContent = doc.data().bio;
+    bioDiv.appendChild(bioTxt);
+
+    let countryDiv = document.querySelector("#userCountry");
+    let country = document.createElement("h6");
+    country.textContent = doc.data().country;
+    countryDiv.appendChild(country);
+    })
+
+
+  }else{
+    alert(auth.currentUser);
+  }
+  
+ 
+}
 
 // get a single document
 /*

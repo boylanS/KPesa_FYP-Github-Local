@@ -21,40 +21,83 @@
 
     <body>
 
-        <!-- NAVBAR -->
-        <div class = "entireNav">
-        <nav class="z-depth-0 white">
-          <div class="nav-wrapper container">
-            <a href="index.html" class="brand-logo">
-                <img src="KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
-              </a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li class="logged-in" style="display: none;">
-                  <a href="#" class="grey-text modal-trigger" data-target="modal-account">Account</a>
-                </li>
-                <li class="logged-in" style="display: none;">
-                  <a href="campaignExplore.html" class="grey-text modal-trigger" >Campaigns</a>
-                </li>
-                <li class="logged-in" style="display: none;">
-                  <a href="#" class="grey-text" id="logout">Logout</a>
-                </li>
-                <li class="logged-in" style="display: none;">
-                    <a href="forum.html" class="grey-text" id="logout">Community Forum</a>
-                  </li>
-                <li class="logged-in" style="display: none;">
-                  <a href="createCampaign.html" class="grey-text modal-trigger">Create Campaign</a>
-                </li>
-                <li class="logged-out" style="display: none;">
-                  <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
-                </li>
-                <li class="logged-out" style="display: none;">
-                  <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
-                </li>
-              </span>
-            </ul>
-          </div>
-        </nav>
-        </div>
+          <!-- NAVBAR -->
+          <div class = "entireNav">
+            <nav class="z-depth-0 white">
+              <div class="nav-wrapper container">
+                <a href="index.html" class="brand-logo">
+                    <img src="KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
+                  </a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li class="logged-in" style="display: none;">
+                      <a href="#" class="grey-text modal-trigger" data-target="modal-account">Account</a>
+                    </li>
+                    <li class="logged-in" style="display: none;">
+                      <a href="campaignExplore.html" class="grey-text modal-trigger" >Campaigns</a>
+                    </li>
+    
+                    <li >
+                      <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
+                    </li>
+                    <li class="logged-in" style="display: none;">
+                      <a href="#" class="grey-text" id="logout">Logout</a>
+                    </li>
+                    <li class="logged-in" style="display: none;">
+                        <a href="forum.html" class="grey-text" id="logout">Community Forum</a>
+                      </li>
+                    <li class="logged-in" style="display: none;">
+                      <a href="createCampaign.html" class="grey-text modal-trigger">Create Campaign</a>
+                    </li>
+                    <li class="logged-out" style="display: none;">
+                      <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
+                    </li>
+                    <li class="logged-out" style="display: none;">
+                      <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
+                    </li>
+                  </span>
+                </ul>
+              </div>
+    
+              <ul id="dropdownCampaign" class="dropdown-content">
+                <li><a href="campaignExplore.html">Explore</a></li>
+                <li class = "logged-in" style="display: none;"><a href="createCampaign.html">Create</a></li>
+    
+              </ul>
+            </nav>
+            </div>
+
+
+            <div id="userAccountInfo">
+
+              <div id="userFullName">
+
+              </div>
+
+              <div class="row">
+                <div class="column">
+      
+                  <div id="username"></div>
+                    <h3>About</h3>
+                    <div id="userBio"></div>
+                  </div>
+      
+                <div class="column">
+                  <div class="row">
+                    <div id="userCountry">
+      
+                    </div>
+            
+                  
+                  </div>
+                  <div id="campaigns">
+                    <h3>User Campaigns</h3>
+                    <ul id = "campaignList"></ul>
+                   </div>
+
+                </div>
+              </div>
+
+            </div>
 
         
         <!-- LOGIN MODAL -->
