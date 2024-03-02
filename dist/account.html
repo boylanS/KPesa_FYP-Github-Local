@@ -16,6 +16,13 @@
   
    <!-- Font Awesome Kit Link -->
    <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
+ 
+   <!-- Google Fonts -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+ 
   </head>
 <body>
 
@@ -72,32 +79,73 @@
               <div id="userFullName">
 
               </div>
+              <h4>About</h4>
+              <div id="userBio"></div>
 
-              <div class="row">
+              <h2>User Campaigns</h2>
+             
+  
+              <div id="userCampaigns"></div>
+              <ul id = "campaignList"></ul>
+            </div>
+
+          
+          </div>
+
+              <!--<div class="row">
                 <div class="column">
-      
-                  <div id="username"></div>
-                    <h3>About</h3>
+                   <h4>About</h4>
                     <div id="userBio"></div>
                   </div>
       
                 <div class="column">
-                  <div class="row">
+                    
                     <div id="userCountry">
       
-                    </div>
-            
-                  
                   </div>
-                  <div id="campaigns">
-                    <h3>User Campaigns</h3>
-                    <ul id = "campaignList"></ul>
-                   </div>
 
                 </div>
-              </div>
+              </div>-->
+             
 
-            </div>
+                   <!-- DONATE MODAL -->
+  <div id="modal-update" class="modal">
+    <div class="modal-content">
+      <h4 id = "updateHeading">Update Campaign</h4><br />
+      <form id="updateForm" action="">
+
+        <form id="create-form">
+
+          <label for="name">Campaign Name:</label>
+          <input type="text" name="name">
+          <label for="category">Category:</label>
+          <input type="text" name="category">
+          <label for="country">Country:</label>
+          <input type="text" name="country">
+          <label for="description">Description:</label>
+          <input type="text" name="description">
+          <label for="imageSrc">Image:</label>
+          <input type="text" name="image">
+          <label for="target">Target</label>
+          <input type="number" name="target">
+          <label for="raised">Raised:</label>
+          <input type="number" name="raised">
+          <label for="bankCountry">Bank Country:</label>
+          <input type="text" name="bankCountry">
+
+          <div class="controls">
+            <button class="add" type="button"><i class="fa fa-plus"></i>Add Reward</button>
+            <button class="remove" id="removeReward" style = "visibility: hidden" type="button"><i class="fa fa-minus"></i>Remove Reward</button>
+          </div>
+
+        <button class="btn yellow darken-2 z-depth-0">Update</button>
+        </div>
+        </div>
+        
+        </form>
+    </div>
+  </div>
+
 
         
         <!-- LOGIN MODAL -->
@@ -146,27 +194,7 @@
             </div>
           </div>
         -->
-          <!-- GUIDE LIST -->
-          <div class="container" style="margin-top: 40px;">
-            <ul class="collapsible z-depth-0 guides" style="border: none;">
-              <li>
-                <div class="collapsible-header grey lighten-4">Guide title</div>
-                <div class="collapsible-body white">Lorem ipsum dolor sit amet.</div>
-              </li>
-              <li>
-                <div class="collapsible-header grey lighten-4">Guide title</div>
-                <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
-              </li>
-              <li>
-                <div class="collapsible-header grey lighten-4">Guide title</div>
-                <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
-              </li>
-              <li>
-                <div class="collapsible-header grey lighten-4">Guide title</div>
-                <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
-              </li>
-            </ul>
-          </div>
+         
           
   
           <footer>

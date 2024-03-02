@@ -316,28 +316,28 @@ button:hover{
   color:  #1C1C57;
 }
 
-#singleCampaignPage i{
+#singleCampaignPage i, #editCampaignPage i{
   color: #1C1C57;
   font-size: 25px;
 }
 
-#singleCampaignPage i:hover{
+#singleCampaignPage i:hover, #editCampaignPage i:hover{
   color: #57BEFF
 }
 
-#singleCampaignPage .column{
+#singleCampaignPage .column, #editCampaignPage .column{
   float: left;
   width: 50%;
   padding: 5px 50px;
 }
 
-#singleCampaignPage .row:after{
+#singleCampaignPage .row:after, #editCampaignPage .row:after{
   content: "";
   display: table;
   clear: both;
 }
 
-#singleCampaignPage #campaignCategory{
+#singleCampaignPage #campaignCategory, #editCampaignPage #campaignCategory{
   border-radius: 10px;
   overflow: none;
   background-color: #F0F6FA;
@@ -347,7 +347,56 @@ button:hover{
   
 }
 
-#singleCampaignPage #campaignCategory h6{
+#singleCampaignPage #progressBarOuter{
+  background-color:#f1f1f1;
+  border-radius: 4px;
+}
+
+#singleCampaignPage .progressBarInner{
+  background-color:#57BEFF;
+  font-weight: 700;
+  padding-left: 10px;
+  border-radius: 4px;
+
+}
+
+#singleCampaignPage #raisedDiv h5, #singleCampaignPage #targetDiv h5{
+  font-weight: 700;
+}
+
+#editCampaignPage #campaignCategory{
+  border-radius: 10px;
+  overflow: none;
+  background-color: #F0F6FA;
+  color: #1C1C57;
+  display: inline-block;
+  border: 2px solid #1C1C57;
+  width: 50%;
+  float: left;
+}
+
+#editCampaignPage #editCategoryBtn{
+  width: 40%;
+}
+
+#editCampaignPage label{
+  display: block;
+  width: 200px;
+  background-color:#1C1C57;
+  color:#F0F6FA;
+  padding: 12px;
+  margin: 10px auto;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#inputFile{
+  display: none;
+}
+
+
+
+#singleCampaignPage #campaignCategory h6, #editCampaignPage #campaignCategory h6{
   font-weight: bolder;
   text-align: center;
   color: #1C1C57;
@@ -356,7 +405,7 @@ button:hover{
 }
 
 
-#singleCampaignPage #campaignOwner{
+#singleCampaignPage #campaignOwner, #editCampaignPage #campaignOwner{
 
   width: 100%;
   border-radius: 4px;
@@ -852,3 +901,140 @@ input.invalid {
   background-color: rgba(0,0,0,0.2);
   display: none;
 }
+
+/* ACCOUNT PAGE */
+
+#userAccountInfo h2{
+  font-weight: 700;
+  color:#1C1C57;
+  padding: 10px 20px 0px 20px;
+  margin-left: 50px;
+}
+
+#userAccountInfo h3{
+  font-weight: 500;
+  color:#57BEFF;
+  padding: 0px 20px 0px 20px;
+  margin-left: 50px;
+}
+
+#userAccountInfo h4{
+  font-weight: 400;
+  color:#1C1C57;
+  padding: 10px 20px 0px 20px;
+  margin-left: 50px;
+}
+
+#userAccountInfo p{
+  font-size: 19px;
+  margin-left: 50px;
+  padding: 10px 20px 0px 20px;
+  letter-spacing: 1px;
+  color: #666666;
+}
+
+#userCountry {
+  border-radius: 10px;
+  font-weight: 200;
+  overflow: none;
+  background-color: #F0F6FA;
+  color: #1C1C57;
+  display: inline-block;
+  border: 2px solid #1C1C57;
+  padding: 10px;
+}
+
+#joinDate{
+  border-radius: 10px;
+  overflow: none;
+  color: #F0F6FA;
+  background-color: #1C1C57;
+  display: inline-block;
+  border: 2px solid #1C1C57;
+}
+
+#userAccountInfo .column{
+  float: left;
+  width: 50%;
+  padding: 5px 50px;
+}
+
+#userAccountInfo .row{
+  margin-left: 50px;
+}
+
+#userAccountInfo .row:after{
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.campContainer {
+  background-color:#F0F6FA;
+  padding: 10px 30px 10px 30px;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.campContainer h4{
+  font-weight: 700;
+  margin: 0;
+  display: inline-block;
+}
+
+#createCampaignFormSteps {
+  background-color: #ffffff;
+  margin: 100px auto;
+  padding: 40px;
+  width: 70%;
+  min-width: 300px;
+}
+
+/* Create Campaign Popup */
+
+.popupCamp{
+  width: 600px;
+  background-color: white;
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%,-50%) scale(0.1);
+  text-align: center;
+  padding: 0 30px 30px;
+  visibility: hidden;
+  transition: transform 0.4s, top 0.4s;
+}
+
+.open-popupCamp{
+  visibility: visible;
+  top: 80%;
+  transform: translate(-50%, -50%) scale(1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+}
+
+
+
+.popupCamp h2{
+  color: #1C1C57;
+  font-weight: bold;
+  font-size: 38px;
+  margin: 30px 0 10px;
+}
+
+.popupCamp p{
+  color: #888888;
+}
+
+.popupCamp #tick {
+
+  width: 150px;
+  background-color: white;
+
+
+}
+
+

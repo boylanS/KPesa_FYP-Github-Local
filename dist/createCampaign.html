@@ -15,6 +15,12 @@
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
      <!-- Font Awesome Kit Link -->
    <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
+ 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+ 
   </head>
 <body>
 
@@ -70,7 +76,7 @@
 
         <h4>Start a Campaign</h4>
         <br>
-
+<!---
         <div id="imageUpload">
           <input type="file" class="inp" />
           <button  id = "selectImageBtn" class="selectImage">Select Images</button>
@@ -84,6 +90,9 @@
           <span class="loading">Loading...</span>
           <img class="img" />
         </div>
+
+
+      
         <form id="create-form">
 
           <label for="name">Campaign Name:</label>
@@ -113,9 +122,167 @@
           <button>add a new campaign</button>
 
        
-        </form>
+        </form>-->
 
-       
+
+        <!---
+        <form id="campaignCreateFormSteps" action="">
+
+          <h1>Create Campaign</h1>-->
+          
+          <!-- One "tab" for each step in the form: -->
+        
+        <!-- <div class="tab">Campaign Info:
+            <p><input placeholder="Campaign Name..." oninput="this.className = ''" name = "campaignName" type="text"></p>
+        -->
+         
+            <!--<img id="campaignImageForm" src="#" width="80%">
+            <label for="inputFile" id="updateImageLabel">Upload Image</label>
+            <input type="file" id="inputFile" accept = "image/jpeg, image/png, image/jpg">-->
+        
+        
+        <!--- </div>
+          
+          <div class="tab">Campaign Category:
+            <p><input list = "campaignCategoryList" name = "campaignCategory"></p>
+           <datalist id = "campaignCategoryList">
+            <option value="Food & Drink">Food & Drink</option>
+            <option value="Clothing & Accessories">Clothing & Accessories</option>
+            <option value="Homeware">Homeware</option>
+            <option value="Health & Wellness">Health & Wellness</option>
+            <option value="Technology">Technology</option>
+            <option value="Service">Service</option>
+            <option value="Other">Other</option>
+           </datalist>
+           
+            <p><input placeholder="Country..." oninput="this.className = ''" name = "campaignName" type="text"></p>
+            <p><input placeholder="Campaign Description..." oninput="this.className = ''" name = "campaignDescription" type="textarea"></p>
+          </div>
+          
+          <div class="tab">Country:
+            <p><input placeholder="Country..." oninput="this.className = ''" name = "country" type="text"></p>
+          </div>
+    
+          <div class="tab">Bio:
+            <p><input placeholder="User Bio..." oninput="this.className = ''" name = "bio" type="text"></p>
+          </div>
+          
+          <div class="tab">Login Info:
+            <p><input placeholder="Username..." oninput="this.className = ''" name = "username" type="text"></p>
+            <p><input placeholder="Password..." oninput="this.className = ''" name = "password" type="password"></p>
+          </div>
+          
+          <div style="overflow:auto;">
+            <div style="float:right;">
+              <button type="button" id="prevBtnCamp">Previous</button>
+              <button type="button" id="nextBtnCamp" >Next</button>
+            </div>
+          </div>
+          
+   
+          <div style="text-align:center;margin-top:40px;">
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+          </div>
+          
+          </form>-->
+    
+          <div class="popupCamp" id = "popupCamp">
+            <img src="tickTransparent.png" id = "tick" >
+            
+            <h2>Welcome to KPesa!</h2>
+            <p>Sign up has been successful.</p>
+            <button type="button" id="continueNewCampaign">Continue</button>
+          </div>
+
+          
+
+          <form id="createCampaignFormSteps" action="">
+
+            <h1>Create Campaign:</h1>
+            
+           
+            <div class="tab">Campaign Info:
+              <p><input placeholder="Campaign Name..." oninput="this.className = ''" name = "campaignName" type="text"></p>
+            </div>
+
+            <div class="tab">Campaign Category:
+              <p><input list = "campaignCategoryList" name = "campaignCategory"></p>
+             <datalist id = "campaignCategoryList">
+              <option value="Food & Drink">Food & Drink</option>
+              <option value="Clothing & Accessories">Clothing & Accessories</option>
+              <option value="Homeware">Homeware</option>
+              <option value="Health & Wellness">Health & Wellness</option>
+              <option value="Technology">Technology</option>
+              <option value="Service">Service</option>
+              <option value="Other">Other</option>
+             </datalist>
+             Country:
+             <p><input list = "campaignCountryList" name = "campaignCountry" type="text"></p>
+             <datalist id = "campaignCountryList">
+              <option value="Ireland">Ireland</option>
+              <option value="UK">UK</option>
+              <option value="Algeria">Algeria</option>
+              <option value="Angola">Angola</option>
+              <option value="Botswana">Botswana</option>
+              <option value="Cameroon">Cameroon</option>
+              <option value="Central African Republic">Central African Republic</option>
+              <option value="Chad">Chad</option>
+              <option value="Congo, Democratic Republic of the">Congo, Democratic Republic of the</option>
+              <option value="Egypt">Egypt</option>
+              <option value="Ethiopia">Ethiopia</option>
+              <option value="Ghana">Ghana</option>
+              <option value="Guinea">Guinea</option>
+              <option value="Kenya">Kenya</option>
+              <option value="Libya">Libya</option>
+              <option value="Mali">Mali</option>
+              <option value="Mauritius">Mauritius</option>
+              <option value="Morocco">Morocco</option>
+              <option value="Nigeria">Nigeria</option>
+              <option value="South Africa">South Africa</option>
+              <option value="Tanzania">Tanzania</option>
+              <option value="Uganda">Uganda</option>
+              <option value="Zambia">Zambia</option>
+              <option value="Zimbabwe">Zimbabwe</option>
+
+             </datalist>
+              <p><input placeholder="Campaign Description..." oninput="this.className = ''" name = "campaignDescription" type="text" width="48" height="48"></p>
+            </div>
+          
+            
+            <div class="tab">Target:
+              <p><input placeholder="Campaign Target..." oninput="this.className = ''" name = "campaignTarget" type="number"></p>
+            </div>
+      
+            <div class="tab">Bio:
+              <p><input placeholder="User Bio..." oninput="this.className = ''" name = "bio" type="text"></p>
+            </div>
+            
+            <div class="tab">Login Info:
+              <p><input placeholder="Username..." oninput="this.className = ''" name = "username" type="text"></p>
+              <p><input placeholder="Password..." oninput="this.className = ''" name = "password" type="password"></p>
+            </div>
+            
+            <div style="overflow:auto;">
+              <div style="float:right;">
+                <button type="button" id="prevBtnCamp">Previous</button>
+                <button type="button" id="nextBtnCamp" >Next</button>
+              </div>
+            </div>
+            
+         
+            <div style="text-align:center;margin-top:40px;">
+              <span class="step"></span>
+              <span class="step"></span>
+              <span class="step"></span>
+              <span class="step"></span>
+              <span class="step"></span>
+            </div>
+            
+            </form>
 
 
       
