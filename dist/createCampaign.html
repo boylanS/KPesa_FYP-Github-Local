@@ -193,8 +193,8 @@
           <div class="popupCamp" id = "popupCamp">
             <img src="tickTransparent.png" id = "tick" >
             
-            <h2>Welcome to KPesa!</h2>
-            <p>Sign up has been successful.</p>
+            <h2>Campaign created!</h2>
+            <p>Congratulations on launching your campaign with KPesa!</p>
             <button type="button" id="continueNewCampaign">Continue</button>
           </div>
 
@@ -209,9 +209,14 @@
               <p><input placeholder="Campaign Name..." oninput="this.className = ''" name = "campaignName" type="text"></p>
             </div>
 
-            <div class="tab">Campaign Category:
-              <p><input list = "campaignCategoryList" name = "campaignCategory"></p>
-             <datalist id = "campaignCategoryList">
+            <div class="tab">
+              <label for="campaignCategory">Category:</label>
+              <input list = "campaignCategoryList" name="campaignCategory" type="text">
+
+                <datalist id = "campaignCategoryList">
+
+             <!--- <p><input list = "campaignCategoryList" name = "campaignCategory"></p>
+             <datalist id = "campaignCategoryList">-->
               <option value="Food & Drink">Food & Drink</option>
               <option value="Clothing & Accessories">Clothing & Accessories</option>
               <option value="Homeware">Homeware</option>
@@ -220,10 +225,24 @@
               <option value="Service">Service</option>
               <option value="Other">Other</option>
              </datalist>
-             Country:
+            </input>
+
+
+        
+
+            <!--- </datalist>-->
+              <p><input placeholder="Campaign Description..." oninput="this.className = ''" name = "campaignDescription" type="text" width="48" height="48"></p>
+            </div>
+          
+            
+            <div class="tab">
+
+            
+           <label for="campaignCountry">Country:</label>
+           <p>Enter country in which operations are based or the country in which the associated bank account is located if different.</p>
              <p><input list = "campaignCountryList" name = "campaignCountry" type="text"></p>
              <datalist id = "campaignCountryList">
-              <option value="Ireland">Ireland</option>
+             <option value="Ireland">Ireland</option>
               <option value="UK">UK</option>
               <option value="Algeria">Algeria</option>
               <option value="Angola">Angola</option>
@@ -247,24 +266,34 @@
               <option value="Uganda">Uganda</option>
               <option value="Zambia">Zambia</option>
               <option value="Zimbabwe">Zimbabwe</option>
-
+              
              </datalist>
-              <p><input placeholder="Campaign Description..." oninput="this.className = ''" name = "campaignDescription" type="text" width="48" height="48"></p>
-            </div>
+          </input>
+
           
-            
+            </div>
+      
             <div class="tab">Target:
               <p><input placeholder="Campaign Target..." oninput="this.className = ''" name = "campaignTarget" type="number"></p>
             </div>
-      
-            <div class="tab">Bio:
-              <p><input placeholder="User Bio..." oninput="this.className = ''" name = "bio" type="text"></p>
-            </div>
             
-            <div class="tab">Login Info:
-              <p><input placeholder="Username..." oninput="this.className = ''" name = "username" type="text"></p>
-              <p><input placeholder="Password..." oninput="this.className = ''" name = "password" type="password"></p>
+            <div class="tab">Campaign Image:
+              <br>
+              <!--<button id = "editImageBtn">Replace Image</button>-->
+            
+              <label for="campaignImageFile" id="campaignImageFileLabel">Upload Campaign Image</label>
+             
+              <input type="file" id="campaignImageFile" name ="campaignImageFile" accept = "image/jpeg, image/png, image/jpg">
+            
+              <centre> <img id="campaignImage" src="#" width="50%" style="visibility:hidden"></centre>
+              
             </div>
+
+          <!--- <div class="tab">Rewards
+
+              <button class="add" type="button"><i class="fa fa-plus"></i>Add Reward</button>
+              <button class="remove" id="removeReward" style = "visibility: hidden" type="button"><i class="fa fa-minus"></i>Remove Reward</button>
+            </div>-->
             
             <div style="overflow:auto;">
               <div style="float:right;">
@@ -280,6 +309,7 @@
               <span class="step"></span>
               <span class="step"></span>
               <span class="step"></span>
+              <!--<span class="step"></span>-->
             </div>
             
             </form>
