@@ -527,6 +527,11 @@ function fillPage(){
       if (Math.round((doc.data().raised/doc.data().target)*100,2) <= 0){
         outerProgressBar.textContent = "0% raised";
       }
+      else if (Math.round((doc.data().raised/doc.data().target)*100,2) >= 100){
+        progressBar.textContent = "100% raised";
+        progressBar.setAttribute("style","height: 24px; width: 100%");
+
+      }
       else{
         let percentageComplete = (Math.round((doc.data().raised/doc.data().target)*100,2))+"%";
         progressBar.setAttribute("style","height: 24px; width:"+percentageComplete);
@@ -710,9 +715,36 @@ function closeDonationPopup(){
   popup.classList.remove("open-popupError");
 }
 
+function validateFormDonation() {
+  // This function deals with validation of the form fields
+  const donationForm= document.querySelector("#donateForm")
+  const donationProposed = parseFloat(donationForm.donationAmount.value).toFixed(2);
+  const rewardSelected = donationForm.donationReward.value;
+
+  if (rewardSelected == "None"){
+    return true;
+  }
+
+  var donationRequired = rewardSelected.split(":");
+  console.log(donationRequired);
+  var donationAmountSplit = donationRequired[1];
+  console.log(donationAmountSplit);
+  donationAmountSplit = donationAmountSplit.slice(0, -1);
+  var donationAmountFloat = donationAmountSplit.trim();
+
+  donationAmountFloat = parseFloat(donationAmountFloat).toFixed(2);
+  console.log(donationAmountFloat);
+  console.log(donationProposed);
+
+  if (Math.round(parseFloat(donationAmountFloat)*100000) > Math.round(parseFloat(donationProposed)*100000)){
+    return false;
+  }
+
+  return true;
+}
 
 //Processing the donation
-function processDonation(){
+//function processDonation(){
   if (document.querySelector("#modal-donate")){
     const donationHeading = document.querySelector("#donationHeading");
     const campaignDonate = localStorage.getItem("currentCampaignName");
@@ -725,21 +757,37 @@ function processDonation(){
         querySnapshot.forEach((doc) => {
           console.log("data: ",doc.data());
           let rewardDiv = document.querySelector("#donateForm");
-          let rewardName = doc.data().name;
+          let rewardName = doc.data().name + " (Required Donation: "+parseFloat(doc.data().donation).toFixed(2)+")";
+          let rewardDonationRequired = doc.data().donation;
       
           let rewardDatalist = document.querySelector("#rewardDatalist");
 
           let rewardOption = document.createElement("option");
           rewardOption.setAttribute("value",rewardName);
+          rewardOption.setAttribute("class",rewardDonationRequired);
           rewardOption.textContent = rewardName;
 
           rewardDatalist.appendChild(rewardOption);
+          console.log("this worked",rewardOption);
 
          } )});
 
      donateForm.addEventListener("submit", (e) => {
         e.preventDefault();
         if (auth.currentUser) {
+
+          var validDonationForm = validateFormDonation();
+          console.log(validDonationForm);
+
+         
+          if (validDonationForm){
+
+            let insufficientErrorDiv = document.querySelector(".insufficientDonation");
+            insufficientErrorDiv.classList.remove("display-error");
+            insufficientErrorDiv.innerHTML = "";
+           
+
+        
           //store a record of the donation under the user information in firestore database
           const userID = auth.currentUser.uid;
           var processingTimeDate = new Date();
@@ -748,12 +796,13 @@ function processDonation(){
           const processingTime = date+"_"+time;
           const donationID = userID+"_"+campaignDonate+"_"+processingTime;
           const userRef = doc(db, "users", userID, "donations",donationID)
+          const donationAmountFromForm = donateForm.donationAmount.value;
 
           setDoc(userRef, {
             donationAmount: donateForm.donationAmount.value,
             donationTo: campaignDonate,
-            donationCurrency: donateForm.currency.value,
-            reward: donateForm.reward.value,
+            donationCurrency: donateForm.donationCurrency.value,
+            reward: donateForm.donationReward.value,
             tip: donateForm.tipAmount.value,
             processedAt: processingTime
         
@@ -769,29 +818,78 @@ function processDonation(){
         //const campRef = collection(db, "campaigns", campaignID, "donations")
         const campRef = doc(db, "campaigns", campaignID, "donations",donationID)
 
+       
+
+
+
         setDoc(campRef, {
           donationAmount: donateForm.donationAmount.value,
           donationFrom: userID,
-          donationCurrency: donateForm.currency.value,
-          reward: donateForm.reward.value,
+          donationCurrency: donateForm.donationCurrency.value,
+          reward: donateForm.donationReward.value,
           tip: donateForm.tipAmount.value,
           processedAt: processingTime
       
-      }).then(() => {
-        const modal = document.querySelector('#modal-donate');
-        M.Modal.getInstance(modal).close();
-        donateForm.reset();
+      }).then(async () => {
+
+        const updateAmountRef = doc(db, "campaigns",campaignID);
+
+        var nowRaisedFloat;
+
+        const updateDocFetch = await getDoc(updateAmountRef);
+
+        const currentRaised = updateDocFetch.data().raised;
+        const currentRaisedFloat = parseFloat(currentRaised).toFixed(2);
+
+        nowRaisedFloat = (parseFloat(currentRaisedFloat)+ parseFloat(donationAmountFromForm)).toFixed(2);
+        console.log(nowRaisedFloat);
+
+        updateDoc(updateAmountRef, {
+          raised: nowRaisedFloat,
+        })
+        .then(() => {
+          openPopupDonationSuccess();
+          const modal = document.querySelector('#modal-donate');
+          M.Modal.getInstance(modal).close();
+          donateForm.reset();
+        })
+
+      
+        
+       
       }).catch(err => {
         console.log(err.message);
       })
 
-
-
-
-      }
-      })
+      }else{
+        let insufficientErrorDiv = document.querySelector(".insufficientDonation");
+        insufficientErrorDiv.classList.add("display-error");
+        insufficientErrorDiv.innerHTML = "Donation amount insufficient for reward selected.";
        
-}};
+      }
+    
+    }
+    })
+};
+
+function openPopupDonationSuccess(){
+  alert("success!");
+  const popup = document.querySelector(".popupDonateSuccess");
+  popup.classList.add("open-popupDonateSuccess");
+
+  const continueBtn = popup.querySelector("#continueDonationComplete")
+
+  continueBtn.addEventListener("click", () => {
+    closePopupDonationSuccess();
+    window.location.href = "campaignExplore.html";
+  })
+}
+
+function closePopupDonationSuccess(){
+  const popup = document.querySelector("#popupDonateSuccess");
+  popup.classList.remove("open-popupDonateSuccess");
+}
+
 
 // LANDING PAGE
 
@@ -1415,6 +1513,7 @@ onSnapshot(docRef, (doc) =>{
   console.log(doc.data(), doc.id)
 })*/
 
+
 // updating a document
 /*
 if (document.querySelector(".update")){ 
@@ -1943,6 +2042,11 @@ function fillEditPage(){
       if (Math.round((docSnap.data().raised/docSnap.data().target)*100,2) <= 0){
         outerProgressBar.textContent = "0% raised";
       }
+      else if (Math.round((doc.data().raised/doc.data().target)*100,2) >= 100){
+        progressBar.textContent = "100% raised";
+        progressBar.setAttribute("style","height: 24px; width: 100px");
+
+      }
       else{
         let percentageComplete = (Math.round((docSnap.data().raised/docSnap.data().target)*100,2))+"%";
         progressBar.setAttribute("style","height: 24px; width:"+percentageComplete);
@@ -2117,6 +2221,78 @@ if (document.querySelector("#createCampaignFormSteps")){
   })
 
 
+  const addRewardBtn = document.querySelector(".addCamp");
+  const removeRewardBtn = document.querySelector(".removeCamp");
+  
+  localStorage.setItem("numberOfRewards",0);
+
+  addRewardBtn.addEventListener("click", () =>{
+    const rewardFormsDiv = document.querySelector(".rewardForms");
+    var newRewardForm = document.createElement("form");
+    var currentRewards = parseInt(localStorage.getItem("numberOfRewards"));
+    currentRewards = currentRewards + 1;
+    localStorage.setItem("numberOfRewards",currentRewards);
+    
+    var rewardFormName = "reward"+currentRewards;
+    newRewardForm.setAttribute("id",rewardFormName);
+
+    var rewardName = document.createElement("input");
+    rewardName.setAttribute("type","text");
+    rewardName.setAttribute("name","rewardName");
+    rewardName.setAttribute("class","name");
+    rewardName.setAttribute("siz",50);
+    rewardName.setAttribute("placeholder","Reward "+currentRewards+" Name");
+    newRewardForm.appendChild(rewardName);
+
+    var rewardAmount = document.createElement("input");
+    rewardAmount.setAttribute("type","number");
+    rewardAmount.setAttribute("name","rewardDonation");
+    rewardAmount.setAttribute("class","donation");
+    rewardAmount.setAttribute("siz",50);
+    rewardAmount.setAttribute("placeholder","Required Donation");
+    newRewardForm.appendChild(rewardAmount);
+
+    var rewardDesc = document.createElement("input");
+    rewardDesc.setAttribute("type","text");
+    rewardDesc.setAttribute("name","rewardDesc");
+    rewardDesc.setAttribute("class","desc");
+    rewardDesc.setAttribute("siz",150);
+    rewardDesc.setAttribute("placeholder","Reward "+currentRewards+" Description");
+    newRewardForm.appendChild(rewardDesc);
+
+    rewardFormsDiv.appendChild(newRewardForm);
+    document.getElementById("removeReward").style.visibility = "visible";
+
+  })
+
+  removeRewardBtn.addEventListener("click", () =>{
+    
+    const rewardFormsDiv = document.querySelector(".rewardForms");
+    const addCampaignForm = document.getElementById("createCampaignFormSteps");
+    var input_tags = addCampaignForm.getElementsByTagName("input");
+    var deleteFormName = "#reward"+localStorage.getItem("numberOfRewards");
+    var rewardForm = addCampaignForm.querySelector(deleteFormName);
+    
+    console.log("number of inputs tags:", input_tags.length);
+    if (input_tags.length > 8) {
+     
+      rewardFormsDiv.removeChild(rewardForm);
+  
+      var currentRewards = parseInt(localStorage.getItem("numberOfRewards"));
+      currentRewards = currentRewards - 1;
+      localStorage.setItem("numberOfRewards",currentRewards);
+
+      if (currentRewards == 0){
+        document.getElementById("removeReward").style.visibility = "hidden";
+      }
+     
+    }else{
+      //let rewardBtn = addCampaignForm.querySelector("#removeReward");
+    }
+
+  })
+
+
   //TRYING UPLOAD IMAGE
   let inputFile = document.querySelector("#campaignImageFile");
   let campaignImage = document.querySelector("#campaignImage");
@@ -2275,6 +2451,48 @@ function nextPrevCamp(n) {
       // close the signup modal & reset form
       //const modal = document.querySelector('#modal-signup');
       //M.Modal.getInstance(modal).close();
+
+      const noOfRewards = localStorage.getItem("numberOfRewards");
+  
+      if (noOfRewards != 0){
+    
+        for (let i = 1; i <= noOfRewards; i++){
+    
+          var rewardForm = document.querySelector("#reward"+i);
+          let rewardId = Math.round(Math.random() * 9999) + rewardForm.rewardName.value;
+          let rewardSubRef = doc(db, "campaigns",idNew,"rewards",rewardId);
+    
+          setDoc(rewardSubRef, {
+            uid: rewardId,
+            name: rewardForm.rewardName.value,
+            donation: rewardForm.rewardDonation.value,
+            description: rewardForm.rewardDesc.value,
+        })
+          .then(() => {
+            const userIDCurrent = auth.currentUser.uid;
+            const newUserRef = doc(db,"users",userIDCurrent,"campaigns",idNew);
+
+            setDoc(newUserRef, {
+             name: addCampaignForm.name.value,
+            createdAt: serverCreationTime,
+           }).then(() =>  {
+            addCampaignForm.reset();
+            addCampaignForm.removeChild(rewardForm);
+
+              })
+            
+    
+          }).catch(err => {
+            console.log(err.message);
+          })
+          
+    
+        }
+        
+      }
+    
+      document.getElementById("removeReward").style.visibility = "hidden";
+
     
       openPopupCampaign();
 

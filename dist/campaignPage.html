@@ -130,6 +130,14 @@
             </ul>
          </div>-->
 
+         <div class="popupDonateSuccess" id = "popupDonateSuccess">
+          <img src="tickTransparent.png" id = "tick" >
+          
+          <h2>Donation processed!</h2>
+          <p>Thank you for your support!</p>
+          <button type="button" id="continueDonationComplete">Continue</button>
+        </div>
+
 
          <!-- DONATE MODAL -->
   <div id="modal-donate" class="modal">
@@ -139,15 +147,17 @@
 
         
         <div class="input-field">
-          <input type="number" id="donationAmount" required />
+          <input type="number" id="donationAmount" step="0.01" required />
           <label for="donationAmount">Donation</label>
+
+          <p class="insufficientDonation"></p>
         </div>
 
 
         <div class="input-field">
           <label for="donationCurrency">Select currency: </label>
           <br>
-          <input list="currencies" name = "currency" id="currency">
+          <input list="currencies" name = "donationCurrency" id="donationCurrency" required>
           <datalist id="currencies">
             <option value = "pound">£</option>
             <option value = "dollar">$</option>
@@ -158,7 +168,7 @@
         <div class="input-field">
           <label for="donationReward">Select reward: </label>
           <br>
-          <input list="rewardDatalist" name = "reward" id="reward" required>
+          <input list="rewardDatalist" name = "donationReward" id="donationReward" type = "text" required>
           <datalist id="rewardDatalist">
             <option value = "None">None</option>
 
@@ -166,7 +176,7 @@
         </div>
 
         <div class="input-field">
-          <input type="number" id="tipAmount" />
+          <input type="number" id="tipAmount" step="0.01" />
           <label for="tipAmount">Tip</label>
         </div>  
 

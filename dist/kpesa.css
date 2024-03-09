@@ -214,12 +214,22 @@ button:hover{
   color: #666666;
 }
 
-.altButton {
+#altButton {
   color: #1C1C57;
   background-color:#F0F6FA;
   border:1px solid; 
   border-color: #F0F6FA;
-  padding: 5px;
+  text-align: center;
+  border-radius: 4px;
+  font-weight: bold
+
+}
+
+#altButton:hover{
+  color: #F0F6FA;
+  background-color:#57BEFF;
+  border:1px solid; 
+  border-color: #57BEFF;
   text-align: center;
   border-radius: 4px;
   font-weight: bold
@@ -477,6 +487,20 @@ button:hover{
   font-size: 20px;
   align-items: center;
 }
+
+.insufficientDonation{
+  color:#af4242;
+  background-color:#fde8ec;
+  padding: 10px;
+  display: none;
+}
+
+.insufficientDonation.display-error{
+  display: block;
+  margin-bottom: 20px;
+  transform:translateY(-20px);
+}
+
 
 /* Donate Error Popup */
 
@@ -994,7 +1018,7 @@ input.invalid {
 
 /* Create Campaign Popup */
 
-.popupCamp{
+.popupCamp, .popupDonateSuccess{
   width: 600px;
   background-color: white;
   border-radius: 10px;
@@ -1008,7 +1032,7 @@ input.invalid {
   transition: transform 0.4s, top 0.4s;
 }
 
-.open-popupCamp{
+.open-popupCamp, .open-popupDonateSuccess{
   visibility: visible;
   top: 80%;
   transform: translate(-50%, -50%) scale(1);
@@ -1018,22 +1042,21 @@ input.invalid {
 
 
 
-.popupCamp h2{
+.popupCamp h2, .popupDonateSuccess h2{
   color: #1C1C57;
   font-weight: bold;
   font-size: 38px;
   margin: 30px 0 10px;
 }
 
-.popupCamp p{
+.popupCamp p, .popupDonateSuccess p{
   color: #888888;
 }
 
-.popupCamp #tick {
+.popupCamp #tick, .popupDonateSuccess #tick{
 
   width: 150px;
   background-color: white;
-
 
 }
 
