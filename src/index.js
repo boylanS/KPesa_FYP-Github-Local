@@ -31,6 +31,7 @@ import{
 
 } from "firebase/storage"
 
+
 //Firebase configuration for KPesa Database
 
 const firebaseConfig = {
@@ -50,19 +51,18 @@ initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
 const storage = getStorage();
+//collection ref
+const colRef = collection(db, "campaigns");
 
 //initialising doc ID
 
  const currentCampaignRef = doc(db, "currentCampaign", "1");
 
-
-//localStorage.setItem("currentCampaign","DzN8ySvSq344slRZqAff")
-
- var currentCampaignId = "DzN8ySvSq344slRZqAff";
 //AUTHENTICATION JAVASCRIPT
 
-// listen for auth state changes
 
+// listen for auth state changes
+// This will dictate if a user receives the "logged in" UI or "not logged in" UI
 onAuthStateChanged(auth, (user) =>{
   if (user){
     db.collection
@@ -72,20 +72,17 @@ onAuthStateChanged(auth, (user) =>{
 
   }else{
     console.log("user logged out.");
-
     setupUI();
+}
 
-   /* if (document.querySelector("#campaignDiv")){
-      renderCampaign([]);
-    }*/
 
-  }
+// FILLING EXPLORE CAMPAIGNS PAGE 
 
-  
-  if (document.querySelector("#campaignDiv")){
-    campaignDiv.innerHTML= "";
+//This will update explore campaigns page when a new doc is added or a doc is removed
+  if (document.querySelector("#exploreCampaigns")){
+    campaignDiv.innerHTML= ""; //clears div to initialise reuploading all campaigns
+   
     //get collection data
-
     //onSnapshot ensures the collection will update
     //in real time
     onSnapshot(colRef, (snapshot) => {
@@ -98,96 +95,76 @@ onAuthStateChanged(auth, (user) =>{
 
 });
 
-//testing signing users up
+//  ################   SIGNING USERS UP ################################################
 
-
+//First, it is established if the user is on the page with the registration form
 if (document.querySelector("#regForm")){
-  const popup = document.querySelector(".popup");
+
+  // Define constants
+  const regForm = document.querySelector("#regForm");
+  const popup = document.querySelector(".popup"); 
+  const prevBtnPage = document.querySelector("#prevBtn");
+  const nextBtnPage = document.querySelector("#nextBtn");
 
   var currentTab = 0; // Current tab is set to be the first tab (0)
   showTab(currentTab); // Display the current tab
 
-  const prevBtnPage = document.querySelector("#prevBtn");
-  const nextBtnPage = document.querySelector("#nextBtn");
-
+  //When previous button is clicked, moves a step back in the form
   prevBtnPage.addEventListener("click", () => {
     nextPrev(-1);
   })
 
+  //When next button is clicked, moves a step forward in the form
   nextBtnPage.addEventListener("click", () => {
     nextPrev(1);
   })
 
-  const regForm = document.querySelector("#regForm");
-
-  regForm.addEventListener("submit", (e) => {
-    e.preventDefault();
- 
- // get user info
-   const email = regForm.email.value;
-   const password = regForm.password.value;
-
- // sign up the user
-   createUserWithEmailAndPassword(auth, email, password).then(async cred => {
-     
-     return await setDoc(doc(db, "users",cred.user.uid),{
-      firstName: regForm.firstName.value,
-      lastName: regForm.lastName.value,
-      username: regForm.username.value,
-      country: regForm.country.value,
-      email: regForm.email.value,
-      bio: regForm.bio.value,
-     })
-  
-   }).then(() => {
-      // close the signup modal & reset form
-      //const modal = document.querySelector('#modal-signup');
-      //M.Modal.getInstance(modal).close();
-    
-      openPopup();
-
-      const continueBtn = popup.querySelector("#continueNewUser")
-
-      continueBtn.addEventListener("click", () => {
-        closePopup();
-        window.location.href = "index.html";
-        regForm.reset();
-  })
-     // openPopup();
-      //regForm.reset();
-     // alert("Sign up successful!");
-
-  
-     
-
-
-   });
-});
-
-
-
 }
 
+//Opens a popup in the event of a signup error
+function openSignupErrorPopup(){
+  const popup = document.querySelector(".popupSignupError");
+  popup.classList.add("open-popupSignupError");
+  const continueBtn = popup.querySelector("#continueSignup")
+
+  //Adds an event listener to the continue button so that it will
+  //close the popup and reset the form when clicked
+  continueBtn.addEventListener("click", () => {
+    closeSignupErrorPopup();
+    const regForm = document.querySelector("#regForm");
+    regForm.reset();
+    window.location.href = "signup.html"; //redirects user to beginning of form
+  })
+}
+
+//Closes the popup when called
+function closeSignupErrorPopup(){
+  const popup = document.querySelector(".popupSignupError");
+  popup.classList.remove("open-popupSignupError");
+}
+
+//Opens a popup in the event that a user is successful in signing up for the platform
 function openPopup(){
   const popup = document.querySelector(".popup");
   popup.classList.add("open-popup");
-  //alert("open the popup");
-
   const continueBtn = popup.querySelector("#continueNewUser")
 
+    //Adds an event listener to the continue button so that it will
+  //close the popup and redirect the user when clicked
   continueBtn.addEventListener("click", () => {
     closePopup();
     window.location.href = "index.html";
   })
 }
 
+//Closes the successful user sign up popup
 function closePopup(){
   const popup = document.querySelector("#popup");
   popup.classList.remove("open-popup");
 }
 
+// This function will display the specified tab of the user sign up form ...
 function showTab(n) {
-  // This function will display the specified tab of the form ...
   var x = document.getElementsByClassName("tab");
   x[n].style.display = "block";
   // ... and fix the Previous/Next buttons:
@@ -205,8 +182,15 @@ function showTab(n) {
   fixStepIndicator(n)
 }
 
+//Will check if an email has been provided in the correct form - returns a boolean value
+function validateEmail(email){
+  const emailRegex =  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
+
+}
+
+ // This function will figure out which tab to display in the user sign up form
 function nextPrev(n) {
-  // This function will figure out which tab to display
   var x = document.getElementsByClassName("tab");
   // Exit the function if any field in the current tab is invalid:
   if (n == 1 && !validateForm()) return false;
@@ -218,34 +202,65 @@ function nextPrev(n) {
   if (currentTab >= x.length) {
     //...the form gets submitted:
     const regForm = document.getElementById("regForm");
-    //document.getElementById("regForm").submit();
-     // get user info
+    
+    // get user info is pulled from the form to be validated
    const email = regForm.email.value;
    const password = regForm.password.value;
 
- // sign up the user
+   //If at least one of the email or password is formatted incorrectly, the user
+   //will be presented with a popup error message. They will be required to resubmit
+   //to create their account
+
+   //Both email and password are incorrect
+   if (!validateEmail(email) && password.length <= 6){
+      const errorMessage = "Invalid email format. Must be in form xx@xx.xxx. Password must be greater than 6 characters.";
+      const errParagraph = document.querySelector("#signupError");
+      errParagraph.innerText = "Error message: "+errorMessage;
+      openSignupErrorPopup();
+   }
+
+   //Password only is incorrect
+   else if (password.length <= 6){
+    const errorMessage = "Invalid password format. Password must be greater than 6 characters.";
+    const errParagraph = document.querySelector("#signupError");
+    errParagraph.innerText = "Error message: "+errorMessage;
+    openSignupErrorPopup();
+   }
+
+   //Email only is incorrect
+   else if (!validateEmail(email)){
+    const errorMessage = "Invalid email format. Must be in form xx@xx.xxx";
+      const errParagraph = document.querySelector("#signupError");
+      errParagraph.innerText = "Error message: "+errorMessage;
+      openSignupErrorPopup();
+   }
+
+   //If both are correct, sign up can proceed and an account can be created for the user
+   else{
+
+ // sign up the user with Firebase auth
    createUserWithEmailAndPassword(auth, email, password).then(async cred => {
      
+    //Create a user record in the firestore database
      return await setDoc(doc(db, "users",cred.user.uid),{
       firstName: regForm.firstName.value,
       lastName: regForm.lastName.value,
       username: regForm.username.value,
-      country: regForm.country.value,
+      country: regForm.countryUser.value,
       email: regForm.email.value,
       bio: regForm.bio.value,
      })
   
    }).then(() => {
-      // close the signup modal & reset form
-      //const modal = document.querySelector('#modal-signup');
-      //M.Modal.getInstance(modal).close();
+      //Open successful signup popup
       openPopup();
+      
+      //Backdrop is darkened
       const modalBackground = document.querySelector(".modalBackdrop");
-
       modalBackground.style.display = "block";
 
+      //Continue button set to clear registration form and redirect user on click
       const continueBtn = popup.querySelector("#continueNewUser")
-
       continueBtn.addEventListener("click", () => {
         closePopup();
         window.location.href = "index.html";
@@ -254,22 +269,26 @@ function nextPrev(n) {
         modalBackground.style.display = "none";
         window.location.href = "index.html";
   })
-      //regForm.reset();
-      //alert("Sign up successful!");
      
-
+  // In the event of an error with the Firebase auth sign up, the user is presented with an error message that
+  //explains the error (e.g. account with email already exists)
+   }).catch(error => {
+      const errorMessage = error.message;
+      const errParagraph = document.querySelector("#signupError");
+      errParagraph.innerText = "Error message: "+errorMessage;
+      openSignupErrorPopup();
+      
    });
 
-
-
-    return false;
+  }
+   // return false;
   }
   // Otherwise, display the correct tab:
   showTab(currentTab);
 }
 
+// This function deals with validation of the sign up form fields
 function validateForm() {
-  // This function deals with validation of the form fields
   var x, y, i, valid = true;
   x = document.getElementsByClassName("tab");
   y = x[currentTab].getElementsByTagName("input");
@@ -290,8 +309,8 @@ function validateForm() {
   return valid; // return the valid status
 }
 
+// This function removes the "active" class of all steps...
 function fixStepIndicator(n) {
-  // This function removes the "active" class of all steps...
   var i, x = document.getElementsByClassName("step");
   for (i = 0; i < x.length; i++) {
     x[i].className = x[i].className.replace(" active", "");
@@ -300,54 +319,24 @@ function fixStepIndicator(n) {
   x[n].className += " active";
 }
 
+//  ################   LOGGING USER IN ################################################
 
-
-
-
-
-// signing users up working
-if (document.querySelector("#modal-signup")){
-  const signupForm = document.querySelector('#signup-form');
-
-  signupForm.addEventListener("submit", (e) => {
-     e.preventDefault();
-  
-  // get user info
-    const email = signupForm['signup-email'].value;
-    const password = signupForm['signup-password'].value;
-
-  // sign up the user
-    createUserWithEmailAndPassword(auth, email, password).then(async cred => {
-      
-      return await setDoc(doc(db, "users",cred.user.uid),{
-        bio: signupForm["signup-bio"].value
-      })
-   
-    }).then(() => {
-       // close the signup modal & reset form
-       const modal = document.querySelector('#modal-signup');
-       M.Modal.getInstance(modal).close();
-       signupForm.reset();
-
-    });
-});
-
-}
-
-
-//logging user in
+//On every page there is a login modal, this code will run
 if (document.querySelector("#modal-login")){
   
   const loginForm = document.querySelector("#login-form");
 
+  //On submission of login form
   loginForm.addEventListener("submit", (e) => {
+    
+    //Prevents default submission
     e.preventDefault();
 
-    //get user info
-
+    //get user info necessary to sign in
     const email = loginForm["login-email"].value;
     const password = loginForm["login-password"].value;
 
+    //sign in with Firebase auth
     signInWithEmailAndPassword(auth, email, password).then(cred => {
 
       //close login modal and reset form
@@ -355,61 +344,37 @@ if (document.querySelector("#modal-login")){
       M.Modal.getInstance(modal).close();
       loginForm.reset();
       loginForm.querySelector(".error").innerHTML = "";
+
+
+      //If logged in on the sign up page, the user will be redirected to the landing page
+      if (document.querySelector("#regForm")){
+        window.location.href="index.html";
+      }
     }).catch(err => {
+      //If login is unsuccessful, the user is presented with an error message within the modal
       loginForm.querySelector(".error").innerHTML = "Error - email and/or password is incorrect.";
     })
-
-
   })
-
-
-
 };
 
-//logout
+//  ################   LOGGING USER IN ################################################
+
+//On every page there is a logout tab, this code will run
 if (document.querySelector("#logout")){
   const logout = document.querySelector("#logout");
+  //On clicking the logout tab
   logout.addEventListener("click", (e) =>{
     e.preventDefault();
+    //user is redirected to landing page
     window.location.href = "index.html";
+    //user is signed out using Firebase auth
     signOut(auth);
-
   })
-
-
 };
   
-
-// FIRESTORE JAVASCRIPT
-
-//collection ref
-const colRef = collection(db, "campaigns");
-
-//queries
-
-const q = query(colRef, orderBy("createdAt"));
-
-// real time collection data
-/*
-onSnapshot(q, (snapshot) => {
-  let campaigns = []
-
-  // here, for each object in the array we are
-  //creating a new campaign object with the
-  //data attributes split up and identified and 
-  //the id pulled
-  snapshot.docs.forEach((doc) => {
-    campaigns.push({...doc.data(), id: doc.id})
-  })
-  console.log(campaigns)
-
-})
-*/
-
 //render campaign
 
-const campaignList = document.querySelector("#campaign-list");
-const campaignDiv = document.querySelector(".float-container");
+const campaignDiv = document.querySelector("#exploreCampaigns");
 
 function renderCampaign(doc){
 
@@ -433,7 +398,7 @@ function renderCampaign(doc){
 
     let tempID = document.createElement("p");
     pageButton.textContent = "Read more";
-    pageButton.setAttribute("href","/itempage.html");
+    //pageButton.setAttribute("href","/itempage.html");
 
     //li.setAttribute("data-id", doc.id);
     name.textContent = doc.data().name;
@@ -461,6 +426,7 @@ function renderCampaign(doc){
 
      floatContainer.appendChild(card);
      campaignDiv.appendChild(floatContainer);
+     
 
   
 
@@ -971,7 +937,7 @@ function renderCampaignLanding(doc) {
 
     let tempID = document.createElement("p");
     pageButton.textContent = "Read more";
-    pageButton.setAttribute("href","/itempage.html");
+   // pageButton.setAttribute("href","/itempage.html");
 
     //li.setAttribute("data-id", doc.id);
     name.textContent = doc.data().name;
@@ -2169,13 +2135,13 @@ const setupUI = (user) => {
   if (user) {
     //account information
     const userRef = doc(db, "users", user.uid)
-    getDoc(userRef).then((doc) =>{
+    /*getDoc(userRef).then((doc) =>{
       const html = `
       <div> Logged in as ${user.email}</div>
       <div>${doc.data().bio}</div>
       `
     accountDetails.innerHTML = html;
-    })
+    })*/
 
 
   
@@ -2186,7 +2152,7 @@ const setupUI = (user) => {
   }
   else{
     //hide account info
-    accountDetails.innerHTML = "";
+    //accountDetails.innerHTML = "";
 
     //toggle UI elements
     loggedInLinks.forEach(item => item.style.display = "none");
@@ -2246,6 +2212,7 @@ if (document.querySelector("#createCampaignFormSteps")){
 
     var rewardAmount = document.createElement("input");
     rewardAmount.setAttribute("type","number");
+    rewardAmount.setAttribute("step",0.01);
     rewardAmount.setAttribute("name","rewardDonation");
     rewardAmount.setAttribute("class","donation");
     rewardAmount.setAttribute("siz",50);
