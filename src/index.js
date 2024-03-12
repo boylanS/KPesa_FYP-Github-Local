@@ -55,8 +55,10 @@ const storage = getStorage();
 const colRef = collection(db, "campaigns");
 
 //initialising doc ID
-
  const currentCampaignRef = doc(db, "currentCampaign", "1");
+
+//initialising explore campaigns page div
+const campaignDiv = document.querySelector("#exploreCampaigns");
 
 //AUTHENTICATION JAVASCRIPT
 
@@ -372,77 +374,71 @@ if (document.querySelector("#logout")){
   })
 };
   
-//render campaign
-
-const campaignDiv = document.querySelector("#exploreCampaigns");
+//  ################ RENDER CAMPAIGN EXPLORE PAGE ################################################
 
 function renderCampaign(doc){
 
   if (doc.length != 0){
 
-    //WORKS WITH THE LIST 
+    // Creates a card for each campaign to be displayed on the explore page
 
     let floatContainer = document.createElement("div");
     floatContainer.setAttribute("class","float-child");
 
-
     let card = document.createElement("div");
     card.setAttribute("class","card");
+
     let image = document.createElement("IMG");
     image.setAttribute("style","width:100%");
+    image.src = doc.data().image;
+
     let container = document.createElement("div");
     container.setAttribute("class","container");
+
     let name = document.createElement("h4");
-    let description = document.createElement("p");
-    let pageButton = document.createElement("button");
-
-    let tempID = document.createElement("p");
-    pageButton.textContent = "Read more";
-    //pageButton.setAttribute("href","/itempage.html");
-
-    //li.setAttribute("data-id", doc.id);
     name.textContent = doc.data().name;
-    description.textContent = doc.data().description;
-    image.src = doc.data().image;
-    let idCurrent = doc.id;
-  
 
-    //currentCampaign = doc.id;
+    let description = document.createElement("p");
+    description.textContent = doc.data().description;
+
+    let pageButton = document.createElement("button");
+    pageButton.textContent = "Read more";
+ 
+    let idCurrent = doc.id;
+
+    //Clicking on the read more button will take you to that campaign's
+    //individual page
 
     pageButton.addEventListener("click", () => {
       localStorage.setItem("currentCampaign", idCurrent);
       localStorage.setItem("currentCampaignName",doc.data().name)
-      currentCampaignId = idCurrent;
-      //alert(localStorage.getItem("currentCampaign"));
       renderCampaignPage();
     });
 
     container.appendChild(name);
     container.appendChild(description);
     container.appendChild(pageButton);
+    card.appendChild(image);
+    card.appendChild(container);
+    floatContainer.appendChild(card);
 
-     card.appendChild(image);
-     card.appendChild(container);
-
-     floatContainer.appendChild(card);
-     campaignDiv.appendChild(floatContainer);
-     
-
-  
+    //Appends new elements to the page
+    campaignDiv.appendChild(floatContainer);     
 
   } else{
+
+    //In the event of no active campaigns, text explaining this will be displayed
     campaignDiv.innerHTML=
-    '<h5 class ="center-align">Login to view campaigns</h5>';
+    '<h5 class ="center-align">There are no active campaigns</h5>';
   }
-  
   
 }
 
-//Rendering campaign page function
+//  ################ RENDER INDIVIDUAL CAMPAIGN PAGE ################################################
 
+//redirects user to individual campaign page
 function renderCampaignPage(){
   window.location.href = "campaignPage.html";
-  
 }
 
 //Will fill page if it is identified as the single campaign page
@@ -452,32 +448,40 @@ if (document.querySelector("#singleCampaignPage")){
 
 function fillPage(){
   
+  //retrives the current campaign (i.e. the campaign the user has interacted with)
   let currentCampaign = localStorage.getItem("currentCampaign");
-    if (currentCampaign != null){
-    //alert("current campaign"+currentCampaign);
+   
+  if (currentCampaign != null){
 
-    //Calls the current campaign doc from the database
+   // Current campaign document reference
     const currentCampaignDoc = doc(db, "campaigns", currentCampaign);
-    //const campaignSnap = getDoc(currentCampaignDoc);
 
+   // Calls the current campaign doc from the database
     onSnapshot(currentCampaignDoc, (doc) =>{
-      //console.log(doc.data(), doc.id)
+      
+      //Creates elements to populate page and fills them
+      //with content from the campaign document
 
+      //title
       let titleDiv = document.querySelector("#campaignName");
       let title = document.createElement("h2");
       title.textContent = doc.data().name;
       titleDiv.appendChild(title);
 
+      //bio
       let bioDiv = document.querySelector("#campaignBio");
       let bio = document.createElement("p");
       bio.textContent = doc.data().description;
       bioDiv.appendChild(bio);
 
+      //category
       let categoryDiv = document.querySelector("#campaignCategory");
       let category = document.createElement("h6");
       category.textContent = doc.data().category;
       categoryDiv.appendChild(category);
 
+
+      //money raised, target, and progress
       let progressDiv = document.querySelector("#moneyDiv");
       let raisedDiv = document.querySelector("#raisedDiv");
       let targetDiv = document.querySelector("#targetDiv");
@@ -490,14 +494,17 @@ function fillPage(){
       raisedDoc.textContent = "Raised: "+doc.data().raised;
       let outerProgressBar = document.querySelector("#progressBarOuter");
 
+      //If no money has been raised
       if (Math.round((doc.data().raised/doc.data().target)*100,2) <= 0){
         outerProgressBar.textContent = "0% raised";
       }
+      //If target has been met or exceeded
       else if (Math.round((doc.data().raised/doc.data().target)*100,2) >= 100){
         progressBar.textContent = "100% raised";
         progressBar.setAttribute("style","height: 24px; width: 100%");
 
       }
+      //All other cases
       else{
         let percentageComplete = (Math.round((doc.data().raised/doc.data().target)*100,2))+"%";
         progressBar.setAttribute("style","height: 24px; width:"+percentageComplete);
@@ -505,202 +512,170 @@ function fillPage(){
       }
       
       raisedDiv.appendChild(raisedDoc);
-   
       outerProgressBar.appendChild(progressBar);
       targetDiv.appendChild(targetDoc);
       
-
-
-      
+      //image
       let imageDiv = document.querySelector("#campaignImage");
       let imageSrc = doc.data().image;
-
       imageDiv.setAttribute("src",imageSrc);
-      let userUID = doc.data().user;
-
-      console.log("the user is: ",doc.data().user);
       
+      //rewards
 
-      /*const subColRef = collection(db,"campaigns", currentCampaign,"rewards");
-
-      const qSnap = getDocs(subColRef);
-
-      console.log(qSnap.docs);*/
-
-
-
-
-      /*
-
-      getDoc(doc(db,"users",userUID))
-        .then((doc) => {
-          let userDiv = document.querySelector("#campaignOwner");
-          let user = document.createElement("h6");
-          user.textContent = doc.data().user;
-          userDiv.appendChild(user);
-        })*/
-
+      //collection reference for the campaign's rewards
       let collectionRef = collection(db, "campaigns",currentCampaign,"rewards");
 
+      //fetches rewards from rewards subcollection under the campaign document
       onSnapshot(collectionRef, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          console.log("data: ",doc.data());
-          let rewardDiv = document.querySelector("#rewards");
-          let rewardList = rewardDiv.querySelector("#rewardList");
+        if (querySnapshot.empty){
+          let noRewardsMsg = document.querySelector("#rewardsMsg");
+          noRewardsMsg.textContent = "This campaign has no rewards available."
+        }else{
 
-          let listElement = document.createElement("li");
+          querySnapshot.forEach((doc) => {
+            
+            //Clears no rewards message if necessary 
+            let noRewardsMsg = document.querySelector("#rewardsMsg");
+            noRewardsMsg.textContent = ""
 
-          let rewardContainer = document.createElement("div");
+            //Each reward document in the subcollection is fetched and
+            //presented on the interface
 
-          let rewardDivDonation = document.createElement("div");
-          rewardDivDonation.setAttribute("id","rewardDonationDiv");
+            let rewardDiv = document.querySelector("#rewards");
+            let rewardList = rewardDiv.querySelector("#rewardList");
+            let listElement = document.createElement("li");
 
-          let rewardDivDescription = document.createElement("div");
-          rewardDivDescription.setAttribute("id","rewardDescriptionDiv");
-          
+            let rewardContainer = document.createElement("div");
+            rewardContainer.setAttribute("id","rewardContainer");
 
-          let rewardName = document.createElement("h5");
-          let donation = document.createElement("button");
-          donation.disabled = true;
-          donation.setAttribute("id","donationAmount");
+            let rewardDivDonation = document.createElement("div");
+            rewardDivDonation.setAttribute("id","rewardDonationDiv");
 
-          let rewardButtonDivCenter = document.createElement("div");
-          rewardButtonDivCenter.setAttribute("class","center");
-          //let currency = document.createElement("currency");
-          let descriptionReward = document.createElement("p");
+            let rewardDivDescription = document.createElement("div");
+            rewardDivDescription.setAttribute("id","rewardDescriptionDiv");
+            
+            let rewardName = document.createElement("h5");
+            rewardName.textContent = doc.data().name;
 
+            let donation = document.createElement("button");
+            donation.disabled = true;
+            donation.setAttribute("class","donationAmount");
+            const donationRounded = (Math.round(doc.data().donation * 100) / 100).toFixed(2);
+            donation.textContent = donationRounded + " ";
 
-          rewardName.textContent = doc.data().name;
-          const donationRounded = (Math.round(doc.data().donation * 100) / 100).toFixed(2);
-          donation.textContent = donationRounded + " "+ doc.data().currency;
-          descriptionReward.textContent = doc.data().description;
+            let rewardButtonDivCenter = document.createElement("div");
+            rewardButtonDivCenter.setAttribute("class","center");
+            
+            let descriptionReward = document.createElement("p");
+            descriptionReward.textContent = doc.data().description;
 
-          rewardDivDescription.appendChild(rewardName);
-          rewardButtonDivCenter.appendChild(donation);
-          rewardDivDonation.appendChild(rewardButtonDivCenter);
-          rewardDivDescription.appendChild(descriptionReward);
-          rewardContainer.appendChild(rewardDivDonation);
-          rewardContainer.appendChild(rewardDivDescription);
+            rewardDivDescription.appendChild(rewardName);
+            rewardButtonDivCenter.appendChild(donation);
+            rewardDivDonation.appendChild(rewardButtonDivCenter);
+            rewardDivDescription.appendChild(descriptionReward);
+            rewardContainer.appendChild(rewardDivDonation);
+            rewardContainer.appendChild(rewardDivDescription);
+            rewardContainer.setAttribute("id","rewardContainer");
 
-          rewardContainer.setAttribute("id","rewardContainer");
-
-          listElement.appendChild(rewardContainer);
-          rewardList.appendChild(listElement);
-
-          //alert("code running");
-        });
+            //Finally, the reward is added to the document
+            listElement.appendChild(rewardContainer);
+            rewardList.appendChild(listElement);
+          });
+         }
       });
-
-      //const userRefCamp = doc(db,"users",userUID);
-
-     /* getDoc(doc(db,"users",userUID))
-        .then((doc) => {
-          let userDiv = document.querySelector("#campaignOwner");
-          let user = document.createElement("h6");
-          user.textContent = doc.data().user;
-          userDiv.appendChild(user);
-        })*/
-
-      /*let rewards = doc.data().collection("rewards");
-      let rewardDiv = document.querySelector("#rewards");
-      let rewardText = document.createElement("p");
-      rewardText.textContent = rewards;
-      rewardDiv.appendChild(rewardText);
-
-      console.log(rewards);*/
-
-
-
-
-     // alert("this also runs");
-
     })
-
-    
-
-    let titleDiv = document.querySelector("#campaignName");
-
-    let title = document.createElement("h2");
-   // title.textContent = campaignSnap.data().name;
- 
-
-
-    //alert("this much has run");
-   /* if (campaignSnap.exists()){
-      console.log("Document data:", campaignSnap.data().name);
-    } else{
-      console.log("no such document");
-    }*/
-    //alert(currentCampaignDoc.data().name);
-    //console.log(currentCampaignDoc.name);
-
+  } else{
+    window.location.href = "campaignExplore.html";
+    alert("Error - no campaign selected");
   }
-
-  //alert("it worked!");
-  
-
-
- 
 }
 
-//Donation modal
+//  ################ PROCESSING DONATIONS ################################################
+
+//Pages that have a donate button will have access to this functionality
+
 if (document.querySelector("#donationButton")){
   const donate = document.querySelector("#donationButton");
+
+  //When the donate button is clicked
   donate.addEventListener("click", (e) =>{
+
+    //If the user is currently logged in
     if (auth.currentUser){
       e.preventDefault();
-      console.log("the current user is:",auth.currentUser);
+
+      //The donation form is opened
       const donateForm = document.querySelector("#modal-donate");
       M.Modal.getInstance(donateForm).open();
-     // processDonation();
+
+    //Else, the user is presented with an error popup
     }else{
       openDonationPopup();
-      
     }
-   
   })
+}
 
-
-};
-
+//The user is presented with an error popup if they attempt to donate to a campaign when they are not
+//logged in
 function openDonationPopup(){
+  const modalBackground = document.querySelector(".modalBackdrop");
+  modalBackground.style.display = "block";
+
   const popup = document.querySelector(".popupError");
   popup.classList.add("open-popupError");
-  //alert("open the popup");
 
+  //When the continue button is clicked within the popup, the modal will close
   const continueBtn = popup.querySelector("#continueDonate")
-
   continueBtn.addEventListener("click", () => {
+    modalBackground.style.display = "none";
     closeDonationPopup();
   })
 }
 
-
+//Closing the popup window
 function closeDonationPopup(){
   const popup = document.querySelector(".popupError");
   popup.classList.remove("open-popupError");
 }
 
+//This function checks that a user has selected a valid reward from the list
+function validateFormReward(){
+
+  //Pull values from the form and document
+  const donationForm = document.querySelector("#donateForm")
+  const rewardSelected = donationForm.donationReward.value;
+  const rewardsList = document.querySelector("#rewardDatalist");
+
+   // Checks if the user selection is an option in the datalist
+   for (var j = 0; j < rewardsList.options.length; j++) {
+    if (rewardSelected == rewardsList.options[j].value) {
+      return true;
+    }
+  }
+  return false;
+}
+
+//This function checks if a user has donated a sufficient amount to avail of their selected
+//reward
 function validateFormDonation() {
-  // This function deals with validation of the form fields
+
+  //Pulls necessary information from the form.
   const donationForm= document.querySelector("#donateForm")
-  const donationProposed = parseFloat(donationForm.donationAmount.value).toFixed(2);
   const rewardSelected = donationForm.donationReward.value;
 
+  //If the reward selected is none, there is no lower bound on the donation
   if (rewardSelected == "None"){
     return true;
   }
 
+  //The proposed donations and required donations are parsed to be able to compare them as
+  //float numbers to two decimal places
+  const donationProposed = parseFloat(donationForm.donationInput.value).toFixed(2);
   var donationRequired = rewardSelected.split(":");
-  console.log(donationRequired);
   var donationAmountSplit = donationRequired[1];
-  console.log(donationAmountSplit);
   donationAmountSplit = donationAmountSplit.slice(0, -1);
   var donationAmountFloat = donationAmountSplit.trim();
-
   donationAmountFloat = parseFloat(donationAmountFloat).toFixed(2);
-  console.log(donationAmountFloat);
-  console.log(donationProposed);
 
   if (Math.round(parseFloat(donationAmountFloat)*100000) > Math.round(parseFloat(donationProposed)*100000)){
     return false;
@@ -709,148 +684,186 @@ function validateFormDonation() {
   return true;
 }
 
-//Processing the donation
-//function processDonation(){
+// If a page contains the donation modal, it will have access to this functionality
   if (document.querySelector("#modal-donate")){
+
+    // Alter donation form heading to reflect campaign being donated to
     const donationHeading = document.querySelector("#donationHeading");
     const campaignDonate = localStorage.getItem("currentCampaignName");
     donationHeading.innerText = "Donate to "+ campaignDonate;
-    const donateForm = document.querySelector('#donateForm');
 
+    const donateForm = document.querySelector('#donateForm');
     let collectionRef = collection(db, "campaigns",localStorage.getItem("currentCampaign"),"rewards");
 
-      onSnapshot(collectionRef, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          console.log("data: ",doc.data());
-          let rewardDiv = document.querySelector("#donateForm");
-          let rewardName = doc.data().name + " (Required Donation: "+parseFloat(doc.data().donation).toFixed(2)+")";
-          let rewardDonationRequired = doc.data().donation;
-      
-          let rewardDatalist = document.querySelector("#rewardDatalist");
-
-          let rewardOption = document.createElement("option");
-          rewardOption.setAttribute("value",rewardName);
-          rewardOption.setAttribute("class",rewardDonationRequired);
-          rewardOption.textContent = rewardName;
-
-          rewardDatalist.appendChild(rewardOption);
-          console.log("this worked",rewardOption);
-
-         } )});
-
-     donateForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (auth.currentUser) {
-
-          var validDonationForm = validateFormDonation();
-          console.log(validDonationForm);
-
+    //Fill the datalist for rewards (i.e. the options in a drop down menu) depending on the
+    //rewards made available by the campaign in question
+    onSnapshot(collectionRef, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
          
-          if (validDonationForm){
-
-            let insufficientErrorDiv = document.querySelector(".insufficientDonation");
-            insufficientErrorDiv.classList.remove("display-error");
-            insufficientErrorDiv.innerHTML = "";
-           
-
+        let rewardDatalist = document.querySelector("#rewardDatalist");
         
-          //store a record of the donation under the user information in firestore database
+        // Note: Here, reward name includes the donation required to avoid the user having to check back
+        let rewardName = doc.data().name + " (Required Donation: "+parseFloat(doc.data().donation).toFixed(2)+")";
+
+        let rewardOption = document.createElement("option");
+        rewardOption.setAttribute("value",rewardName);
+        rewardOption.textContent = rewardName;
+        rewardDatalist.appendChild(rewardOption);
+        
+        })
+      });
+
+    //When the donation form is submitted
+    donateForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      // If the user is currently logged in
+      if (auth.currentUser) {
+        
+        //Checks if the user has selected a valid reward
+        var validRewardSelected = validateFormReward();
+        
+        //If they have
+        if (validRewardSelected){
+          
+          //Ensures any previous errors are cleared
+          let invalidRewardDiv = document.querySelector(".invalidReward");
+          invalidRewardDiv.classList.remove("display-error");
+          invalidRewardDiv.innerHTML = "";
+
+          //Checks if the user's donation amount is valid for the reward selected
+          var validDonationForm = validateFormDonation();
+        
+        //If it is valid
+        if (validDonationForm){
+
+          //Ensures any previous errors are cleared
+          let insufficientErrorDiv = document.querySelector(".insufficientDonation");
+          insufficientErrorDiv.classList.remove("display-error");
+          insufficientErrorDiv.innerHTML = "";
+
+          // Information is pulled to store a record of the donation under the user's donation subcollection
+          
+          //User ID
           const userID = auth.currentUser.uid;
+
+          //Processing time
           var processingTimeDate = new Date();
           var date = processingTimeDate.getFullYear()+"-"+(processingTimeDate.getMonth()+1)+"-"+processingTimeDate.getDate();
           var time = processingTimeDate.getHours() + ":" + processingTimeDate.getMinutes() + ":" + processingTimeDate.getSeconds();
           const processingTime = date+"_"+time;
-          const donationID = userID+"_"+campaignDonate+"_"+processingTime;
-          const userRef = doc(db, "users", userID, "donations",donationID)
-          const donationAmountFromForm = donateForm.donationAmount.value;
 
+          //Donation ID
+          const donationID = userID+"_"+campaignDonate+"_"+processingTime;
+
+          //Constructs new reference
+          const userRef = doc(db, "users", userID, "donations",donationID)
+
+          //Donation Amount
+          const donationAmountFromForm = donateForm.donationInput.value;
+
+          //Sets new reward document in the user's donations subcollecction
           setDoc(userRef, {
-            donationAmount: donateForm.donationAmount.value,
+            donationAmount: donateForm.donationInput.value,
             donationTo: campaignDonate,
-            donationCurrency: donateForm.donationCurrency.value,
             reward: donateForm.donationReward.value,
             tip: donateForm.tipAmount.value,
             processedAt: processingTime
         
         }).then(() => {
-      
-        
+          
+          //Constructs new reference to store donation record under the campaign's donations subcollection
+          const campaignID = localStorage.getItem("currentCampaign");
+          const campRef = doc(db, "campaigns", campaignID, "donations",donationID)
+
+          //Sets new reward document in the campaign's donations subcollection
+          setDoc(campRef, {
+              donationAmount: donateForm.donationInput.value,
+              donationFrom: userID,
+              reward: donateForm.donationReward.value,
+              tip: donateForm.tipAmount.value,
+              processedAt: processingTime
+          
+          }).then(async () => {
+
+          //Updates the amount raised in the campaign's record
+
+          const updateAmountRef = doc(db, "campaigns",campaignID);
+          var nowRaisedFloat;
+          
+          //Retrives campaign document and pulls necessary information
+          const updateDocFetch = await getDoc(updateAmountRef);
+          const currentRaised = updateDocFetch.data().raised;
+
+          //Parses current amount raised to a float number of two decimal places
+          const currentRaisedFloat = parseFloat(currentRaised).toFixed(2);
+
+          //Updates the amount raised
+           nowRaisedFloat = (parseFloat(currentRaisedFloat)+ parseFloat(donationAmountFromForm)).toFixed(2);
+    
+          //Updates the campaign document with the new amount raised
+          updateDoc(updateAmountRef, {
+            raised: nowRaisedFloat,
+          })
+          .then(() => {
+
+            //Popup saying donation has been processed successully appears
+            openPopupDonationSuccess();
+            const modal = document.querySelector('#modal-donate');
+            M.Modal.getInstance(modal).close();
+            donateForm.reset();
+          })
+            }).catch(err => {
+              console.log(err.message);
+            })
+
         }).catch(err => {
-          console.log(err.message);
+              console.log(err.message);
         })
 
-        //store a record of the donation under the campaign information in firestore database
-        const campaignID = localStorage.getItem("currentCampaign");
-        //const campRef = collection(db, "campaigns", campaignID, "donations")
-        const campRef = doc(db, "campaigns", campaignID, "donations",donationID)
-
-       
-
-
-
-        setDoc(campRef, {
-          donationAmount: donateForm.donationAmount.value,
-          donationFrom: userID,
-          donationCurrency: donateForm.donationCurrency.value,
-          reward: donateForm.donationReward.value,
-          tip: donateForm.tipAmount.value,
-          processedAt: processingTime
-      
-      }).then(async () => {
-
-        const updateAmountRef = doc(db, "campaigns",campaignID);
-
-        var nowRaisedFloat;
-
-        const updateDocFetch = await getDoc(updateAmountRef);
-
-        const currentRaised = updateDocFetch.data().raised;
-        const currentRaisedFloat = parseFloat(currentRaised).toFixed(2);
-
-        nowRaisedFloat = (parseFloat(currentRaisedFloat)+ parseFloat(donationAmountFromForm)).toFixed(2);
-        console.log(nowRaisedFloat);
-
-        updateDoc(updateAmountRef, {
-          raised: nowRaisedFloat,
-        })
-        .then(() => {
-          openPopupDonationSuccess();
-          const modal = document.querySelector('#modal-donate');
-          M.Modal.getInstance(modal).close();
-          donateForm.reset();
-        })
-
-      
-        
-       
-      }).catch(err => {
-        console.log(err.message);
-      })
-
-      }else{
+      //If the donation is insufficient an error will be displayed
+      } else{
         let insufficientErrorDiv = document.querySelector(".insufficientDonation");
         insufficientErrorDiv.classList.add("display-error");
         insufficientErrorDiv.innerHTML = "Donation amount insufficient for reward selected.";
-       
+      }
+      
+      //If the reward is invalid an error will be displayed
+      } else{
+        let invalidRewardDiv = document.querySelector(".invalidReward");
+        invalidRewardDiv.classList.add("display-error");
+        invalidRewardDiv.innerHTML = "Please select a reward from the list provided."; 
       }
     
+    // If the user is not logged in, they will be presented with the error popup
+    } else{
+      openDonationPopup();
+      const modal = document.querySelector('#modal-donate');
+      M.Modal.getInstance(modal).close();
+      donateForm.reset();
     }
-    })
+  })
 };
 
+// Opens pop up in the event a donation has been processed successfully
 function openPopupDonationSuccess(){
-  alert("success!");
+
+  const modalBackground = document.querySelector(".modalBackdrop");
+  modalBackground.style.display = "block";
+
   const popup = document.querySelector(".popupDonateSuccess");
   popup.classList.add("open-popupDonateSuccess");
 
   const continueBtn = popup.querySelector("#continueDonationComplete")
 
   continueBtn.addEventListener("click", () => {
+    modalBackground.style.display = "none";
     closePopupDonationSuccess();
     window.location.href = "campaignExplore.html";
   })
 }
 
+// Closes the successful donation popup
 function closePopupDonationSuccess(){
   const popup = document.querySelector("#popupDonateSuccess");
   popup.classList.remove("open-popupDonateSuccess");
@@ -918,12 +931,8 @@ function renderCampaignLanding(doc) {
   if (doc.length != 0){
 
     //WORKS WITH THE LIST 
-
-   
-
     let floatContainer = document.createElement("div");
     floatContainer.setAttribute("class","float-child");
-
 
     let card = document.createElement("div");
     card.setAttribute("class","card");
@@ -946,12 +955,12 @@ function renderCampaignLanding(doc) {
     let idCurrent = doc.id;
   
 
-    //currentCampaign = doc.id;
+    let currentCampaign = doc.id;
 
     pageButton.addEventListener("click", () => {
       localStorage.setItem("currentCampaign", idCurrent);
       localStorage.setItem("currentCampaignName",doc.data().name)
-      currentCampaignId = idCurrent;
+      let currentCampaignId = idCurrent;
       //alert(localStorage.getItem("currentCampaign"));
       renderCampaignPage();
     });
@@ -2055,7 +2064,7 @@ function fillEditPage(){
           let rewardName = document.createElement("h5");
           let donation = document.createElement("button");
           donation.disabled = true;
-          donation.setAttribute("id","donationAmount");
+          donation.setAttribute("class","donationAmount");
 
           let deleteBtn = document.createElement("button");
           deleteBtn.setAttribute("id","deleteRewardBtn");
@@ -2084,7 +2093,7 @@ function fillEditPage(){
 
           rewardName.textContent = docSnapshot.data().name;
           const donationRounded = (Math.round(docSnapshot.data().donation * 100) / 100).toFixed(2);
-          donation.textContent = donationRounded + " "+ docSnapshot.data().currency;
+          donation.textContent = donationRounded + " ";
           descriptionReward.textContent = docSnapshot.data().description;
 
           rewardDivDescription.appendChild(rewardName);

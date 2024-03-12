@@ -13,6 +13,16 @@ button {
   font-weight: bold
 }
 
+.modal {
+  background-color: white;
+}
+
+.modal-content{
+  border: none;
+  box-shadow: none;
+  background-color: white;
+}
+
 button:hover{
   background-color:#57BEFF !important;
 }
@@ -180,12 +190,12 @@ button:focus{
 
 }
 
-.recentCampaigns {
+.recentCampaigns, .campaignExplorePage {
   padding: 20px 50px 50px 50px;
   width: 100%;
 }
 
-.recentCampaigns h2, .exploreCampaigns h2 {
+.recentCampaigns h2{
   font-size: 30px;
   color: #1C1C57;
   margin-top: 10px;
@@ -194,11 +204,30 @@ button:focus{
 
 }
 
-.recentCampaigns p, .exploreCampaigns p{
+.recentCampaigns p{
   font-size: 19px;
   margin: 30px 30px 30px 0;
   letter-spacing: 1px;
   color: #666666;
+}
+
+.campaignExplorePage p{
+  font-size: 19px;
+  margin: 30px 30px 30px 0;
+  letter-spacing: 1px;
+  color: #666666;
+
+}
+
+.campaignExplorePage h1{
+  font-size: 50px;
+  position: relative;
+  color: #1C1C57;
+  margin-top: 25px;
+  font-weight: 700;
+  line-height: 1;
+
+
 }
 
 
@@ -453,7 +482,8 @@ button:focus{
   padding: 2px;
 }
 
-#rewardContainer{
+#rewardContainer:hover{
+  box-shadow: 0 12px 20px 0 rgba(0,0,0,0.2);
 
 }
 
@@ -488,9 +518,19 @@ button:focus{
   
 }
 
+#donationHeading{
+  font-weight: bold;
+  color:  #1C1C57;
+}
+
+#donationButton{
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
 
 
-#donationAmount{
+.donationAmount{
   color:#1C1C57; 
   background-color: white; 
   padding: 5px;
@@ -501,14 +541,27 @@ button:focus{
   align-items: center;
 }
 
-.insufficientDonation{
+#donationAmount:hover{
+  color:#1C1C57 !important; 
+  background-color: white !important; 
+  padding: 5px;
+  text-align: center;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 20px;
+  align-items: center;
+}
+
+
+
+.insufficientDonation, .invalidReward{
   color:#af4242;
   background-color:#fde8ec;
   padding: 10px;
   display: none;
 }
 
-.insufficientDonation.display-error{
+.insufficientDonation.display-error, .invalidReward.display-error{
   display: block;
   margin-bottom: 20px;
   transform:translateY(-20px);
@@ -530,6 +583,7 @@ button:focus{
   padding: 0 30px 30px;
   visibility: hidden;
   transition: transform 0.4s, top 0.4s;
+  z-index: 100;
 }
 
 .open-popupError, .open-popupSignupError{
@@ -537,6 +591,7 @@ button:focus{
   top: 80%;
   transform: translate(-50%, -50%) scale(1);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 100;
 
 }
 
@@ -572,7 +627,7 @@ button:focus{
 .hero-section{
     width: 50%;
     height: calc(100vh - 120px);
-    background-image: url("../img/stockphoto1.jpg");
+    background-image: url("https://firebasestorage.googleapis.com/v0/b/kpesacrowdfunding.appspot.com/o/siteImages%2Fstockphoto1.jpg?alt=media&token=ddd78902-3000-404b-bac5-cad8d490531e");
     background-size: cover;
     display: flex;
     justify-content: center;
@@ -632,7 +687,7 @@ position: relative;
 .textSplit h3{
   color: #F0F6FA;
   font-size: 50px;
-  padding: 60px 60px;
+  padding: 60px 0px;
   font-weight: 700;
 }
 
@@ -642,22 +697,7 @@ position: relative;
 }
 
 
-.campaignExplorePage h1{
-  font-size: 50px;
-  position: relative;
-  color: #1C1C57;
-  margin-top: 30px;
-  padding: 10px 10px 10px 40px;
-  font-weight: 700;
-  line-height: 1;
-}
 
-.campaignExplorePage p{
-  font-size: 19px;
-  padding: 10px 10px 10px 40px;
-  letter-spacing: 1px;
-  color: #666666;
-}
 
 
 /* campaign */
@@ -850,6 +890,14 @@ button {
 
 .loading {
   display: none;
+}
+
+#chevronTop{
+  margin-left: 4%;
+}
+
+#raisedDiv h5, #targetDiv h5{
+  color:#1C1C57;
 }
 
 /* REG FORM */
@@ -1081,6 +1129,7 @@ input.invalid {
   padding: 0 30px 30px;
   visibility: hidden;
   transition: transform 0.4s, top 0.4s;
+  z-index: 100;
 }
 
 .open-popupCamp, .open-popupDonateSuccess{
