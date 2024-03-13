@@ -2,7 +2,7 @@ body {
   font-family: "Nunito", sans-serif;
 }
 
-button { 
+button, #updateImageLabel { 
   color:#F0F6FA; 
   background-color:#1C1C57; 
   border:1px solid; 
@@ -27,15 +27,18 @@ button {
   color:#1C1C57
 }
 
-#modal-login.modal.open{
+#modal-login.modal.open, #modal-updateBio.modal.open, #modal-updateCategory.modal.open, #modal-updateReward.modal.open, #modal-updateTarget.modal.open {
   background-color: white;
 }
-#login-form{
+#login-form, #updateBio-form, #updateCategory-form, #updateReward-form, #updateTarget-form{
   background-color: white;
 }
 
-button:hover{
+
+
+button:hover, #updateImageLabel:hover{
   background-color:#57BEFF !important;
+  border-color: #57BEFF !important;
 }
 
 button:active{
@@ -411,12 +414,12 @@ button:focus{
   
 }
 
-#singleCampaignPage #progressBarOuter{
+#progressBarOuter{
   background-color:#f1f1f1;
   border-radius: 4px;
 }
 
-#singleCampaignPage .progressBarInner{
+.progressBarInner{
   background-color:#57BEFF;
   font-weight: 700;
   padding-left: 10px;
@@ -424,7 +427,7 @@ button:focus{
 
 }
 
-#singleCampaignPage #raisedDiv h5, #singleCampaignPage #targetDiv h5{
+#raisedDiv h5,  #targetDiv h5{
   font-weight: 700;
 }
 
@@ -441,17 +444,6 @@ button:focus{
 
 #editCampaignPage #editCategoryBtn{
   width: 40%;
-}
-
-#editCampaignPage label{
-  display: block;
-  width: 200px;
-  background-color:#1C1C57;
-  color:#F0F6FA;
-  padding: 12px;
-  margin: 10px auto;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 #inputFile{
@@ -566,14 +558,14 @@ button:focus{
 
 
 
-.insufficientDonation, .invalidReward{
+.insufficientDonation, .invalidReward, .invalidCategory{
   color:#af4242;
   background-color:#fde8ec;
   padding: 10px;
   display: none;
 }
 
-.insufficientDonation.display-error, .invalidReward.display-error{
+.insufficientDonation.display-error, .invalidReward.display-error, .invalidCategory.display-error{
   display: block;
   margin-bottom: 20px;
   transform:translateY(-20px);
@@ -583,7 +575,7 @@ button:focus{
 /* Donate Error Popup */
 
 
-.popupError, .popupSignupError, .popupErrorAccount{
+.popupError, .popupSignupError, .popupErrorAccount, .popupCreateCampaignError{
   width: 600px;
   background-color: white;
   border-radius: 10px;
@@ -598,7 +590,7 @@ button:focus{
   z-index: 100;
 }
 
-.open-popupError, .open-popupSignupError, .open-popupErrorAccount{
+.open-popupError, .open-popupSignupError, .open-popupErrorAccount, .open-popupCreateCampaignError{
   visibility: visible;
   top: 80%;
   transform: translate(-50%, -50%) scale(1);
@@ -609,18 +601,18 @@ button:focus{
 
 
 
-.popupError h2, .popupSignupError h2{
+.popupError h2, .popupSignupError h2, .popupCreateCampaignError h2{
   color: #1C1C57;
   font-weight: bold;
   font-size: 38px;
   margin: 30px 0 10px;
 }
 
-.popupError p, .popupSignupError p{
+.popupError p, .popupSignupError p, .popupCreateCampaignError p{
   color: #888888;
 }
 
-.popupError #x , .popupSignupError #x{
+.popupError #x , .popupSignupError #x, .popupCreateCampaignError #x{
 
   width: 150px;
   background-color: white;

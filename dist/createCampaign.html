@@ -41,16 +41,13 @@
                   <li >
                     <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
                   </li>
-              
+                 
                   <li class="logged-in" style="display: none;">
                       <a href="forum.html" class="grey-text" id="forum">Community Forum</a>
                     </li>
-
                     <li class="logged-in" style="display: none;">
                       <a href="#" class="grey-text" id="logout">Logout</a>
                     </li>
-              
-              
                   <li class="logged-out" style="display: none;">
                     <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
                   </li>
@@ -60,7 +57,6 @@
                 </span>
               </ul>
             </div>
-        
   
             <ul id="dropdownCampaign" class="dropdown-content">
               <li><a href="campaignExplore.html">Explore</a></li>
@@ -81,6 +77,16 @@
             <button type="button" id="continueNewCampaign">Continue</button>
           </div>
 
+          <div class="popupCreateCampaignError" id = "popupCreateCampaignError">
+            <img src="red-x-icon.png" id = "x" >
+            
+            <h2>Campaign could not be created.</h2>
+            <p id="createCampaignError"></p>
+            <button type="button" id="continueCreateCampaign">Continue</button>
+          </div>
+        
+
+
           
 
           <form id="createCampaignFormSteps" action="">
@@ -93,7 +99,7 @@
               <p><input placeholder="Campaign Name..." oninput="this.className = ''" name = "campaignName" type="text"></p>
             </div>
 
-            <div class="tab">
+            <div class="tab" id ="updateCategory-form">
               <label for="campaignCategory">Category:</label>
               <input list = "campaignCategoryList" name="campaignCategory" type="text">
 
@@ -109,6 +115,7 @@
               <option value="Other">Other</option>
              </datalist>
             </input>
+            <p class="invalidCategory"></p>
 
 
         
@@ -118,7 +125,7 @@
             </div>
           
             
-            <div class="tab">
+            <div class="tab" id ="countryTab">
 
             
            <label for="campaignCountry">Country:</label>
@@ -220,17 +227,8 @@
           </div>
         </div>
 
-        
-        <!-- ACCOUNT MODAL -->
-        <div id="modal-account" class="modal">
-          <div class="modal-content center-align">
-            <h4>Account details</h4><br />
-            <div class="account-details"></div>
-          </div>
-        </div>
-      
-      
-       
+
+         
         <footer>
           <div class = "footer">
           <div class = "col-1">

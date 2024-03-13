@@ -78,7 +78,7 @@ onAuthStateChanged(auth, (user) =>{
 }
 
 
-// FILLING EXPLORE CAMPAIGNS PAGE 
+// ##################### FILLING EXPLORE CAMPAIGNS PAGE  ###############################################
 
 //This will update explore campaigns page when a new doc is added or a doc is removed
   if (document.querySelector("#exploreCampaigns")){
@@ -96,6 +96,34 @@ onAuthStateChanged(auth, (user) =>{
   }
 
 });
+
+// ############################ HIDING NAV BAR LINKS ########################################
+
+const loggedOutLinks = document.querySelectorAll(".logged-out");
+
+const loggedInLinks = document.querySelectorAll(".logged-in");
+
+const accountDetails = document.querySelector(".account-details");
+
+const setupUI = (user) => {
+
+  //If a user is logged in
+  if (user) {
+    const userRef = doc(db, "users", user.uid)
+    //toggle UI elements
+    loggedInLinks.forEach(item => item.style.display = "block");
+    loggedOutLinks.forEach(item => item.style.display = "none");
+  }
+
+  //Otherwise
+  else{
+    //toggle UI elements
+    loggedInLinks.forEach(item => item.style.display = "none");
+    loggedOutLinks.forEach(item => item.style.display = "block");
+
+  }
+}
+
 
 //  ################   SIGNING USERS UP ################################################
 
@@ -443,149 +471,177 @@ function renderCampaignPage(){
 
 //Will fill page if it is identified as the single campaign page
 if (document.querySelector("#singleCampaignPage")){
-  fillPage();
+  fillPage("currentCampaign");
 }
 
-function fillPage(){
-  
-  //retrives the current campaign (i.e. the campaign the user has interacted with)
-  let currentCampaign = localStorage.getItem("currentCampaign");
-   
+function fillPage(campaignItem){
+  let currentCampaign = localStorage.getItem(campaignItem);
+
   if (currentCampaign != null){
+    
+  // Current campaign document reference
+  const currentCampaignDoc = doc(db, "campaigns", currentCampaign);
 
-   // Current campaign document reference
-    const currentCampaignDoc = doc(db, "campaigns", currentCampaign);
+  // Calls the current campaign doc from the database
+   onSnapshot(currentCampaignDoc, (docCamp) =>{
+     
+     //Creates elements to populate page and fills them
+     //with content from the campaign document
 
-   // Calls the current campaign doc from the database
-    onSnapshot(currentCampaignDoc, (doc) =>{
+     //title
+     let titleDiv = document.querySelector("#campaignName");
+     let title = document.createElement("h2");
+     title.textContent = docCamp.data().name;
+     titleDiv.appendChild(title);
+
+     //bio
+     let bioDiv = document.querySelector("#campaignBio");
+     let bio = document.createElement("p");
+     bio.textContent = docCamp.data().description;
+     bioDiv.appendChild(bio);
+
+     //category
+     let categoryDiv = document.querySelector("#campaignCategory");
+     let category = document.createElement("h6");
+     category.textContent = docCamp.data().category;
+     categoryDiv.appendChild(category);
+
+     //money raised, target, and progress
+     let raisedDiv = document.querySelector("#raisedDiv");
+     let targetDiv = document.querySelector("#targetDiv");
+     let targetDoc = document.createElement("h5");
+     let raisedDoc = document.createElement("h5");
+     let progressBar = document.createElement("div");
+     progressBar.setAttribute("class","progressBarInner");
+
+     targetDoc.textContent = "Target: "+docCamp.data().target;
+     raisedDoc.textContent = "Raised: "+docCamp.data().raised;
+     let outerProgressBar = document.querySelector("#progressBarOuter");
+
+     //If no money has been raised
+     if (Math.round((docCamp.data().raised/docCamp.data().target)*100,2) <= 0){
+       outerProgressBar.textContent = "0% raised";
+     }
+     //If target has been met or exceeded
+     else if (Math.round((docCamp.data().raised/docCamp.data().target)*100,2) >= 100){
+       progressBar.textContent = "100% raised";
+       progressBar.setAttribute("style","height: 24px; width: 100%");
+
+     }
+     //All other cases
+     else{
+       let percentageComplete = (Math.round((docCamp.data().raised/docCamp.data().target)*100,2))+"%";
+       progressBar.setAttribute("style","height: 24px; width:"+percentageComplete);
+       progressBar.textContent = percentageComplete+" raised";
+     }
+     
+     raisedDiv.appendChild(raisedDoc);
+     outerProgressBar.appendChild(progressBar);
+     targetDiv.appendChild(targetDoc);
+     
+     //image
+     let imageDiv = document.querySelector("#campaignImage");
+     let imageSrc = docCamp.data().image;
+     imageDiv.setAttribute("src",imageSrc);
+     
+     //rewards
+
+     //collection reference for the campaign's rewards
+     let collectionRef = collection(db, "campaigns",currentCampaign,"rewards");
+     const queryOrder = query(collectionRef, orderBy("donation"));
+
+     //fetches rewards from rewards subcollection under the campaign document
+     onSnapshot(queryOrder, (querySnapshot) => {
+      if (querySnapshot.empty){
+         let noRewardsMsg = document.querySelector("#rewardsMsg");
+         noRewardsMsg.textContent = "This campaign has no rewards available."
+       }else{
+        //const queryOrder = querySnapshot.orderBy("donation");
+         querySnapshot.forEach((docSnap) => {
+           
+           //Clears no rewards message if necessary 
+           let noRewardsMsg = document.querySelector("#rewardsMsg");
+           noRewardsMsg.textContent = ""
+
+           //Each reward document in the subcollection is fetched and
+           //presented on the interface
+
+           let rewardDiv = document.querySelector("#rewards");
+           let rewardList = rewardDiv.querySelector("#rewardList");
+           let listElement = document.createElement("li");
+
+           let rewardContainer = document.createElement("div");
+           rewardContainer.setAttribute("class","rewardContainer");
+
+           let rewardDivDonation = document.createElement("div");
+           rewardDivDonation.setAttribute("class","rewardDonationDiv");
+
+           let rewardDivDescription = document.createElement("div");
+           rewardDivDescription.setAttribute("class","rewardDescriptionDiv");
+           
+           let rewardName = document.createElement("h5");
+           rewardName.textContent = docSnap.data().name;
+
+           let donation = document.createElement("button");
+           donation.disabled = true;
+           donation.setAttribute("class","donationAmount");
+           const donationRounded = (Math.round(docSnap.data().donation * 100) / 100).toFixed(2);
+           donation.textContent = donationRounded + " ";
+
+           let rewardButtonDivCenter = document.createElement("div");
+           rewardButtonDivCenter.setAttribute("class","center");
+
+           rewardDivDescription.appendChild(rewardName);
+           rewardButtonDivCenter.appendChild(donation);
+
+
+           //If the function is called to the edit page, delete buttons are added to each reward
+           if (campaignItem == "updateCampaignId"){
+            let deleteBtn = document.createElement("button");
+            deleteBtn.setAttribute("id","deleteRewardBtn");
+            deleteBtn.innerText = "Delete";
+            rewardButtonDivCenter.appendChild(deleteBtn);
+  
+            deleteBtn.addEventListener("click", () => {
+              let currentCampaign = localStorage.getItem("updateCampaignId");
+              let rewardId = docSnap.data().uid;
+              alert(rewardId);
+  
+              let rewardDocRef = doc(db, "campaigns",currentCampaign,"rewards",rewardId);
+  
+              deleteDoc(rewardDocRef)
+              .then(() => {
+                location.reload();
+              })
+  
+  
+            })
+  
+           }
+
       
-      //Creates elements to populate page and fills them
-      //with content from the campaign document
+           
+           let descriptionReward = document.createElement("p");
+           descriptionReward.textContent = docSnap.data().description;
 
-      //title
-      let titleDiv = document.querySelector("#campaignName");
-      let title = document.createElement("h2");
-      title.textContent = doc.data().name;
-      titleDiv.appendChild(title);
+       
+           rewardDivDonation.appendChild(rewardButtonDivCenter);
+           rewardDivDescription.appendChild(descriptionReward);
+           rewardContainer.appendChild(rewardDivDonation);
+           rewardContainer.appendChild(rewardDivDescription);
+           rewardContainer.setAttribute("class","rewardContainer");
 
-      //bio
-      let bioDiv = document.querySelector("#campaignBio");
-      let bio = document.createElement("p");
-      bio.textContent = doc.data().description;
-      bioDiv.appendChild(bio);
-
-      //category
-      let categoryDiv = document.querySelector("#campaignCategory");
-      let category = document.createElement("h6");
-      category.textContent = doc.data().category;
-      categoryDiv.appendChild(category);
-
-      //money raised, target, and progress
-      let raisedDiv = document.querySelector("#raisedDiv");
-      let targetDiv = document.querySelector("#targetDiv");
-      let targetDoc = document.createElement("h5");
-      let raisedDoc = document.createElement("h5");
-      let progressBar = document.createElement("div");
-      progressBar.setAttribute("class","progressBarInner");
-
-      targetDoc.textContent = "Target: "+doc.data().target;
-      raisedDoc.textContent = "Raised: "+doc.data().raised;
-      let outerProgressBar = document.querySelector("#progressBarOuter");
-
-      //If no money has been raised
-      if (Math.round((doc.data().raised/doc.data().target)*100,2) <= 0){
-        outerProgressBar.textContent = "0% raised";
-      }
-      //If target has been met or exceeded
-      else if (Math.round((doc.data().raised/doc.data().target)*100,2) >= 100){
-        progressBar.textContent = "100% raised";
-        progressBar.setAttribute("style","height: 24px; width: 100%");
-
-      }
-      //All other cases
-      else{
-        let percentageComplete = (Math.round((doc.data().raised/doc.data().target)*100,2))+"%";
-        progressBar.setAttribute("style","height: 24px; width:"+percentageComplete);
-        progressBar.textContent = percentageComplete+" raised";
-      }
-      
-      raisedDiv.appendChild(raisedDoc);
-      outerProgressBar.appendChild(progressBar);
-      targetDiv.appendChild(targetDoc);
-      
-      //image
-      let imageDiv = document.querySelector("#campaignImage");
-      let imageSrc = doc.data().image;
-      imageDiv.setAttribute("src",imageSrc);
-      
-      //rewards
-
-      //collection reference for the campaign's rewards
-      let collectionRef = collection(db, "campaigns",currentCampaign,"rewards");
-
-      //fetches rewards from rewards subcollection under the campaign document
-      onSnapshot(collectionRef, (querySnapshot) => {
-        if (querySnapshot.empty){
-          let noRewardsMsg = document.querySelector("#rewardsMsg");
-          noRewardsMsg.textContent = "This campaign has no rewards available."
-        }else{
-
-          querySnapshot.forEach((doc) => {
-            
-            //Clears no rewards message if necessary 
-            let noRewardsMsg = document.querySelector("#rewardsMsg");
-            noRewardsMsg.textContent = ""
-
-            //Each reward document in the subcollection is fetched and
-            //presented on the interface
-
-            let rewardDiv = document.querySelector("#rewards");
-            let rewardList = rewardDiv.querySelector("#rewardList");
-            let listElement = document.createElement("li");
-
-            let rewardContainer = document.createElement("div");
-            rewardContainer.setAttribute("class","rewardContainer");
-
-            let rewardDivDonation = document.createElement("div");
-            rewardDivDonation.setAttribute("class","rewardDonationDiv");
-
-            let rewardDivDescription = document.createElement("div");
-            rewardDivDescription.setAttribute("class","rewardDescriptionDiv");
-            
-            let rewardName = document.createElement("h5");
-            rewardName.textContent = doc.data().name;
-
-            let donation = document.createElement("button");
-            donation.disabled = true;
-            donation.setAttribute("class","donationAmount");
-            const donationRounded = (Math.round(doc.data().donation * 100) / 100).toFixed(2);
-            donation.textContent = donationRounded + " ";
-
-            let rewardButtonDivCenter = document.createElement("div");
-            rewardButtonDivCenter.setAttribute("class","center");
-            
-            let descriptionReward = document.createElement("p");
-            descriptionReward.textContent = doc.data().description;
-
-            rewardDivDescription.appendChild(rewardName);
-            rewardButtonDivCenter.appendChild(donation);
-            rewardDivDonation.appendChild(rewardButtonDivCenter);
-            rewardDivDescription.appendChild(descriptionReward);
-            rewardContainer.appendChild(rewardDivDonation);
-            rewardContainer.appendChild(rewardDivDescription);
-            rewardContainer.setAttribute("class","rewardContainer");
-
-            //Finally, the reward is added to the document
-            listElement.appendChild(rewardContainer);
-            rewardList.appendChild(listElement);
-          });
-         }
-      });
-    })
-  } else{
-    window.location.href = "campaignExplore.html";
-    alert("Error - no campaign selected");
-  }
+           //Finally, the reward is added to the document
+           listElement.appendChild(rewardContainer);
+           rewardList.appendChild(listElement);
+         });
+        }
+     });
+   })
+ } else{
+   window.location.href = "campaignExplore.html";
+   alert("Error - no campaign selected");
+ }
 }
 
 //  ################ PROCESSING DONATIONS ################################################
@@ -762,10 +818,10 @@ function validateFormDonation() {
 
           //Sets new reward document in the user's donations subcollecction
           setDoc(userRef, {
-            donationAmount: donateForm.donationInput.value,
+            donationAmount: parseFloat(donateForm.donationInput.value),
             donationTo: campaignDonate,
             reward: donateForm.donationReward.value,
-            tip: donateForm.tipAmount.value,
+            tip: parseFloat(donateForm.tipAmount.value),
             processedAt: processingTime
         
         }).then(() => {
@@ -774,12 +830,15 @@ function validateFormDonation() {
           const campaignID = localStorage.getItem("currentCampaign");
           const campRef = doc(db, "campaigns", campaignID, "donations",donationID)
 
-          //Sets new reward document in the campaign's donations subcollection
+         
+       
+
+          //Sets new donation document in the campaign's donations subcollection
           setDoc(campRef, {
-              donationAmount: donateForm.donationInput.value,
+              donationAmount: parseFloat(donateForm.donationInput.value),
               donationFrom: userID,
               reward: donateForm.donationReward.value,
-              tip: donateForm.tipAmount.value,
+              tip: parseFloat(donateForm.tipAmount.value),
               processedAt: processingTime
           
           }).then(async () => {
@@ -1296,7 +1355,6 @@ if (document.querySelector(".delete")){
 
 //  ################ RENDERING ACCOUNT PAGE ################################################
 
-
 if (document.querySelector("#userAccountInfo")){
 
   //When a user logs in or logs out, the account page is updated accordingly
@@ -1456,7 +1514,6 @@ function campaignSummary(doc){
 
 function donationSummary(doc){
 
-
   // Initialises div containers
 
   let donationContainer = document.createElement("div");
@@ -1470,444 +1527,76 @@ function donationSummary(doc){
 
   let donationList = document.querySelector("#donationsList");
   let listElement = document.createElement("li");
+  let donationDivDescription = document.createElement("div");
+  donationDivDescription.setAttribute("class","rewardDescriptionDiv");
 
   // Campaign name
   let title = document.createElement("h4");
   title.textContent = "Donation to: "+doc.data().donationTo;
- 
-  let donationDivDescription = document.createElement("div");
-  donationDivDescription.setAttribute("class","rewardDescriptionDiv");
-   
 
+  // Donation amount
   let donation = document.createElement("button");
   donation.disabled = true;
   donation.setAttribute("class","donationAmount");
   const donationRounded = (Math.round(doc.data().donationAmount * 100) / 100).toFixed(2);
   donation.textContent = donationRounded + " ";
 
-  let donationButtonDivCenter = document.createElement("div");
-  donationButtonDivCenter.setAttribute("class","center");
-   
+  //Reward gained
   let descriptionReward = document.createElement("p");
   descriptionReward.textContent = "Reward: "+doc.data().reward;
 
+  //Donation date
   let donationTime = document.createElement("p");
   let timeObj = doc.data().processedAt;
-
   var timeObjArr = timeObj.split("_");
-  donationTime.textContent = "Date: "+timeObjArr[0];
+  donationTime.textContent = timeObjArr[0];
 
 
+  //Adding to document
    donationDivDescription.appendChild(title);
-   //donationButtonDivCenter.appendChild(donation);
-  // donationAmountDiv.appendChild(donationButtonDivCenter);
    donationDivDescription.appendChild(descriptionReward);
    donationContainer.appendChild(donationAmountDiv);
    donationContainer.appendChild(donation);
+   donationContainer.appendChild(donationTime);
    donationContainer.appendChild(donationDivDescription);
-   
    donationContainer.setAttribute("class","donationContainer");
-
-   //Finally, the reward is added to the document
    listElement.appendChild(donationContainer);
    donationList.appendChild(listElement);
 }
 
 
-// get a single document
-/*
+//  ################ EDITING A CAMPAIGN ################################################
 
-const docRef = doc(db, "campaigns", "tcuu8dymVtGuDJqipsa3")
-
-onSnapshot(docRef, (doc) =>{
-  console.log(doc.data(), doc.id)
-})*/
-
-
-// updating a document
-/*
-if (document.querySelector(".update")){ 
-  const updateForm = document.querySelector(".update")
-  updateForm.addEventListener("submit", (e) => {
-  e.preventDefault()
-
-  const docRef = doc(db, "campaigns", updateForm.id.value)
-
-  updateDoc(docRef, {
-    name: "updated name"
-  })
-  .then(() => {
-    updateForm.reset();
-  })
-})
-
-}
-
-function processUpdate(){
-  if (document.querySelector("#modal-update")){
-    const updateHeading = document.querySelector("#updateHeading");
-    const campaignUpdate = localStorage.getItem("campaignToUpdate");
-    campaignHeading.innerText = "Update "+ campaignUpdate;
-    const updateForm = document.querySelector('#updateForm');
-
-    const updateID = localStorage.getItem("updateCampaignId");
-    let docRef = doc(db, "campaigns",updateID);
-
-      onSnapshot(collectionRef, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          console.log("data: ",doc.data());
-          let rewardDiv = document.querySelector("#donateForm");
-          let rewardName = doc.data().name;
-      
-          let rewardDatalist = document.querySelector("#rewardDatalist");
-
-          let rewardOption = document.createElement("option");
-          rewardOption.setAttribute("value",rewardName);
-          rewardOption.textContent = rewardName;
-
-          rewardDatalist.appendChild(rewardOption);
-
-         } )});
-
-     donateForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (auth.currentUser) {
-          //store a record of the donation under the user information in firestore database
-          const userID = auth.currentUser.uid;
-          var processingTimeDate = new Date();
-          var date = processingTimeDate.getFullYear()+"-"+(processingTimeDate.getMonth()+1)+"-"+processingTimeDate.getDate();
-          var time = processingTimeDate.getHours() + ":" + processingTimeDate.getMinutes() + ":" + processingTimeDate.getSeconds();
-          const processingTime = date+"_"+time;
-          const donationID = userID+"_"+campaignDonate+"_"+processingTime;
-          const userRef = doc(db, "users", userID, "donations",donationID)
-
-          setDoc(userRef, {
-            donationAmount: donateForm.donationAmount.value,
-            donationTo: campaignDonate,
-            donationCurrency: donateForm.currency.value,
-            reward: donateForm.reward.value,
-            tip: donateForm.tipAmount.value,
-            processedAt: processingTime
-        
-        }).then(() => {
-      
-        
-        }).catch(err => {
-          console.log(err.message);
-        })
-
-        //store a record of the donation under the campaign information in firestore database
-        const campaignID = localStorage.getItem("currentCampaign");
-        //const campRef = collection(db, "campaigns", campaignID, "donations")
-        const campRef = doc(db, "campaigns", campaignID, "donations",donationID)
-
-        setDoc(campRef, {
-          donationAmount: donateForm.donationAmount.value,
-          donationFrom: userID,
-          donationCurrency: donateForm.currency.value,
-          reward: donateForm.reward.value,
-          tip: donateForm.tipAmount.value,
-          processedAt: processingTime
-      
-      }).then(() => {
-        const modal = document.querySelector('#modal-donate');
-        M.Modal.getInstance(modal).close();
-        donateForm.reset();
-      }).catch(err => {
-        console.log(err.message);
-      })
-
-
-
-
-      }
-      })
-       
-}};*/
-
-//Will fill page if it is identified as the single campaign page
+// If the page contains the editCampaignPage div, it will have access to this functionality
 if (document.querySelector("#editCampaignPage")){
  
-  fillEditPage();
+  //Same function used to fill individual campaign called here
+  fillPage("updateCampaignId");
 
+  //Instantiating variables
   let editBioBtn = document.querySelector("#editBioBtn");
- // let editImageBtn = document.querySelector("#editImageBtn");
+  let editTargetBtn = document.querySelector("#editTargetBtn")
   let editCategoryBtn = document.querySelector("#editCategoryBtn");
   let addRewardBtn = document.querySelector("#addRewardBtn");
   let inputFile = document.querySelector("#inputFile");
   let campaignImage = document.querySelector("#campaignImage");
   
+  //On a change to the input file
   inputFile.addEventListener("change", () => {
+
+    //The image is stored to the firebase cloud storage in the campaign images folder
     campaignImage.src = URL.createObjectURL(inputFile.files[0]);
     let file = inputFile.files[0];
     let fileName = Math.round(Math.random() * 9999) + file.name;
-
-    console.log(file, fileName);
-
-      const storageRef = ref(storage, "campaignImages");
-      const folderRef = ref(storageRef, fileName);
-      const fileRef = "campaignImages/"+fileName;
-      const docRef = ref(storage, fileRef);
-      console.log("The ref is: "+docRef);
-     // const uploadtask = uploadBytes(folderRef, file);
-      localStorage.setItem("imageStorageRef",docRef);
-  
-      uploadBytes(folderRef, file).then((snapshot) =>  {
-          console.log("Snapshot", snapshot.ref.name);
-          let uploadedFileName = snapshot.ref.name;
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          storage
-            .ref("campaignImages")
-            .child(uploadedFileName)
-            .getDownloadURL()
-            .then((url) => {
-              console.log("URL", url);
-              if (!url) {
-                img.style.display = "none";
-              } else {
-                img.style.display = "block";
-                loading.style.display = "none";
-
-              }
-              img.setAttribute("src", url);
-            });
-          console.log("File Uploaded Successfully");
-        }
-        
-      ).then(() => {
-        const imageSrc = ref(storage,localStorage.getItem("imageStorageRef"));
-      let imageURL = "";
-      
-      getDownloadURL(imageSrc)
-      .then((url) => {
-        imageURL = url.toString();
-        alert(imageURL);
-  
-        const docId = localStorage.getItem("updateCampaignId");
-        const editDocRef = doc(db, "campaigns",docId);
-
-  
-        const newImage = imageURL;
-    
-        alert("image updated");
-
-        updateDoc(editDocRef, {
-          image: newImage
-        })
-        .then(() => {
-          console.log("campaign was updated");
-          
-        
-
-        })
-  
-      })
-
-      })
-
-  
-  })
-   
-
-
-
-  editBioBtn.addEventListener("click", () => {
-     const updateBioForm = document.querySelector("#modal-updateBio");
-     M.Modal.getInstance(updateBioForm).open();
-     //const docRef = doc(db, "campaigns", idCurrent)
-
-  })
-
- /* editImageBtn.addEventListener("click", () => {
-    const updateImageForm = document.querySelector("#modal-updateImage");
-    M.Modal.getInstance(updateImageForm).open();
-  })*/
-
-  addRewardBtn.addEventListener("click", () => {
-    const addRewardFormModal = document.querySelector("#modal-updateReward");
-    M.Modal.getInstance(addRewardFormModal).open();
-  })
-
-  editCategoryBtn.addEventListener("click", () => {
-    const editCategoryModal = document.querySelector("#modal-updateCategory");
-    M.Modal.getInstance(editCategoryModal).open();
-  })
-
-}
-
-//updating campaign bio
-if (document.querySelector("#modal-updateBio")){
-  
-  const updateBioForm = document.querySelector("#updateBio-form");
-  const docId = localStorage.getItem("updateCampaignId");
-  const editDocRef = doc(db, "campaigns",docId);
-
-  updateBioForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    //get new name
-
-    const newBio = updateBioForm["bio"].value;
-
-    updateDoc(editDocRef, {
-      description: newBio
-    })
-    .then(() => {
-      updateBioForm.reset();
-      const updateBioFormModal = document.querySelector("#modal-updateBio");
-      M.Modal.getInstance(updateBioFormModal).close();
-      location.reload();
-    })
-
-  })
-
-};
-
-//updating campaign category
-if (document.querySelector("#modal-updateCategory")){
-  
-  const updateCategoryForm = document.querySelector("#updateCategory-form");
-  const docId = localStorage.getItem("updateCampaignId");
-  const editDocRef = doc(db, "campaigns",docId);
-
-  updateCategoryForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    //get new name
-
-    const newCategory = updateCategoryForm["category"].value;
-
-    updateDoc(editDocRef, {
-      category: newCategory
-    })
-    .then(() => {
-      updateCategoryForm.reset();
-      const updateCategoryFormModal = document.querySelector("#modal-updateCategory");
-      M.Modal.getInstance(updateCategoryFormModal).close();
-      location.reload();
-    })
-
-  })
-
-};
-
-//adding new reward when editing
-if (document.querySelector("#modal-updateReward")){
-  
-  const updateRewardForm = document.querySelector("#updateReward-form");
-  const docId = localStorage.getItem("updateCampaignId");
-  const editDocRef = collection(db, "campaigns",docId,"rewards");
-
-  updateRewardForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    //get new name
-
-    const newName = updateRewardForm["rewardName"].value;
-    const newDescription = updateRewardForm["rewardDescription"].value;
-    const newDonation = updateRewardForm["rewardDonation"].value;
-
-    addDoc(editDocRef, {
-      name: newName,
-      description: newDescription,
-      donation: newDonation
-    })
-    .then(() => {
-      updateRewardForm.reset();
-      const updateRewardFormModal = document.querySelector("#modal-updateReward");
-      M.Modal.getInstance(updateRewardFormModal).close();
-      location.reload();
-    })
-
-  })
-
-};
-
-// updating campaign image
-/*
-if (document.querySelector("#modal-updateImage")){
-  
-  
-
-
-
-  const updateImageForm = document.querySelector("#updateImageForm");
-  const input = updateImageForm.querySelector("input");
-  const output = updateImageForm.querySelector("output");
-  let imagesArray = [];
-
-  input.addEventListener("change", function () {
-    const file = input.file;
-    console.log(file);
-  })*/
-
-  /*
-
-  const docId = localStorage.getItem("updateCampaignId");
-  const editDocRef = doc(db, "campaigns",docId);
-
-  const inp = document.querySelector(".inp");
-  const progressbar = document.querySelector(".progress");
-  const img = document.querySelector(".img");
-  const fileData = document.querySelector(".filedata");
-  const loading = document.querySelector(".loading");
-  let file;
-  let fileName;
-  let progress;
-  let isLoading = false;
-  let uploadedFileName;
-  
-  inp.addEventListener("click", () => {
-    inp.click();
-  });
-
-  var currentFile;
-
-  //let selectImageBtn = document.querySelector("#selectImageBtn");
-  inp.addEventListener("change", function() {
-    if (this.files && this.files[0]) {
-
-      var img = document.querySelector("#campaignImage");
-
-      img.onload = () => {
-        URL.revokeObjectURL(img.src);
-      }
-
-      img.src = URL.createObjectURL(this.files[0]);
-      file = this.files[0];
-      fileName = Math.round(Math.random() * 9999) + file.name;
-      if (fileName) {
-        fileData.style.display = "block";
-      }
-      fileData.innerHTML = fileName;
-      console.log(file, fileName);
-
-    }
-
-  });
-
-  let uploadImageBtn = document.querySelector("#uploadBtn");
-  uploadImageBtn.addEventListener("click", () => {
-    loading.style.display = "block";
     const storageRef = ref(storage, "campaignImages");
     const folderRef = ref(storageRef, fileName);
     const fileRef = "campaignImages/"+fileName;
     const docRef = ref(storage, fileRef);
-    console.log("The ref is: "+docRef);
-   // const uploadtask = uploadBytes(folderRef, file);
     localStorage.setItem("imageStorageRef",docRef);
-
+  
     uploadBytes(folderRef, file).then((snapshot) =>  {
-        console.log("Snapshot", snapshot.ref.name);
-        progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        progress = Math.round(progress);
-        progressbar.style.width = progress + "%";
-        progressbar.innerHTML = progress + "%";
-        uploadedFileName = snapshot.ref.name;
+      console.log("Snapshot", snapshot.ref.name);
+      let uploadedFileName = snapshot.ref.name;
       },
       (error) => {
         console.log(error);
@@ -1918,341 +1607,286 @@ if (document.querySelector("#modal-updateImage")){
           .child(uploadedFileName)
           .getDownloadURL()
           .then((url) => {
-            console.log("URL", url);
-            let imageURL = url;
-            if (!url) {
-              img.style.display = "none";
-            } else {
-              img.style.display = "block";
-              loading.style.display = "none";
-            }
-            img.setAttribute("src", url);
+
+            //Sets image to new image
+             img.setAttribute("src", url);
           });
-
-        console.log("File Uploaded Successfully");
-        const imageSrc = ref(storage,localStorage.getItem("imageStorageRef"));
-        let imageURL = "";
+        }
         
-        getDownloadURL(imageSrc)
-        .then((url) => {
-          imageURL = url.toString();
-    
-          const updateImageForm = document.querySelector("#updateImage-form");
-          const docId = localStorage.getItem("updateCampaignId");
-          const editDocRef = doc(db, "campaigns",docId);
+      ).then(() => {
 
-    
-          const newImage = imageURL;
-      
-          alert("image updated");
+      //Updates the campaign doc to refer back to the new image
+      const imageSrc = ref(storage, localStorage.getItem("imageStorageRef"));
+      let imageURL = "";
+      getDownloadURL(imageSrc)
+      .then((url) => {
+        imageURL = url.toString();
+        const docId = localStorage.getItem("updateCampaignId");
+        const editDocRef = doc(db, "campaigns",docId);
+        const newImage = imageURL;
 
-          updateDoc(editDocRef, {
-            image: newImage
-          })
-          .then(() => {
-            
-           /* updateImageForm.reset();
-            const updateImageFormModal = document.querySelector("#modal-updateImage");
-            M.Modal.getInstance(updateImageFormModal).close();*/
-          // location.reload();*/
-
-          /*
-          })
-    
+        //When the document has been uploaded, the page is refreshed to
+        //smoothly implement the changes
+        updateDoc(editDocRef, {
+          image: newImage
         })
-        
-    
-    
-    
-        
-    
+        .then(() => {
+          location.reload();
+        })
       })
-      }
-    );*/
+    })
+  })
+   
+//Adds an event listener to the editBioBtn so the editBio form is opened when clicked
+  editBioBtn.addEventListener("click", () => {
+     const updateBioForm = document.querySelector("#modal-updateBio");
+     M.Modal.getInstance(updateBioForm).open();
+  })
 
- // }
-/*
-  updateImageForm.addEventListener("submit", (e) => {
+  //Adds an event listener to the editTargetBtn so the editTarget form is opened when clicked
+  editTargetBtn.addEventListener("click", () => {
+    const updateTargetForm = document.querySelector("#modal-updateTarget");
+    M.Modal.getInstance(updateTargetForm).open();
+  })
+
+  //Adds an event listener to the editRewardBtn so the editReward form is opened when clicked
+  addRewardBtn.addEventListener("click", () => {
+    const addRewardFormModal = document.querySelector("#modal-updateReward");
+    M.Modal.getInstance(addRewardFormModal).open();
+  })
+
+  //Adds an event listener to the editCategoryBtn so the editCategory form is opened when clicked
+  editCategoryBtn.addEventListener("click", () => {
+    const editCategoryModal = document.querySelector("#modal-updateCategory");
+    M.Modal.getInstance(editCategoryModal).open();
+  })
+
+}
+
+// Updating Campaign Bio
+if (document.querySelector("#modal-updateBio")){
+  
+  //Defining constants
+  const updateBioForm = document.querySelector("#updateBio-form");
+  const docId = localStorage.getItem("updateCampaignId");
+  const editDocRef = doc(db, "campaigns",docId);
+
+  //When the form is submitted
+  updateBioForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const imageSrc = ref(storage,localStorage.getItem("imageStorageRef"));
-    let imageURL = "";
-    
-    getDownloadURL(imageSrc)
-    .then((url) => {
-      imageURL = url.toString();
 
-      const updateBioForm = document.querySelector("#updateImage-form");
-      const docId = localStorage.getItem("updateCampaignId");
-      const editDocRef = doc(db, "campaigns",docId);
+    //The new bio is pulled from the form
+    const newBio = updateBioForm["bio"].value;
 
-    updateImageForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    //get new name
-
-    const newImage = imageURL;
-
+    //The campaign's doc is updated
     updateDoc(editDocRef, {
-      image: newImage
+      description: newBio
     })
     .then(() => {
-      updateImageForm.reset();
-      const updateBioFormModal = document.querySelector("#modal-updateImage");
-      M.Modal.getInstance(updateImageFormModal).close();
+    //The form is reset, the modal is closed, and the window is reloaded
+      updateBioForm.reset();
+      const updateBioFormModal = document.querySelector("#modal-updateBio");
+      M.Modal.getInstance(updateBioFormModal).close();
+      location.reload();
+    })
+  })
+};
+
+// Updating Campaign Target
+if (document.querySelector("#modal-updateTarget")){
+  
+  //Defining constants
+  const updateTargetForm = document.querySelector("#updateTarget-form");
+  const docId = localStorage.getItem("updateCampaignId");
+  const editDocRef = doc(db, "campaigns",docId);
+
+  //When the form is submitted
+  updateTargetForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    //The new target is pulled from the form
+    const newTarget = updateTargetForm["newTarget"].value;
+
+    //The campaign's doc is updated
+    updateDoc(editDocRef, {
+      target: newTarget
+    })
+    .then(() => {
+    //The form is reset, the modal is closed, and the window is reloaded
+      updateTargetForm.reset();
+      const updateTargetFormModal = document.querySelector("#modal-updateTarget");
+      M.Modal.getInstance(updateTargetFormModal).close();
+      location.reload();
+    })
+  })
+
+};
+
+// Updating campaign category
+if (document.querySelector("#modal-updateCategory")){
+  
+  //Defining constants
+  const updateCategoryForm = document.querySelector("#updateCategory-form");
+  const docId = localStorage.getItem("updateCampaignId");
+  const editDocRef = doc(db, "campaigns",docId);
+
+  //When the form is submitted
+  updateCategoryForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    //A check is performed to verify the category is valid
+    var validFormCat = validateFormCategory()
+
+    if (validFormCat){
+      //Ensures any previous errors are cleared
+      let invalidCategoryDiv = document.querySelector(".invalidCategory");
+      invalidCategoryDiv.classList.remove("display-error");
+      invalidCategoryDiv.innerHTML = "";
+
+        //The new target is pulled from the form
+      const newCategory = updateCategoryForm["campaignCategory"].value;
+
+      //The campaign's doc is updated
+      updateDoc(editDocRef, {
+      category: newCategory
+      })
+      .then(() => {
+      //The form is reset, the modal is closed, and the window is reloaded
+      updateCategoryForm.reset();
+      const updateCategoryFormModal = document.querySelector("#modal-updateCategory");
+      M.Modal.getInstance(updateCategoryFormModal).close();
       location.reload();
     })
 
+    //If the category is invalid, an error is displayed
+    }else{
+      let invalidCategoryDiv = document.querySelector(".invalidCategory");
+      invalidCategoryDiv.classList.add("display-error");
+      invalidCategoryDiv.innerHTML = "Please select a reward from the list provided."; 
+    }
+  })
+};
+
+//This function checks that a user has selected a valid reward from the list
+function validateFormCategory(){
+
+  var categoryForm;
+  //Pull values from the form and document
+  if (document.querySelector("#createCampaignFormSteps")){
+     categoryForm = document.querySelector("#createCampaignFormSteps")
+  }else{
+     categoryForm = document.querySelector("#updateCategory-form")
+  }
+  const categorySelected = categoryForm.campaignCategory.value;
+  const categoryList = document.querySelector("#campaignCategoryList");
+
+   // Checks if the user selection is an option in the datalist
+   for (var j = 0; j < categoryList.options.length; j++) {
+    if (categorySelected == categoryList.options[j].value) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Adding a new reward when editing
+if (document.querySelector("#modal-updateReward")){
+  
+  //Defining constants
+  const updateRewardForm = document.querySelector("#updateReward-form");
+  const docId = localStorage.getItem("updateCampaignId");
+  const editDocRef = collection(db, "campaigns",docId,"rewards");
+
+  //When the form is submitted
+  updateRewardForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    //The new reward details are pulled from the form
+    const newName = updateRewardForm["rewardName"].value;
+    const newDescription = updateRewardForm["rewardDescription"].value;
+    const newDonation = parseFloat(updateRewardForm["rewardDonation"].value);
+    let rewardId = Math.round(Math.random() * 9999) + newName;
+    let rewardSubRef = doc(db, "campaigns",docId,"rewards",rewardId);
+
+    //A new document is created in the campaign's rewards sub collection
+    setDoc(rewardSubRef, {
+      uid: rewardId,
+      name: newName,
+      description: newDescription,
+      donation: newDonation
     })
-    
-
-
-
-    
+    .then(() => {
+      // The form is reset, the modal is closed, and the page is reloaded
+      updateRewardForm.reset();
+      const updateRewardFormModal = document.querySelector("#modal-updateReward");
+      M.Modal.getInstance(updateRewardFormModal).close();
+      location.reload();
+    })
 
   })
 
-})*/
+};
 
 
-function fillEditPage(){
-  let currentCampaign = localStorage.getItem("updateCampaignId");
-    if (currentCampaign != null){
-
-    const currentEditCampaignDoc = doc(db, "campaigns", currentCampaign);
-
-    onSnapshot(currentEditCampaignDoc, (docSnap) =>{
-
-      let titleDiv = document.querySelector("#campaignName");
-      let title = document.createElement("h2");
-      title.textContent = docSnap.data().name;
-      titleDiv.appendChild(title);
-
-      let bioDiv = document.querySelector("#campaignBio");
-      let bio = document.createElement("p");
-      bio.textContent = docSnap.data().description;
-      bioDiv.appendChild(bio);
-
-      let categoryDiv = document.querySelector("#campaignCategory");
-      let category = document.createElement("h6");
-      category.textContent = docSnap.data().category;
-      categoryDiv.appendChild(category);
-
-      let raisedDiv = document.querySelector("#raisedDiv");
-      let targetDiv = document.querySelector("#targetDiv");
-      let targetDoc = document.createElement("h5");
-      let raisedDoc = document.createElement("h5");
-      let progressBar = document.createElement("div");
-      progressBar.setAttribute("class","progressBarInner");
-
-      targetDoc.textContent = "Target: "+docSnap.data().target;
-      raisedDoc.textContent = "Raised: "+docSnap.data().raised;
-      let outerProgressBar = document.querySelector("#progressBarOuter");
-
-      if (Math.round((docSnap.data().raised/docSnap.data().target)*100,2) <= 0){
-        outerProgressBar.textContent = "0% raised";
-      }
-      else if (Math.round((doc.data().raised/doc.data().target)*100,2) >= 100){
-        progressBar.textContent = "100% raised";
-        progressBar.setAttribute("style","height: 24px; width: 100px");
-
-      }
-      else{
-        let percentageComplete = (Math.round((docSnap.data().raised/docSnap.data().target)*100,2))+"%";
-        progressBar.setAttribute("style","height: 24px; width:"+percentageComplete);
-        progressBar.textContent = percentageComplete+" raised";
-      }
-      
-      raisedDiv.appendChild(raisedDoc);
-   
-      outerProgressBar.appendChild(progressBar);
-      targetDiv.appendChild(targetDoc);
-
-      
-      let imageDiv = document.querySelector("#campaignImage");
-      let imageSrc = docSnap.data().image;
-
-      imageDiv.setAttribute("src",imageSrc);
-      let userUID = docSnap.data().user;
-
-      console.log("the user is: ",docSnap.data().user);
-
-      let collectionRef = collection(db, "campaigns",currentCampaign,"rewards");
-
-      onSnapshot(collectionRef, (querySnapshot) => {
-        querySnapshot.forEach((docSnapshot) => {
-          console.log("data: ",docSnapshot.data());
-          let rewardDiv = document.querySelector("#rewards");
-          let rewardList = rewardDiv.querySelector("#rewardList");
-
-          let listElement = document.createElement("li");
-
-          let rewardContainer = document.createElement("div");
-
-          let rewardDivDonation = document.createElement("div");
-          rewardDivDonation.setAttribute("class","rewardDonationDiv");
-
-          let rewardDivDescription = document.createElement("div");
-          rewardDivDescription.setAttribute("class","rewardDescriptionDiv");
-          
-
-          let rewardName = document.createElement("h5");
-          let donation = document.createElement("button");
-          donation.disabled = true;
-          donation.setAttribute("class","donationAmount");
-
-          let deleteBtn = document.createElement("button");
-          deleteBtn.setAttribute("id","deleteRewardBtn");
-          deleteBtn.innerText = "Delete";
-
-          deleteBtn.addEventListener("click", () => {
-            let currentCampaign = localStorage.getItem("updateCampaignId");
-            let rewardId = docSnapshot.data().uid;
-            alert(rewardId);
-
-            let rewardDocRef = doc(db, "campaigns",currentCampaign,"rewards",rewardId);
-
-            deleteDoc(rewardDocRef)
-            .then(() => {
-              location.reload();
-            })
-
-
-          })
-
-          let rewardButtonDivCenter = document.createElement("div");
-          rewardButtonDivCenter.setAttribute("class","center");
-          //let currency = document.createElement("currency");
-          let descriptionReward = document.createElement("p");
-
-
-          rewardName.textContent = docSnapshot.data().name;
-          const donationRounded = (Math.round(docSnapshot.data().donation * 100) / 100).toFixed(2);
-          donation.textContent = donationRounded + " ";
-          descriptionReward.textContent = docSnapshot.data().description;
-
-          rewardDivDescription.appendChild(rewardName);
-          rewardButtonDivCenter.appendChild(donation);
-          rewardButtonDivCenter.appendChild(deleteBtn);
-          rewardDivDonation.appendChild(rewardButtonDivCenter);
-          rewardDivDescription.appendChild(descriptionReward);
-          rewardContainer.appendChild(rewardDivDonation);
-          rewardContainer.appendChild(rewardDivDescription);
-
-          rewardContainer.setAttribute("class","rewardContainer");
-
-          listElement.appendChild(rewardContainer);
-          rewardList.appendChild(listElement);
-
-          //alert("code running");
-        });
-      });
-
-    
-    })
-
-    
-
-    let titleDiv = document.querySelector("#campaignName");
-
-    let title = document.createElement("h2");
-  
-
-  }
-
-}
-
-
-
-
-
-
-// HIDING NAV BAR LINKS
-
-const loggedOutLinks = document.querySelectorAll(".logged-out");
-
-const loggedInLinks = document.querySelectorAll(".logged-in");
-
-const accountDetails = document.querySelector(".account-details");
-
-const setupUI = (user) => {
-  if (user) {
-    //account information
-    const userRef = doc(db, "users", user.uid)
-    /*getDoc(userRef).then((doc) =>{
-      const html = `
-      <div> Logged in as ${user.email}</div>
-      <div>${doc.data().bio}</div>
-      `
-    accountDetails.innerHTML = html;
-    })*/
-
-
-  
-    //toggle UI elements
-    loggedInLinks.forEach(item => item.style.display = "block");
-    loggedOutLinks.forEach(item => item.style.display = "none");
-
-  }
-  else{
-    //hide account info
-    //accountDetails.innerHTML = "";
-
-    //toggle UI elements
-    loggedInLinks.forEach(item => item.style.display = "none");
-    loggedOutLinks.forEach(item => item.style.display = "block");
-
-  }
-}
-
-
-// NEW CREATE A CAMPAIGN FORM ////
+// ######################## CREATE A CAMPAIGN FORM #################################################
 
 var storageRefCamp, folderRefCamp, fileRefCamp, fileCamp;
 
-
-//testing signing users up
+// Creating a campaign
 if (document.querySelector("#createCampaignFormSteps")){
+
+  //Defining constants
   const popupCamp = document.querySelector(".popupCamp");
   const createCampaignForm = document.querySelector("#createCampaignFormSteps");
+  const prevBtnPageCamp = document.querySelector("#prevBtnCamp");
+  const nextBtnPageCamp = document.querySelector("#nextBtnCamp");
+  const addRewardBtn = document.querySelector(".addCamp");
+  const removeRewardBtn = document.querySelector(".removeCamp");
 
   var currentTabCamp = 0; // Current tab is set to be the first tab (0)
   showTabCamp(currentTabCamp); // Display the current tab
 
-  const prevBtnPageCamp = document.querySelector("#prevBtnCamp");
-  const nextBtnPageCamp = document.querySelector("#nextBtnCamp");
-
+//When the prevBtn is clicked, it moves the form back a step
   prevBtnPageCamp.addEventListener("click", () => {
     nextPrevCamp(-1);
   })
 
+//When the nextBtn is clicked, it moves the form forward a step
   nextBtnPageCamp.addEventListener("click", () => {
     nextPrevCamp(1);
   })
 
-
-  const addRewardBtn = document.querySelector(".addCamp");
-  const removeRewardBtn = document.querySelector(".removeCamp");
   
+
+  //Sets the count of number of rewards available to 0
   localStorage.setItem("numberOfRewards",0);
 
+  //When the user clicks the add reward button
   addRewardBtn.addEventListener("click", () =>{
+
+    //A reward form is created and added to the page
     const rewardFormsDiv = document.querySelector(".rewardForms");
     var newRewardForm = document.createElement("form");
+
+    //The number of rewards is incremented by 1
     var currentRewards = parseInt(localStorage.getItem("numberOfRewards"));
     currentRewards = currentRewards + 1;
     localStorage.setItem("numberOfRewards",currentRewards);
     
+
     var rewardFormName = "reward"+currentRewards;
     newRewardForm.setAttribute("id",rewardFormName);
 
+    //Reward name input
     var rewardName = document.createElement("input");
     rewardName.setAttribute("type","text");
     rewardName.setAttribute("name","rewardName");
     rewardName.setAttribute("class","name");
     rewardName.setAttribute("siz",50);
-    rewardName.setAttribute("placeholder","Reward "+currentRewards+" Name");
+    rewardName.setAttribute("placeholder","Reward #"+currentRewards+" Name");
     newRewardForm.appendChild(rewardName);
 
+    //Reward amount input
     var rewardAmount = document.createElement("input");
     rewardAmount.setAttribute("type","number");
     rewardAmount.setAttribute("step",0.01);
@@ -2262,12 +1896,13 @@ if (document.querySelector("#createCampaignFormSteps")){
     rewardAmount.setAttribute("placeholder","Required Donation");
     newRewardForm.appendChild(rewardAmount);
 
+    //Reward description input
     var rewardDesc = document.createElement("input");
     rewardDesc.setAttribute("type","text");
     rewardDesc.setAttribute("name","rewardDesc");
     rewardDesc.setAttribute("class","desc");
     rewardDesc.setAttribute("siz",150);
-    rewardDesc.setAttribute("placeholder","Reward "+currentRewards+" Description");
+    rewardDesc.setAttribute("placeholder","Reward #"+currentRewards+" Description");
     newRewardForm.appendChild(rewardDesc);
 
     rewardFormsDiv.appendChild(newRewardForm);
@@ -2275,79 +1910,108 @@ if (document.querySelector("#createCampaignFormSteps")){
 
   })
 
+  //When the removeRewardBtn is clicked
   removeRewardBtn.addEventListener("click", () =>{
     
+    //Defines constants
     const rewardFormsDiv = document.querySelector(".rewardForms");
     const addCampaignForm = document.getElementById("createCampaignFormSteps");
+
+    //Initialises variables
     var input_tags = addCampaignForm.getElementsByTagName("input");
     var deleteFormName = "#reward"+localStorage.getItem("numberOfRewards");
     var rewardForm = addCampaignForm.querySelector(deleteFormName);
     
-    console.log("number of inputs tags:", input_tags.length);
+    //If there is an existing rewardForm on the page
     if (input_tags.length > 8) {
      
+      //The reward form is removed from the page
       rewardFormsDiv.removeChild(rewardForm);
-  
+      //The number of rewards decrements by 1
       var currentRewards = parseInt(localStorage.getItem("numberOfRewards"));
       currentRewards = currentRewards - 1;
       localStorage.setItem("numberOfRewards",currentRewards);
 
+      //If there are currently no rewards to remove, the button is hidden
       if (currentRewards == 0){
         document.getElementById("removeReward").style.visibility = "hidden";
       }
-     
+    
+      //If the button has been clicked outside of this case, there has been an error
     }else{
-      //let rewardBtn = addCampaignForm.querySelector("#removeReward");
+      (console.log(error));
     }
-
   })
 
+  // Uploading User Image
 
-  //TRYING UPLOAD IMAGE
   let inputFile = document.querySelector("#campaignImageFile");
   let campaignImage = document.querySelector("#campaignImage");
   
-  inputFile.addEventListener("change", () => {
+  //When the input file changes
+    inputFile.addEventListener("change", () => {
     campaignImage.src = URL.createObjectURL(inputFile.files[0]);
     campaignImage.setAttribute("style","visibility: visible");
     let fileCamp = inputFile.files[0];
     let fileNameCamp = Math.round(Math.random() * 9999) + fileCamp.name;
 
-    console.log(fileCamp, fileNameCamp);
+  //The file is prepped to be uploaded to storage
+    storageRefCamp = ref(storage, "campaignImages");
+    folderRefCamp = ref(storageRefCamp, fileNameCamp);
+    fileRefCamp = "campaignImages/"+fileNameCamp;
+    const docRefCamp = ref(storage, fileRefCamp);
+    localStorage.setItem("imageStorageRef",docRefCamp);
+    
+  })
 
-      storageRefCamp = ref(storage, "campaignImages");
-      folderRefCamp = ref(storageRefCamp, fileNameCamp);
-      fileRefCamp = "campaignImages/"+fileNameCamp;
-      const docRefCamp = ref(storage, fileRefCamp);
-      console.log("The ref is: "+docRefCamp);
-     // const uploadtask = uploadBytes(folderRef, file);
-      localStorage.setItem("imageStorageRef",docRefCamp);
-      })
-
-  createCampaignForm.addEventListener("submit", (e) => {
-
-
-})
+  //When the form is submitted
+ /* createCampaignForm.addEventListener("submit", (e) => {
+})*/
 
 }
 
+//Pop up appears when a campaign has been created successfully
 function openPopupCampaign(){
   const popup = document.querySelector(".popupCamp");
   popup.classList.add("open-popupCamp");
-  //alert("open the popup");
 
+  //When the continue button is clicked, the popup is closed and the user is redirected
   const continueBtn = popup.querySelector("#continueNewCampaign")
-
   continueBtn.addEventListener("click", () => {
     closePopupCampaign();
     window.location.href = "campaignExplore.html";
   })
 }
 
+//The pop up is closed
 function closePopupCampaign(){
   const popup = document.querySelector("#popupCamp");
   popup.classList.remove("open-popupCamp");
 }
+
+
+//Opens a popup in the event of a create campaign error
+function openCreateCampaignErrorPopup(){
+  const popup = document.querySelector(".popupCreateCampaignError");
+  popup.classList.add("open-popupCreateCampaignError");
+  const continueBtn = popup.querySelector("#continueCreateCampaign")
+
+  //Adds an event listener to the continue button so that it will
+  //close the popup and reset the form when clicked
+  continueBtn.addEventListener("click", () => {
+    closeCreateCampaignErrorPopup();
+    const createCampForm = document.querySelector("#createCampaignFormSteps");
+    createCampForm.reset();
+    window.location.href = "createCampaign.html"; //redirects user to beginning of form
+  })
+}
+
+//Closes the popup when called
+function closeCreateCampaignErrorPopup(){
+  const popup = document.querySelector(".popupCreateCampaignError");
+  popup.classList.remove("open-popupCreateCampaignError");
+}
+
 
 function showTabCamp(n) {
   // This function will display the specified tab of the form ...
@@ -2368,6 +2032,22 @@ function showTabCamp(n) {
   fixStepIndicatorCamp(n)
 }
 
+//This function checks that a user has selected a valid country from the list
+function validateFormCountry(){
+
+  var countryForm = document.querySelector("#createCampaignFormSteps")
+  
+  const countrySelected = countryForm.campaignCountry.value;
+  const countryList = document.querySelector("#campaignCountryList");
+
+   // Checks if the user selection is an option in the datalist
+   for (var j = 0; j < countryList.options.length; j++) {
+    if (countrySelected == countryList.options[j].value) {
+      return true;
+    }
+  }
+  return false;
+}
 function nextPrevCamp(n) {
   // This function will figure out which tab to display
   var x = document.getElementsByClassName("tab");
@@ -2381,25 +2061,45 @@ function nextPrevCamp(n) {
  
   if (currentTabCamp >= x.length) {
     //...the form gets submitted:
+
+    //Checks for valid category and country are conducted
+    let validateCategory = validateFormCategory();
+    let validateCountry = validateFormCountry();
+    let errMsg = document.querySelector("#createCampaignError");
+ 
+
+    //If both are invalid an error is presented
+    if (!validateCategory && !validateCountry){
+      errMsg.textContent = "Invalid category, please select from list provided. Invalid country, please select from list provided.";
+      openCreateCampaignErrorPopup()
+    
+   // If either are invalid an error is presented
+    }else if (validateCategory && !validateCountry){
+      errMsg.textContent = "Invalid country, please select from list provided.";
+      openCreateCampaignErrorPopup()
+
+    }else if (!validateCategory && validateCountry){
+      errMsg.textContent = "Invalid category, please select from list provided."; 
+      openCreateCampaignErrorPopup()
+    }
+
+  //Otherwise, the form is submitted
+    else{
+    errMsg.textContent = "";
+
+    //The image file is uploaded to firebase cloud storage
     let inputFile = document.querySelector("#campaignImageFile");
     const addCampaignForm = document.getElementById("createCampaignFormSteps");
     let campaignImage = document.querySelector("#campaignImage");
-
-
     campaignImage.src = URL.createObjectURL(inputFile.files[0]);
     campaignImage.setAttribute("style","visibility: visible");
     let fileCamp = inputFile.files[0];
     let fileNameCamp = Math.round(Math.random() * 9999) + fileCamp.name;
-
-    console.log(fileCamp, fileNameCamp);
-
-      storageRefCamp = ref(storage, "campaignImages");
-      folderRefCamp = ref(storageRefCamp, fileNameCamp);
-      fileRefCamp = "campaignImages/"+fileNameCamp;
-      const docRefCamp = ref(storage, fileRefCamp);
-      console.log("The ref is: "+docRefCamp);
-     // const uploadtask = uploadBytes(folderRef, file);
-      localStorage.setItem("imageStorageRef",docRefCamp);
+    storageRefCamp = ref(storage, "campaignImages");
+    folderRefCamp = ref(storageRefCamp, fileNameCamp);
+    fileRefCamp = "campaignImages/"+fileNameCamp;
+    const docRefCamp = ref(storage, fileRefCamp);
+    localStorage.setItem("imageStorageRef",docRefCamp);
       
 
     uploadBytes(folderRefCamp, fileCamp).then((snapshot) =>  {
@@ -2415,13 +2115,6 @@ function nextPrevCamp(n) {
         .child(uploadedFileNameCamp)
         .getDownloadURL()
         .then((url) => {
-          console.log("URL", url);
-          if (!url) {
-            img.style.display = "none";
-          } else {
-            img.style.display = "block";
-            loading.style.display = "none";
-          }
           img.setAttribute("src", url);
         });
       console.log("File Uploaded Successfully");
@@ -2431,22 +2124,22 @@ function nextPrevCamp(n) {
     const imageSrc = ref(storage,localStorage.getItem("imageStorageRef"));
     let imageURL = "";
   
+    //The URL will be stored in the campaign document
     getDownloadURL(imageSrc)
     .then((url) => {
       imageURL = url.toString();
 
+      //Values from the form are pulled 
       const campaignName = addCampaignForm.campaignName.value;
       const campaignOwner = auth.currentUser.uid;
       const idNew = campaignName+campaignOwner+(Math.round(Math.random() * 9999));
       localStorage.setItem("newCampaign",idNew);
 
-     console.log("The url is: "+imageURL);
-     console.log("The type is: "+ typeof imageURL);
+      const colRef = collection(db, "campaigns");
+      const newCampRef = doc(db,"campaigns",idNew);
+      const serverCreationTime = serverTimestamp();
 
-     const colRef = collection(db, "campaigns");
-     const newCampRef = doc(db,"campaigns",idNew);
-     const serverCreationTime = serverTimestamp();
-
+    //A new document is created for the campaign
      setDoc(newCampRef, {
        country: addCampaignForm.campaignCountry.value,
        category: addCampaignForm.campaignCategory.value,
@@ -2458,10 +2151,8 @@ function nextPrevCamp(n) {
        createdAt: serverCreationTime,
        user: auth.currentUser.uid
    }).then(() => {
-      // close the signup modal & reset form
-      //const modal = document.querySelector('#modal-signup');
-      //M.Modal.getInstance(modal).close();
-
+    
+    //The rewards subcollection is filled
       const noOfRewards = localStorage.getItem("numberOfRewards");
   
       if (noOfRewards != 0){
@@ -2475,7 +2166,7 @@ function nextPrevCamp(n) {
           setDoc(rewardSubRef, {
             uid: rewardId,
             name: rewardForm.rewardName.value,
-            donation: rewardForm.rewardDonation.value,
+            donation: parseFloat(rewardForm.rewardDonation.value),
             description: rewardForm.rewardDesc.value,
         })
           .then(() => {
@@ -2491,87 +2182,24 @@ function nextPrevCamp(n) {
 
               })
             
-    
           }).catch(err => {
             console.log(err.message);
           })
-          
-    
-        }
-        
+        } 
       }
     
+      //Ensures the form is reset correctly
       document.getElementById("removeReward").style.visibility = "hidden";
 
-    
+    //Popup appears alerting the user that the campaign has been created
       openPopupCampaign();
-
-      const continueBtn = popup.querySelector("#continueNewCampaign")
-
-      continueBtn.addEventListener("click", () => {
-        closePopupCampaign();
-        window.location.href = "campaignExplore.html";
-        addCampaignForm.reset();
-      })
-      openPopupCampaign();
-      addCampaignForm.reset();
-      alert("Campaign created");
-
    });
   })
 
-  })
+})
    
-   
-   /*const imageSrc = ref(storage,localStorage.getItem("imageStorageRef"));
-   let imageURL = "";*/
-
-    //document.getElementById("regForm").submit();
-     // get user info
-  /* const email = regForm.email.value;
-   const password = regForm.password.value;*/
-
- // sign up the user
- /*
-   createUserWithEmailAndPassword(auth, email, password).then(async cred => {
-     
-     return await setDoc(doc(db, "users",cred.user.uid),{
-      firstName: regForm.firstName.value,
-      lastName: regForm.lastName.value,
-      username: regForm.username.value,
-      country: regForm.country.value,
-      email: regForm.email.value,
-      bio: regForm.bio.value,
-     })
-  
-   }).then(() => {
-      // close the signup modal & reset form
-      //const modal = document.querySelector('#modal-signup');
-      //M.Modal.getInstance(modal).close();
-      openPopup();
-      const modalBackground = document.querySelector(".modalBackdrop");
-
-      modalBackground.style.display = "block";
-
-      const continueBtn = popup.querySelector("#continueNewUser")
-
-      continueBtn.addEventListener("click", () => {
-        closePopup();
-        window.location.href = "index.html";
-        regForm.reset();
-        document.getElementById("regForm").submit();
-        modalBackground.style.display = "none";
-        window.location.href = "index.html";
-  })
-      //regForm.reset();
-      //alert("Sign up successful!");
-     
-
-   });*/
-
-
-
     return false;
+  }
   }
   // Otherwise, display the correct tab:
   showTabCamp(currentTabCamp);
@@ -2611,213 +2239,4 @@ function fixStepIndicatorCamp(n) {
   //... and adds the "active" class to the current step:
   x[n].className += " active";
 }
-
-
-//Adding documents
-
-/*
-if (document.querySelector("#createCampaignFormSteps")){ 
-
-  const addCampaignForm = document.querySelector("#createCampaignFormSteps");
-
-  
-  const addRewardBtn = document.querySelector(".add");
-  const removeRewardBtn = document.querySelector(".remove");
-  localStorage.setItem("numberOfRewards",0);
-
-  addRewardBtn.addEventListener("click", () =>{
-    var newRewardForm = document.createElement("form");
-    var currentRewards = parseInt(localStorage.getItem("numberOfRewards"));
-    currentRewards = currentRewards + 1;
-    localStorage.setItem("numberOfRewards",currentRewards);
-    
-    var rewardFormName = "reward"+currentRewards;
-    newRewardForm.setAttribute("id",rewardFormName);
-
-    var rewardName = document.createElement("input");
-    rewardName.setAttribute("type","text");
-    rewardName.setAttribute("name","rewardName");
-    rewardName.setAttribute("class","name");
-    rewardName.setAttribute("siz",50);
-    rewardName.setAttribute("placeholder","Reward "+currentRewards+" Name");
-    newRewardForm.appendChild(rewardName);
-
-    var rewardAmount = document.createElement("input");
-    rewardAmount.setAttribute("type","number");
-    rewardAmount.setAttribute("name","rewardDonation");
-    rewardAmount.setAttribute("class","donation");
-    rewardAmount.setAttribute("siz",50);
-    rewardAmount.setAttribute("placeholder","Required Donation");
-    newRewardForm.appendChild(rewardAmount);
-
-    var rewardDesc = document.createElement("input");
-    rewardDesc.setAttribute("type","text");
-    rewardDesc.setAttribute("name","rewardDesc");
-    rewardDesc.setAttribute("class","desc");
-    rewardDesc.setAttribute("siz",150);
-    rewardDesc.setAttribute("placeholder","Reward "+currentRewards+" Description");
-    newRewardForm.appendChild(rewardDesc);
-
-    addCampaignForm.appendChild(newRewardForm);
-    document.getElementById("removeReward").style.visibility = "visible";
-
-  })
-
-  removeRewardBtn.addEventListener("click", () =>{
-
-    var input_tags = addCampaignForm.getElementsByTagName("input");
-    var deleteFormName = "#reward"+localStorage.getItem("numberOfRewards");
-    var rewardForm = addCampaignForm.querySelector(deleteFormName);
-    
-    console.log("number of inputs tags:", input_tags.length);
-    if (input_tags.length > 8) {
-     
-      addCampaignForm.removeChild(rewardForm);
-  
-      var currentRewards = parseInt(localStorage.getItem("numberOfRewards"));
-      currentRewards = currentRewards - 1;
-      localStorage.setItem("numberOfRewards",currentRewards);
-
-      if (currentRewards == 0){
-        document.getElementById("removeReward").style.visibility = "hidden";
-      }
-     
-    }else{
-      //let rewardBtn = addCampaignForm.querySelector("#removeReward");
-    }
-
-  })*/
-
-
-
-  /*
-  addCampaignForm.addEventListener("submit",(e) =>{
-    e.preventDefault()
-    const imageSrc = ref(storage,localStorage.getItem("imageStorageRef"));
-    let imageURL = "";
-    const campaignName = addCampaignForm.name.value;
-    const campaignOwner = auth.currentUser.uid;
-    const idNew = campaignName+campaignOwner+(Math.round(Math.random() * 9999));
-    localStorage.setItem("newCampaign",idNew);
-    
-    getDownloadURL(imageSrc)
-    .then((url) => {
-      imageURL = url.toString();
-      console.log("The url is: "+imageURL);
-      console.log("The type is: "+ typeof imageURL);
-
-      const colRef = collection(db, "campaigns");
-      const newCampRef = doc(db,"campaigns",idNew);
-      const serverCreationTime = serverTimestamp();
-
-      setDoc(newCampRef, {
-        bankCountry: addCampaignForm.bankCountry.value,
-        category: addCampaignForm.category.value,
-        country: addCampaignForm.country.value,
-        description: addCampaignForm.description.value,
-        image: imageURL,
-        name: addCampaignForm.name.value,
-        raised: addCampaignForm.raised.value,
-        target: addCampaignForm.target.value,
-        createdAt: serverCreationTime,
-        user: auth.currentUser.uid,
-    })
-    .then(() => {
-      //addCampaignForm.reset();
-
-      const noOfRewards = localStorage.getItem("numberOfRewards");
-  
-      if (noOfRewards != 0){
-    
-  
-    
-        for (let i = 1; i <= noOfRewards; i++){
-    
-          var rewardForm = document.querySelector("#reward"+i);
-          let rewardId = Math.round(Math.random() * 9999) + rewardForm.rewardName.value;
-          let rewardSubRef = doc(db, "campaigns",idNew,"rewards",rewardId);
-    
-          setDoc(rewardSubRef, {
-            uid: rewardId,
-            name: rewardForm.rewardName.value,
-            donation: rewardForm.rewardDonation.value,
-            description: rewardForm.rewardDesc.value,
-        })
-          .then(() => {
-            const userIDCurrent = auth.currentUser.uid;
-            const newUserRef = doc(db,"users",userIDCurrent,"campaigns",idNew);
-
-            setDoc(newUserRef, {
-             name: addCampaignForm.name.value,
-            createdAt: serverCreationTime,
-           }).then(() =>  {
-            addCampaignForm.reset();
-            addCampaignForm.removeChild(rewardForm);
-
-              })
-            
-    
-          }).catch(err => {
-            console.log(err.message);
-          })
-          
-    
-        }
-        
-      }
-    
-      document.getElementById("removeReward").style.visibility = "hidden";
-    }).catch(err => {
-      console.log(err.message);
-    })
-
-
-    }) .catch((error) => {
-      // A full list of error codes is available at
-      // https://firebase.google.com/docs/storage/web/handle-errors
-      switch (error.code) {
-        case 'storage/object-not-found':
-          // File doesn't exist
-          break;
-        case 'storage/unauthorized':
-          // User doesn't have permission to access the object
-          break;
-        case 'storage/canceled':
-          // User canceled the upload
-          break;
-  
-        // ...
-  
-        case 'storage/unknown':
-          // Unknown error occurred, inspect the server response
-          break;
-      }
-    });
-    //const imageURL = URL.createObjectURL(imageSrc);*/
-    
-   /* addDoc(colRef, {
-      bankCountry: addCampaignForm.bankCountry.value,
-      category: addCampaignForm.category.value,
-      country: addCampaignForm.country.value,
-      description: addCampaignForm.description.value,
-      image: imageURL,
-      name: addCampaignForm.name.value,
-      raised: addCampaignForm.raised.value,
-      target: addCampaignForm.target.value,
-      createdAt: serverTimestamp()
-  })
-  .then(() => {
-    addCampaignForm.reset();
-  }).catch(err => {
-    console.log(err.message);
-  })*/
-
- 
-  
-/*})
-
-}*/
-
-
-
 

@@ -27,53 +27,50 @@
 
     <body class="white">
 
-        <!-- NAVBAR -->
-        <div class = "entireNav">
-         <nav class="z-depth-0 white">
-          <div class="nav-wrapper container">
-            <a href="index.html" class="brand-logo">
-                <img src="KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
-              </a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li class="logged-in" style="display: none;">
-                  <a href="#" class="grey-text modal-trigger" data-target="modal-account">Account</a>
-                </li>
-                <li class="logged-in" style="display: none;">
-                  <a href="campaignExplore.html" class="grey-text modal-trigger" >Campaigns</a>
-                </li>
-                <li >
-                  <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
-                </li>
-                <li class="logged-in" style="display: none;">
-                  <a href="#" class="grey-text" id="logout">Logout</a>
-                </li>
-                <li class="logged-in" style="display: none;">
-                    <a href="forum.html" class="grey-text" id="logout">Community Campaign</a>
-                  </li>
-                <li class="logged-in" style="display: none;">
-                  <a href="createCampaign.html" class="grey-text modal-trigger">Create Guide</a>
-                </li>
-                <li class="logged-out" style="display: none;">
-                  <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
-                </li>
-                <li class="logged-out" style="display: none;">
-                  <a href="#" class="grey-text modal-trigger" data-target="modal-signup">Sign up</a>
-                </li>
-              </span>
-            </ul>
-          </div>
-        </nav>
-        <ul id="dropdownCampaign" class="dropdown-content">
-          <li><a href="campaignExplore.html">Explore</a></li>
-          <li class = "logged-in" style="display: none;"><a href="createCampaign.html">Create</a></li>
-
-        </ul>
-      </div>
+          <!-- NAVBAR -->
+          <div class = "entireNav">
+            <nav class="z-depth-0 white">
+              <div class="nav-wrapper container">
+                <a href="index.html" class="brand-logo">
+                    <img src="KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
+                  </a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li class="logged-in" style="display: none;">
+                      <a href="account.html" class="grey-text">Account</a>
+                    </li>
+                  
+                    <li >
+                      <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
+                    </li>
+                    <li class="logged-in" style="display: none;">
+                      <a href="#" class="grey-text" id="logout">Logout</a>
+                    </li>
+                    <li class="logged-in" style="display: none;">
+                        <a href="forum.html" class="grey-text" id="forum">Community Forum</a>
+                      </li>
+                
+                    <li class="logged-out" style="display: none;">
+                      <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
+                    </li>
+                    <li class="logged-out" style="display: none;">
+                      <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
+                    </li>
+                  </span>
+                </ul>
+              </div>
+    
+              <ul id="dropdownCampaign" class="dropdown-content">
+                <li><a href="campaignExplore.html">Explore</a></li>
+                <li class = "logged-in" style="display: none;"><a href="createCampaign.html">Create</a></li>
+    
+              </ul>
+            </nav>
+            </div>
 
       <div id = "editCampaignPage">
         <br>
 
-        <i class="fa-solid fa-chevron-left" onclick="history.back()"></i>
+        <i class="fa-solid fa-chevron-left" id="chevronTop" onclick="history.back()"></i>
 
         <div class="row">
           <div class="column">
@@ -104,7 +101,7 @@
                 <div  id = "progressBarOuter">
                   
                 </div>
-                <div id = "targetDiv"></div>
+                <div id = "targetDiv"></div>  <button id="editTargetBtn">Edit Target</button>
               </div>
       
             
@@ -113,74 +110,13 @@
               <h3>Rewards</h3>
               <p>Rewards are incentives for donor, and carry a minimum required donation. You can choose to donate without availing of a reward.</p>
              <p><b>Donations are not guaranteed by KPesa and are the responsibility of the campaign owner.</b></p>
-              <ul id = "rewardList"></ul>
+             <h6 id = "rewardsMsg"></h6>
+             <ul id = "rewardList"></ul>
              </div>
              <button id = "addRewardBtn">Add Reward</button>
           </div>
         </div>
     
-       
-       
-
-        
-         
-        <!-- Reward List -
-         <div class="container" style="margin-top: 40px;">
-            <ul class="collapsible z-depth-0 guides" style="border: none;" id="rewardList">
-              <li>
-                <div class="collapsible-header grey lighten-4">Guide title</div>
-                <div class="collapsible-body white">Lorem ipsum dolor sit amet.</div>
-              </li>
-            </ul>
-         </div>-->
-
-
-         <!-- DONATE MODAL -->
-  <div id="modal-donate" class="modal">
-    <div class="modal-content">
-      <h4 id = "donationHeading">Donate</h4><br />
-      <form id="donateForm" action="">
-
-        
-        <div class="input-field">
-          <input type="number" id="donationAmount" required />
-          <label for="donationAmount">Donation</label>
-        </div>
-
-
-        <div class="input-field">
-          <label for="donationCurrency">Select currency: </label>
-          <br>
-          <input list="currencies" name = "currency" id="currency">
-          <datalist id="currencies">
-            <option value = "pound">£</option>
-            <option value = "dollar">$</option>
-            <option value = "euro">€</option>
-          </datalist>
-        </div>
-
-        <div class="input-field">
-          <label for="donationReward">Select reward: </label>
-          <br>
-          <input list="rewardDatalist" name = "reward" id="reward" required>
-          <datalist id="rewardDatalist">
-            <option value = "None">None</option>
-
-          </datalist>
-        </div>
-
-        <div class="input-field">
-          <input type="number" id="tipAmount" />
-          <label for="tipAmount">Tip</label>
-        </div>  
-
-        <button class="btn yellow darken-2 z-depth-0">Donate</button>
-        </div>
-        </div>
-        
-        </form>
-    </div>
-  </div>
 
   
   <div class="popupError" id = "popupError">
@@ -194,30 +130,7 @@
 
 
   
-      
-
-          <!-- SIGN UP MODAL -->
-  <div id="modal-signup" class="modal">
-    <div class="modal-content">
-      <h4>Sign up</h4><br />
-      <form id="signup-form">
-        <div class="input-field">
-          <input type="email" id="signup-email" required />
-          <label for="signup-email">Email address</label>
-        </div>
-        <div class="input-field">
-          <input type="password" id="signup-password" required />
-          <label for="signup-password">Choose password</label>
-        </div>
-        <div class ="input-field">
-          <input type ="text" id ="signup-bio" required/>
-          <label for ="signup-bio">One Line Bio</label>
-        </div>
-        <button class="btn yellow darken-2 z-depth-0">Sign up</button>
-      </form>
-    </div>
-  </div>
-
+  
     <!-- CAMPAIGN BIO MODAL -->
      <div id="modal-updateBio" class="modal">
         <div class="modal-content">
@@ -227,21 +140,50 @@
                 <label for="bio">Campaign Bio: </label>
                 <input type="text" name="bio" required>
             </div>
-            <button class="btn yellow darken-2 z-depth-0">Update</button>
+            <button>Update</button>
           </form>
         </div>
       </div>
 
-       <!-- CAMPAIGN BIO MODAL -->
+        <!-- CAMPAIGN TARGET MODAL -->
+     <div id="modal-updateTarget" class="modal">
+      <div class="modal-content">
+        <h4>Update Target</h4><br />
+        <form id="updateTarget-form" class = "updateTargetForm">
+          <div class="input-field">
+              <label for="newTarget">Campaign Target: </label>
+              <input type="number" name="newTarget" step=0.01 required>
+          </div>
+          <button>Update</button>
+        </form>
+      </div>
+    </div>
+
+       <!-- CAMPAIGN Category MODAL -->
      <div id="modal-updateCategory" class="modal">
       <div class="modal-content">
         <h4>Update Category</h4><br />
         <form id="updateCategory-form" class = "updateCategoryForm">
           <div class="input-field">
-              <label for="category">Campaign Category: </label>
-              <input type="text" name="category" required>
+
+            <label for="campaignCategory">Category:</label>
+            <input list = "campaignCategoryList" name="campaignCategory" type="text" required>
+
+              <datalist id = "campaignCategoryList">
+
+           
+            <option value="Food & Drink">Food & Drink</option>
+            <option value="Clothing & Accessories">Clothing & Accessories</option>
+            <option value="Homeware">Homeware</option>
+            <option value="Health & Wellness">Health & Wellness</option>
+            <option value="Technology">Technology</option>
+            <option value="Service">Service</option>
+            <option value="Other">Other</option>
+           </datalist>
+          </input>
           </div>
-          <button class="btn yellow darken-2 z-depth-0">Update</button>
+          <p class="invalidCategory"></p>
+          <button>Update</button>
         </form>
       </div>
     </div>
@@ -262,10 +204,10 @@
             <label for="rewardDescription">Reward Description</label>
           </div>
           <div class="input-field">
-            <input type="float" name="rewardDonation" required />
+            <input type="number" name="rewardDonation" step=0.01 required />
             <label for="rewardDonation">Reward Donation</label>
           </div>
-          <button class="btn yellow darken-2 z-depth-0">Add</button>
+          <button>Add</button>
         </form>
       </div>
     </div>
