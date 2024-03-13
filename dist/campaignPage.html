@@ -43,12 +43,15 @@
                   <li >
                     <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
                   </li>
+              
                   <li class="logged-in" style="display: none;">
-                    <a href="#" class="grey-text" id="logout">Logout</a>
-                  </li>
-                  <li class="logged-in" style="display: none;">
-                      <a href="forum.html" class="grey-text" id="logout">Community Forum</a>
+                      <a href="forum.html" class="grey-text" id="forum">Community Forum</a>
                     </li>
+
+                    <li class="logged-in" style="display: none;">
+                      <a href="#" class="grey-text" id="logout">Logout</a>
+                    </li>
+              
               
                   <li class="logged-out" style="display: none;">
                     <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
@@ -176,24 +179,24 @@
   <div class = "modalBackdrop"></div>
 
 
-
-        <!-- LOGIN MODAL -->
-        <div id="modal-login" class="modal">
-          <div class="modal-content">
-            <h4>Login</h4><br />
-            <form id="login-form" class = "loginForm">
-              <div class="input-field">
-                <input type="email" id="login-email" required />
-                <label for="login-email">Email address</label>
-              </div>
-              <div class="input-field">
-                <input type="password" id="login-password" required />
-                <label for="login-password">Your password</label>
-              </div>
-              <button>Login</button>
-            </form>
-          </div>
-        </div>
+ <!-- LOGIN MODAL -->
+ <div id="modal-login" class="modal">
+  <div class="modal-content">
+    <h4>Login</h4><br />
+    <form id="login-form" class = "loginForm">
+      <div class="input-field">
+        <input type="email" id="login-email" required />
+        <label for="login-email">Email address</label>
+      </div>
+      <div class="input-field">
+        <input type="password" id="login-password" required />
+        <label for="login-password">Your password</label>
+      </div>
+      <button>Login</button>
+      <p class="error pink-text center-align"></p>
+    </form>
+  </div>
+</div>
       
         
       </div>

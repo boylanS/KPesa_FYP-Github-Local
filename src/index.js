@@ -89,7 +89,7 @@ onAuthStateChanged(auth, (user) =>{
     //in real time
     onSnapshot(colRef, (snapshot) => {
       snapshot.docs.forEach(doc =>{
-        renderCampaign(doc);
+        renderCampaignCard(doc,"exploreCampaigns");
       })
     })
     
@@ -376,11 +376,14 @@ if (document.querySelector("#logout")){
   
 //  ################ RENDER CAMPAIGN EXPLORE PAGE ################################################
 
-function renderCampaign(doc){
+// Renders campaign cards for the explore page
+
+function renderCampaignCard(doc, divId) {
+  let pageDiv = document.getElementById(divId);
 
   if (doc.length != 0){
 
-    // Creates a card for each campaign to be displayed on the explore page
+    // Creates a card for each campaign to be displayed on the landing page
 
     let floatContainer = document.createElement("div");
     floatContainer.setAttribute("class","float-child");
@@ -423,15 +426,12 @@ function renderCampaign(doc){
     floatContainer.appendChild(card);
 
     //Appends new elements to the page
-    campaignDiv.appendChild(floatContainer);     
+    pageDiv.appendChild(floatContainer);     
 
   } else{
-
-    //In the event of no active campaigns, text explaining this will be displayed
-    campaignDiv.innerHTML=
-    '<h5 class ="center-align">There are no active campaigns</h5>';
+    pageDiv.innerHTML=
+    '<h5 class ="center-align">There are no active campaigns at present</h5>';
   }
-  
 }
 
 //  ################ RENDER INDIVIDUAL CAMPAIGN PAGE ################################################
@@ -480,9 +480,7 @@ function fillPage(){
       category.textContent = doc.data().category;
       categoryDiv.appendChild(category);
 
-
       //money raised, target, and progress
-      let progressDiv = document.querySelector("#moneyDiv");
       let raisedDiv = document.querySelector("#raisedDiv");
       let targetDiv = document.querySelector("#targetDiv");
       let targetDoc = document.createElement("h5");
@@ -546,13 +544,13 @@ function fillPage(){
             let listElement = document.createElement("li");
 
             let rewardContainer = document.createElement("div");
-            rewardContainer.setAttribute("id","rewardContainer");
+            rewardContainer.setAttribute("class","rewardContainer");
 
             let rewardDivDonation = document.createElement("div");
-            rewardDivDonation.setAttribute("id","rewardDonationDiv");
+            rewardDivDonation.setAttribute("class","rewardDonationDiv");
 
             let rewardDivDescription = document.createElement("div");
-            rewardDivDescription.setAttribute("id","rewardDescriptionDiv");
+            rewardDivDescription.setAttribute("class","rewardDescriptionDiv");
             
             let rewardName = document.createElement("h5");
             rewardName.textContent = doc.data().name;
@@ -575,7 +573,7 @@ function fillPage(){
             rewardDivDescription.appendChild(descriptionReward);
             rewardContainer.appendChild(rewardDivDonation);
             rewardContainer.appendChild(rewardDivDescription);
-            rewardContainer.setAttribute("id","rewardContainer");
+            rewardContainer.setAttribute("class","rewardContainer");
 
             //Finally, the reward is added to the document
             listElement.appendChild(rewardContainer);
@@ -870,121 +868,71 @@ function closePopupDonationSuccess(){
 }
 
 
-// LANDING PAGE
+//  ################ RENDERING LANDING PAGE ################################################
 
-// sign up button
+// Sign up Button
 
 if (document.querySelector(".signupButton")){
-  const signupButton = document.querySelector(".signupButton");
 
+  //If a user clicks on the sign up button
+  const signupButton = document.querySelector(".signupButton");
   signupButton.addEventListener("click", () => {
 
+  //If a user is already signed in, they will be presented with a popup explaining they
+  //cannot sign up
     if (auth.currentUser){
       openLandingPopup();
 
+  //Otherwise, they will be redirected to the sign up page
     }else{
       window.location.href = "signup.html";
     }
-
-
-  } )
-
-}
-
-function openLandingPopup() {
-  const popup = document.querySelector(".popupLanding");
-  popup.classList.add("open-popupLanding");
-  //alert("open the popup");
-
-  const continueBtn = popup.querySelector("#continueLanding")
-
-  continueBtn.addEventListener("click", () => {
-    closeLandingPopup();
   })
 }
 
+//Opens pop up when a logged in user attempts to sign up
+function openLandingPopup() {
+  const modalBackground = document.querySelector(".modalBackdrop");
+  modalBackground.style.display = "block";
+
+  const popup = document.querySelector(".popupLanding");
+  popup.classList.add("open-popupLanding");
+
+  //Closes the pop up when a user clicks the continue button
+  const continueBtn = popup.querySelector("#continueLanding")
+  continueBtn.addEventListener("click", () => {
+    closeLandingPopup();
+    modalBackground.style.display = "none";
+  })
+}
+
+//Closes the popup
 function closeLandingPopup(){
   const popup = document.querySelector("#popupLanding");
   popup.classList.remove("open-popupLanding");
 }
-// DISPLAY THE TOP 3 MOST RECENT CAMPAIGNS
 
+// Displaying the three most recent campaigns
 if (document.querySelector(".landingPageCampaigns")){
 
+  //Queries the campaigns collection for the most recent documents to be added
   const colRef = collection(db, "campaigns");
   const landingQ = query(colRef, orderBy("createdAt", "desc"), limit(3));
-  console.log(landingQ);
 
+  //Fetches each document and renders them for display on the interface
   const querySnapshot = onSnapshot(landingQ, (querySnapshot) => {
     querySnapshot.forEach((doc) => {
-      renderCampaignLanding(doc);
+
+      //Same function as before to render campaign cards
+      renderCampaignCard(doc,"landingPageCampaigns");
     })
-
-  }) 
-
-
-  
-}
-
-function renderCampaignLanding(doc) {
-  let landingPageDiv = document.getElementById("landingPageCampaigns");
-  if (doc.length != 0){
-
-    //WORKS WITH THE LIST 
-    let floatContainer = document.createElement("div");
-    floatContainer.setAttribute("class","float-child");
-
-    let card = document.createElement("div");
-    card.setAttribute("class","card");
-    let image = document.createElement("IMG");
-    image.setAttribute("style","width:100%");
-    let container = document.createElement("div");
-    container.setAttribute("class","container");
-    let name = document.createElement("h4");
-    let description = document.createElement("p");
-    let pageButton = document.createElement("button");
-
-    let tempID = document.createElement("p");
-    pageButton.textContent = "Read more";
-   // pageButton.setAttribute("href","/itempage.html");
-
-    //li.setAttribute("data-id", doc.id);
-    name.textContent = doc.data().name;
-    description.textContent = doc.data().description;
-    image.src = doc.data().image;
-    let idCurrent = doc.id;
-  
-
-    let currentCampaign = doc.id;
-
-    pageButton.addEventListener("click", () => {
-      localStorage.setItem("currentCampaign", idCurrent);
-      localStorage.setItem("currentCampaignName",doc.data().name)
-      let currentCampaignId = idCurrent;
-      //alert(localStorage.getItem("currentCampaign"));
-      renderCampaignPage();
-    });
-
-    container.appendChild(name);
-    container.appendChild(description);
-    container.appendChild(pageButton);
-
-     card.appendChild(image);
-     card.appendChild(container);
-
-     floatContainer.appendChild(card);
-     landingPageDiv.appendChild(floatContainer);
-
-  
-
-  } else{
-    landingPageDiv.innerHTML=
-    '<h5 class ="center-align">Login to view campaigns</h5>';
-  }
+  })  
 }
 
 
 //Adding documents
+
+/*
 if (document.querySelector("#create-form")){ 
 
   const addCampaignForm = document.querySelector("#create-form");
@@ -1176,17 +1124,18 @@ if (document.querySelector("#create-form")){
     addCampaignForm.reset();
   }).catch(err => {
     console.log(err.message);
-  })*/
+  })
 
  
   
 })
 
-}
+}*/
 
 
 //tring to work out image upload
 
+/*
 if (document.querySelector("#imageUpload")){
   const inp = document.querySelector(".inp");
   const progressbar = document.querySelector(".progress");
@@ -1226,7 +1175,9 @@ if (document.querySelector("#imageUpload")){
 
     }
 
-  });
+  });*/
+
+  /*
 
   let uploadImageBtn = document.querySelector("#uploadBtn");
   uploadImageBtn.addEventListener("click", () => {
@@ -1271,9 +1222,11 @@ if (document.querySelector("#imageUpload")){
 
   })
 }
-
+*/
 
 //Getting data from user uploaded image
+
+/*
 function getImageData(e) {
   file = e.target.files[0];
   fileName = Math.round(Math.random() * 9999) + file.name;
@@ -1322,11 +1275,10 @@ function uploadImage() {
       console.log("File Uploaded Successfully");
     }
   );
-};
+};*/
 
 
 //Deleting documents
-
 if (document.querySelector(".delete")){ 
   const deleteCampaignForm = document.querySelector(".delete");
   deleteCampaignForm.addEventListener("submit", (e) =>{
@@ -1342,142 +1294,225 @@ if (document.querySelector(".delete")){
 
 }
 
-
-// FILL ACCOUNT PAGE INFO
+//  ################ RENDERING ACCOUNT PAGE ################################################
 
 
 if (document.querySelector("#userAccountInfo")){
 
+  //When a user logs in or logs out, the account page is updated accordingly
   onAuthStateChanged(auth, (user) => {
     fillAccountPage(user);
   })
-
-
 }
 
+function openAccountPopup(){
+  const modalBackground = document.querySelector(".modalBackdrop");
+  modalBackground.style.display = "block";
+
+  const popup = document.querySelector(".popupErrorAccount");
+  popup.classList.add("open-popupErrorAccount");
+
+  //When the continue button is clicked within the popup, the modal will close
+  const continueBtn = popup.querySelector("#continueAccount")
+  continueBtn.addEventListener("click", () => {
+    modalBackground.style.display = "none";
+    closeAccountPopup();
+    window.location.href="index.html";
+  })
+}
+
+//Closing the popup window
+function closeAccountPopup(){
+  const popup = document.querySelector(".popupErrorAccount");
+  popup.classList.remove("open-popupErrorAccount");
+}
+
+//Fills the account page with the user's information
 function fillAccountPage(user){
 
   if (user) {
-    //account information
+
+    //Fetching user account information
     const userRef = doc(db, "users", user.uid)
+
     getDoc(userRef).then((doc) =>{
+
+    //Name
     let nameDiv = document.querySelector("#userFullName");
     let name = document.createElement("h2");
     name.textContent = doc.data().firstName+" "+doc.data().lastName;
     nameDiv.appendChild(name);
 
+    //Username
     let username = document.createElement("h3");
     username.textContent = "@"+doc.data().username;
     nameDiv.appendChild(username);
 
+    //User bio
     let bioDiv = document.querySelector("#userBio");
     let bioTxt = document.createElement("p");
     bioTxt.textContent = doc.data().bio;
     bioDiv.appendChild(bioTxt);
 
-   /* let countryDiv = document.querySelector("#userCountry");
-    let country = document.createElement("h6");
-    country.textContent = "Country: "+doc.data().country;
-    countryDiv.appendChild(country);*/
+   })
 
 
-    })
+  //Fetches any campaigns a user has started
+  const campRef = collection(db, "users", user.uid,"campaigns")
+  onSnapshot(campRef, (snapshotDocs) => {
 
+    // If the user has not started any campaigns
+    if (snapshotDocs.empty){
+      let docDiv = document.querySelector("#userCampaigns");
+      let messageNoCampaigns = document.createElement("h5");
+      messageNoCampaigns.setAttribute("id","noUserCampaigns");
+      messageNoCampaigns.textContent = "You have no active campaigns :("
+      docDiv.appendChild(messageNoCampaigns);
+    }else{
 
-    const campRef = collection(db, "users", user.uid,"campaigns")
-    onSnapshot(campRef, (snapshotDocs) => {
-      if (snapshotDocs.empty){
-        let docDiv = document.querySelector("#userCampaigns");
-        let messageNoCampaigns = document.createElement("h5");
-        messageNoCampaigns.textContent = "You have no active campaigns :("
-        docDiv.appendChild(messageNoCampaigns);
-      }else{
-        snapshotDocs.docs.forEach(docSnap =>{
-          campaignCard(docSnap);
-        })
+      //Removes no campaigns message if the user has started a campaign
+      if (document.querySelector("#noUserCampaigns")){
+        let noCampaignsMsg = document.querySelector("#noUserCampaigns");
+        document.removeChild(noCampaignsMsg);
       }
-      
-    })
+    // Presents a campaign summary on the screen for each campaign
+    // a user has started
+      snapshotDocs.docs.forEach(docSnap =>{
+        campaignSummary(docSnap);
+      })
+    } 
+  })
 
+    //Fetches any donations a user has made
+  const donationsRef = collection(db, "users",user.uid,"donations");
 
+  onSnapshot(donationsRef, (snapshotDons) => {
+
+    // If the user has not made any donations
+    if (snapshotDons.empty){
+      let docDiv = document.querySelector("#userDonations");
+      let messageNoDonations = document.createElement("h5");
+      messageNoDonations.setAttribute("id","noUserDonations");
+      messageNoDonations.textContent = "You have not donated to any campaigns :("
+      docDiv.appendChild(messageNoDonations);
+
+    }else{
+
+      //Removes no donations message if there are donations
+      if (document.querySelector("#noUserDonations")){
+        let noDonationsMsg = document.querySelector("#noUserDonations");
+        document.removeChild(noDonationsMsg);
+      }
+
+       // Presents a donation summary on the screen for each donation
+       // made by a user
+       snapshotDons.docs.forEach(donSnap => {
+        donationSummary(donSnap);
+       })
+    }
+  })
   }else{
-    alert(auth.currentUser);
+    openAccountPopup();
   }
-
 }
 
-function campaignCard(doc){
+//This function generates a summary of a campaign
+function campaignSummary(doc){
+
   let docDiv = document.querySelector("#userCampaigns");
 
-  if (doc.length != 0){
-    alert("campaigns here");
-    //WORKS WITH THE LIST 
-    
-    let campList = document.querySelector("#campaignList");
-
-
-    let campContainer = document.createElement("div");
-    campContainer.setAttribute("class","campContainer");
-    //let buttonContainer = document.createElement("div");
-    //buttonContainer.setAttribute("class","buttonContainer");
-
-
-    //let campaign = document.createElement("div");
-    //campaign.setAttribute("class","campaignSummary");
-    let name = document.createElement("h4");
-   // let description = document.createElement("p");
-    let pageButton = document.createElement("button");
-
-    let tempID = document.createElement("p");
-    pageButton.textContent = "Edit";
-
-    //li.setAttribute("data-id", doc.id);
-    name.textContent = doc.data().name;
-   // description.textContent = doc.data().description;
-    console.log(doc.data());
-    let idCurrent = doc.id;
+  // Initialises div container
+  let campContainer = document.createElement("div");
+  campContainer.setAttribute("class","campContainer");
   
+  // Campaign name
+  let name = document.createElement("h4");
+  name.textContent = doc.data().name;
+  
+  //Edit button
+  let editButton = document.createElement("button");
+  editButton.textContent = "Edit";
+  
+  //Store id
+  let idCurrent = doc.id;
 
-    //currentCampaign = doc.id;
+  //When the edit button is clicked
+  editButton.addEventListener("click", () => {
+    
+    //Campaign information stored in local storage
+    localStorage.setItem("campaignToUpdate",doc.data().name);
+    localStorage.setItem("updateCampaignId",idCurrent);
+    
+    //User is redirected to campaignEdit page
+    window.location.href = "campaignEdit.html";
 
-    pageButton.addEventListener("click", () => {
-      //const updateForm = document.querySelector("#modal-update");
-      localStorage.setItem("campaignToUpdate",doc.data().name);
-      localStorage.setItem("updateCampaignId",idCurrent);
-     // M.Modal.getInstance(donateForm).open();
-      //const docRef = doc(db, "campaigns", idCurrent)
-      window.location.href = "campaignEdit.html";
-
-     /* updateDoc(docRef, {
-        name: "updated name"
-      })
-      .then(() => {
-        updateForm.reset();
-      })*/
     });
 
+    //Add elements to page
     campContainer.appendChild(name);
-    campContainer.appendChild(pageButton);
-    //campContainer.appendChild(description);
-   // buttonContainer.appendChild(pageButton);
-  //  campaign.appendChild(pageButton);
-
-  
-   // campContainer.appendChild(campaign);
-   // campContainer.appendChild(buttonContainer);
-  
+    campContainer.appendChild(editButton);
     docDiv.appendChild(campContainer);
-
-
-  
-
-  } else{
-   
-    let messageNoCampaigns = document.createElement("h5");
-    messageNoCampaigns.textContent = "You have no active campaigns :("
-    docDiv.appendChild(messageNoCampaigns);
-  }
 }
+
+function donationSummary(doc){
+
+
+  // Initialises div containers
+
+  let donationContainer = document.createElement("div");
+  donationContainer.setAttribute("class","donationContainer");
+
+  let donationAmountDiv = document.createElement("div");
+  donationAmountDiv.setAttribute("class","rewardDonationDiv");
+  
+  //Each donation document in the subcollection is fetched and
+  //presented on the interface
+
+  let donationList = document.querySelector("#donationsList");
+  let listElement = document.createElement("li");
+
+  // Campaign name
+  let title = document.createElement("h4");
+  title.textContent = "Donation to: "+doc.data().donationTo;
+ 
+  let donationDivDescription = document.createElement("div");
+  donationDivDescription.setAttribute("class","rewardDescriptionDiv");
+   
+
+  let donation = document.createElement("button");
+  donation.disabled = true;
+  donation.setAttribute("class","donationAmount");
+  const donationRounded = (Math.round(doc.data().donationAmount * 100) / 100).toFixed(2);
+  donation.textContent = donationRounded + " ";
+
+  let donationButtonDivCenter = document.createElement("div");
+  donationButtonDivCenter.setAttribute("class","center");
+   
+  let descriptionReward = document.createElement("p");
+  descriptionReward.textContent = "Reward: "+doc.data().reward;
+
+  let donationTime = document.createElement("p");
+  let timeObj = doc.data().processedAt;
+
+  var timeObjArr = timeObj.split("_");
+  donationTime.textContent = "Date: "+timeObjArr[0];
+
+
+   donationDivDescription.appendChild(title);
+   //donationButtonDivCenter.appendChild(donation);
+  // donationAmountDiv.appendChild(donationButtonDivCenter);
+   donationDivDescription.appendChild(descriptionReward);
+   donationContainer.appendChild(donationAmountDiv);
+   donationContainer.appendChild(donation);
+   donationContainer.appendChild(donationDivDescription);
+   
+   donationContainer.setAttribute("class","donationContainer");
+
+   //Finally, the reward is added to the document
+   listElement.appendChild(donationContainer);
+   donationList.appendChild(listElement);
+}
+
 
 // get a single document
 /*
@@ -2002,7 +2037,6 @@ function fillEditPage(){
       category.textContent = docSnap.data().category;
       categoryDiv.appendChild(category);
 
-      let progressDiv = document.querySelector("#moneyDiv");
       let raisedDiv = document.querySelector("#raisedDiv");
       let targetDiv = document.querySelector("#targetDiv");
       let targetDoc = document.createElement("h5");
@@ -2055,10 +2089,10 @@ function fillEditPage(){
           let rewardContainer = document.createElement("div");
 
           let rewardDivDonation = document.createElement("div");
-          rewardDivDonation.setAttribute("id","rewardDonationDiv");
+          rewardDivDonation.setAttribute("class","rewardDonationDiv");
 
           let rewardDivDescription = document.createElement("div");
-          rewardDivDescription.setAttribute("id","rewardDescriptionDiv");
+          rewardDivDescription.setAttribute("class","rewardDescriptionDiv");
           
 
           let rewardName = document.createElement("h5");
@@ -2104,7 +2138,7 @@ function fillEditPage(){
           rewardContainer.appendChild(rewardDivDonation);
           rewardContainer.appendChild(rewardDivDescription);
 
-          rewardContainer.setAttribute("id","rewardContainer");
+          rewardContainer.setAttribute("class","rewardContainer");
 
           listElement.appendChild(rewardContainer);
           rewardList.appendChild(listElement);
