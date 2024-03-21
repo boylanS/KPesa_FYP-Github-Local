@@ -16,114 +16,137 @@
   
    <!-- Font Awesome Kit Link -->
    <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
+ 
+   <!-- Google Fonts -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+ 
   </head>
 <body>
 
     <body>
 
-        <!-- NAVBAR -->
+           <!-- NAVBAR -->
         <div class = "entireNav">
-        <nav class="z-depth-0 white">
-          <div class="nav-wrapper container">
-            <a href="index.html" class="brand-logo">
-                <img src="KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
-              </a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li class="logged-in" style="display: none;">
-                  <a href="#" class="grey-text modal-trigger" data-target="modal-account">Account</a>
-                </li>
-                <li class="logged-in" style="display: none;">
-                  <a href="campaignExplore.html" class="grey-text modal-trigger" >Campaigns</a>
-                </li>
-                <li class="logged-in" style="display: none;">
-                  <a href="#" class="grey-text" id="logout">Logout</a>
-                </li>
-                <li class="logged-in" style="display: none;">
-                    <a href="forum.html" class="grey-text" id="logout">Community Forum</a>
+          <nav class="z-depth-0 white">
+            <div class="nav-wrapper container">
+              <a href="index.html" class="brand-logo">
+                  <img src="img\KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
+                </a>
+              <ul id="nav-mobile" class="right hide-on-med-and-down">
+                  <li class="logged-in" style="display: none;">
+                    <a href="account.html" class="grey-text">Account</a>
                   </li>
-                <li class="logged-in" style="display: none;">
-                  <a href="createCampaign.html" class="grey-text modal-trigger">Create Campaign</a>
-                </li>
-                <li class="logged-out" style="display: none;">
-                  <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
-                </li>
-                <li class="logged-out" style="display: none;">
-                  <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
-                </li>
-              </span>
+                
+                  <li >
+                    <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
+                  </li>
+                
+                  <li class="logged-in" style="display: none;">
+                      <a href="forum.html" class="grey-text" id="forum">Community Forum</a>
+                    </li>
+
+                    <li class="logged-in" style="display: none;">
+                      <a href="#" class="grey-text" id="logout">Logout</a>
+                    </li>
+              
+                  <li class="logged-out" style="display: none;">
+                    <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
+                  </li>
+                  <li class="logged-out" style="display: none;">
+                    <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
+                  </li>
+                </span>
+              </ul>
+            </div>
+  
+            <ul id="dropdownCampaign" class="dropdown-content">
+              <li><a href="campaignExplore.html">Explore</a></li>
+              <li class = "logged-in" style="display: none;"><a href="createCampaign.html">Create</a></li>
+  
             </ul>
+          </nav>
           </div>
-        </nav>
-        </div>
+
+
+            <div id="userAccountInfo">
+
+              <div id="userFullName">
+
+              </div>
+              <h4>About</h4>
+              <div id="userBio"></div>
+
+              <h4>User Campaigns</h4>
+             
+  
+              <div id="userCampaigns"></div>
+              <ul id = "campaignList"></ul>
+
+              <h4>Previous Donations</h4>
+             
+  
+              <div id="userDonations"></div>
+              <ul id = "donationsList"></ul>
+
+
+            </div>
+
+          
+          </div>
+
+              <!--<div class="row">
+                <div class="column">
+                   <h4>About</h4>
+                    <div id="userBio"></div>
+                  </div>
+      
+                <div class="column">
+                    
+                    <div id="userCountry">
+      
+                  </div>
+
+                </div>
+              </div>-->
+             
+
+
+  <div class="popupErrorAccount" id = "popupErrorAccount">
+    <img src="img\red-x-icon.png" id = "x" >
+    
+    <h2>You must be logged in to continue.</h2>
+    <p>Please log in or sign up for a KPesa account to proceed.</p>
+    <button type="button" id="continueAccount">Continue</button>
+  </div>
+
+  <div class = "modalBackdrop"></div>
+
 
         
         <!-- LOGIN MODAL -->
         <div id="modal-login" class="modal">
-            <div class="modal-content">
-              <h4>Login</h4><br />
-              <form id="login-form" class = "loginForm">
-                <div class="input-field">
-                  <input type="email" id="login-email" required />
-                  <label for="login-email">Email address</label>
-                </div>
-                <div class="input-field">
-                  <input type="password" id="login-password" required />
-                  <label for="login-password">Your password</label>
-                </div>
-                <button class="btn yellow darken-2 z-depth-0">Login</button>
-              </form>
-            </div>
+          <div class="modal-content">
+            <h4>Login</h4><br />
+            <form id="login-form" class = "loginForm">
+              <div class="input-field">
+                <input type="email" id="login-email" required />
+                <label for="login-email">Email address</label>
+              </div>
+              <div class="input-field">
+                <input type="password" id="login-password" required />
+                <label for="login-password">Your password</label>
+              </div>
+              <button>Login</button>
+              <p class="error pink-text center-align"></p>
+            </form>
           </div>
+        </div>
         
-          <!-- ACCOUNT MODAL -->
-          <div id="modal-account" class="modal">
-            <div class="modal-content center-align">
-              <h4>Account details</h4><br />
-              <div class="account-details"></div>
-            </div>
-          </div>
-  
-  
-        
-          <!-- CREATE GUIDE MODAL -
-          <div id="modal-create" class="modal">
-            <div class="modal-content">
-              <h4>Create Guide</h4><br />
-              <form id="create-form">
-                <div class="input-field">
-                  <input type="text" id="title" required>
-                  <label for="title">Guide Title</label>
-                </div>
-                <div class="input-field">
-                  <textarea id="content" class="materialize-textarea" required></textarea>
-                  <label for="content">Guide Content</label>
-                </div>
-                <button class="btn yellow darken-2 z-depth-0">Create</button>
-              </form>
-            </div>
-          </div>
-        -->
-          <!-- GUIDE LIST -->
-          <div class="container" style="margin-top: 40px;">
-            <ul class="collapsible z-depth-0 guides" style="border: none;">
-              <li>
-                <div class="collapsible-header grey lighten-4">Guide title</div>
-                <div class="collapsible-body white">Lorem ipsum dolor sit amet.</div>
-              </li>
-              <li>
-                <div class="collapsible-header grey lighten-4">Guide title</div>
-                <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
-              </li>
-              <li>
-                <div class="collapsible-header grey lighten-4">Guide title</div>
-                <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
-              </li>
-              <li>
-                <div class="collapsible-header grey lighten-4">Guide title</div>
-                <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
-              </li>
-            </ul>
-          </div>
+      
+         
           
   
           <footer>

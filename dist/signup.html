@@ -16,79 +16,58 @@
   
    <!-- Font Awesome Kit Link -->
    <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
+ 
+      <!-- Google Fonts -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
   </head>
 <body>
 
     <body class="grey lighten-3">
 
-          <!-- NAVBAR -->
-          <div class = "entireNav">
-            <nav class="z-depth-0 white">
-              <div class="nav-wrapper container">
-                <a href="index.html" class="brand-logo">
-                    <img src="KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
-                  </a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li class="logged-in" style="display: none;">
-                      <a href="#" class="grey-text modal-trigger" data-target="modal-account">Account</a>
-                    </li>
-                    <li >
-                      <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
-                    </li>
-                    <li class="logged-in" style="display: none;">
-                      <a href="#" class="grey-text" id="logout">Logout</a>
-                    </li>
-                    <li class="logged-in" style="display: none;">
-                        <a href="forum.html" class="grey-text" id="logout">Community Forum</a>
-                      </li>
-                    <li class="logged-in" style="display: none;">
-                      <a href="createCampaign.html" class="grey-text modal-trigger">Create Campaign</a>
-                    </li>
-                    <li class="logged-out" style="display: none;">
-                      <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
-                    </li>
-                    <li class="logged-out" style="display: none;">
-                      <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
-                    </li>
-                  </span>
-                </ul>
-              </div>
-            </nav>
-            </div>
-      
-        <!-- SIGN UP MODAL -->
+           <!-- NAVBAR -->
+        <div class = "entireNav">
+          <nav class="z-depth-0 white">
+            <div class="nav-wrapper container">
+              <a href="index.html" class="brand-logo">
+                  <img src="img\KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
+                </a>
+              <ul id="nav-mobile" class="right hide-on-med-and-down">
 
-       <!---<div id="modal-signup" class="modal">
-          <div class="modal-content">
-            <h4>Sign up</h4><br /> 
-            <form class="signup">
-              <label for ="email">email:</label>
-              <input type="email" name = "email">
-              <label for="password">password:</label>
-              <input type="password" name = "password">
-              <button type="submit">signup</button>
-          </form>
-       
+                  <li class="logged-in" style="display: none;">
+                    <a href="account.html" class="grey-text">Account</a>
+                  </li>
+                
+                  <li >
+                    <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
+                  </li>
+                  <li class="logged-in" style="display: none;">
+                    <a href="#" class="grey-text" id="logout">Logout</a>
+                  </li>
+                  <li class="logged-in" style="display: none;">
+                      <a href="forum.html" class="grey-text" id="logout">Community Forum</a>
+                    </li>
+              
+                  <li class="logged-out" style="display: none;">
+                    <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
+                  </li>
+                  <li class="logged-out" style="display: none;">
+                    <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
+                  </li>
+                </span>
+              </ul>
+            </div>
+        
+  
+            <ul id="dropdownCampaign" class="dropdown-content">
+              <li><a href="campaignExplore.html">Explore</a></li>
+              <li class = "logged-in" style="display: none;"><a href="createCampaign.html">Create</a></li>
+  
+            </ul>
+          </nav>
           </div>
-        </div>-->
-
-        <!-- SIGN UP MODAL -
-      <div id="modal-signup" class="modal">
-        <div class="modal-content">
-          <h4>Sign up</h4><br />
-          <form id="signup-form">
-            <div class="input-field">
-              <input type="email" id="signup-email" required />
-              <label for="signup-email">Email address</label>
-            </div>
-            <div class="input-field">
-              <input type="password" id="signup-password" required />
-              <label for="signup-password">Choose password</label>
-            </div>
-            <button type="submit" id="signupButton" class="btn yellow darken-2 z-depth-0">Sign up</button>
-          </form>
-        </div>
-      </div>-->
       
         <!-- LOGIN MODAL -->
         <div id="modal-login" class="modal">
@@ -103,73 +82,87 @@
                 <input type="password" id="login-password" required />
                 <label for="login-password">Your password</label>
               </div>
-              <button class="btn yellow darken-2 z-depth-0">Login</button>
+              <button>Login</button>
+              <p class="error pink-text center-align"></p>
             </form>
           </div>
         </div>
-      
-        <!-- ACCOUNT MODAL -->
+        <!-- ACCOUNT MODAL  
         <div id="modal-account" class="modal">
           <div class="modal-content center-align">
             <h4>Account details</h4><br />
             <div class="account-details"></div>
           </div>
+        </div>-->
+
+        <div class="popupSignupError" id = "popupSignupError">
+          <img src="img\red-x-icon.png" id = "x" >
+          
+          <h2>Sign up could not be completed.</h2>
+          <p id="signupError"></p>
+          <button type="button" id="continueSignup">Continue</button>
         </div>
       
-        <!-- CREATE GUIDE MODAL -
-        <div id="modal-create" class="modal">
-          <div class="modal-content">
-            <h4>Create Guide</h4><br />
-            <form id="create-form">
-              <div class="input-field">
-                <input type="text" id="title" required>
-                <label for="title">Guide Title</label>
-              </div>
-              <div class="input-field">
-                <textarea id="content" class="materialize-textarea" required></textarea>
-                <label for="content">Guide Content</label>
-              </div>
-              <button class="btn yellow darken-2 z-depth-0">Create</button>
-            </form>
-          </div>
-        </div>-->
+       
       
         <div class = "modalBackdrop"></div>
      
 
   
   
-  <!---<form class="signup">
-      <label for="email">email:</label>
-      <input type="email"name="email">
-      <label for="password">password:</label>
-      <input type="password" name="password">
-      <button>signup</button>
-    </form>-->
 
     <form id="regForm" action="">
 
       <h1>Sign up:</h1>
       
       <!-- One "tab" for each step in the form: -->
-      <div class="tab">Name:
+      <div class="tab">   <label for="firstName">Name:</label>
         <p><input placeholder="First name..." oninput="this.className = ''" name = "firstName" type="text"></p>
         <p><input placeholder="Last name..." oninput="this.className = ''" name = "lastName" type="text"></p>
       </div>
       
-      <div class="tab">Contact Info:
+      <div class="tab">
+        <label for="email">Email</label>
         <p><input placeholder="E-mail..." oninput="this.className = ''" name = "email" type="email"></p>
       </div>
       
-      <div class="tab">Country:
-        <p><input placeholder="Country..." oninput="this.className = ''" name = "country" type="text"></p>
+      <div class="tab">
+        <label for="countryUser">Country:</label>
+             <p><input list ="countryUserList" autocomplete="off" placeholder="Country" oninput="this.className = ''" name = "countryUser" type="text"></p>
+             <datalist id ="countryUserList">
+             <option value="Ireland">Ireland</option>
+              <option value="UK">UK</option>
+              <option value="Algeria">Algeria</option>
+              <option value="Angola">Angola</option>
+              <option value="Botswana">Botswana</option>
+              <option value="Cameroon">Cameroon</option>
+              <option value="Central African Republic">Central African Republic</option>
+              <option value="Chad">Chad</option>
+              <option value="Congo, Democratic Republic of the">Congo, Democratic Republic of the</option>
+              <option value="Egypt">Egypt</option>
+              <option value="Ethiopia">Ethiopia</option>
+              <option value="Ghana">Ghana</option>
+              <option value="Guinea">Guinea</option>
+              <option value="Kenya">Kenya</option>
+              <option value="Libya">Libya</option>
+              <option value="Mali">Mali</option>
+              <option value="Mauritius">Mauritius</option>
+              <option value="Morocco">Morocco</option>
+              <option value="Nigeria">Nigeria</option>
+              <option value="South Africa">South Africa</option>
+              <option value="Tanzania">Tanzania</option>
+              <option value="Uganda">Uganda</option>
+              <option value="Zambia">Zambia</option>
+              <option value="Zimbabwe">Zimbabwe</option>
+             </datalist>
+
       </div>
 
-      <div class="tab">Bio:
+      <div class="tab">   <label for="bio">Bio:</label>
         <p><input placeholder="User Bio..." oninput="this.className = ''" name = "bio" type="text"></p>
       </div>
       
-      <div class="tab">Login Info:
+      <div class="tab">   <label for="username">Login Info:</label>
         <p><input placeholder="Username..." oninput="this.className = ''" name = "username" type="text"></p>
         <p><input placeholder="Password..." oninput="this.className = ''" name = "password" type="password"></p>
       </div>
@@ -193,7 +186,7 @@
       </form>
 
       <div class="popup" id = "popup">
-        <img src="tickTransparent.png" id = "tick" >
+        <img src="img\tickTransparent.png" id = "tick" >
         
         <h2>Welcome to KPesa!</h2>
         <p>Sign up has been successful.</p>

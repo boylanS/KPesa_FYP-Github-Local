@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Forum</title>
       <!-- Boostrap and style sheet -->
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
@@ -16,40 +16,43 @@
 
      <!-- Font Awesome Kit Link -->
    <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
+
+         <!-- Google Fonts -->
+         <link rel="preconnect" href="https://fonts.googleapis.com">
+         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+         <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+      
 </head>
 <body>
 
      <!-- NAVBAR -->
      <div class = "entireNav">
-     <nav class="z-depth-0 white">
+      <nav class="z-depth-0 white">
         <div class="nav-wrapper container">
           <a href="index.html" class="brand-logo">
-              <img src="KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
+              <img src="img\KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
             </a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
               <li class="logged-in" style="display: none;">
-                <a href="#" class="grey-text modal-trigger" data-target="modal-account">Account</a>
+                <a href="account.html" class="grey-text">Account</a>
               </li>
-              <li class="logged-in" style="display: none;">
-                <a href="campaignExplore.html" class="grey-text modal-trigger" >Campaigns</a>
-              </li>
+            
               <li >
                 <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
               </li>
+          
               <li class="logged-in" style="display: none;">
-                <a href="#" class="grey-text" id="logout">Logout</a>
-              </li>
-              <li class="logged-in" style="display: none;">
-                  <a href="forum.html" class="grey-text" id="logout">Community Forum</a>
+                  <a href="forum.html" class="grey-text" id="forum">Community Forum</a>
                 </li>
-              <li class="logged-in" style="display: none;">
-                <a href="createCampaign.html" class="grey-text modal-trigger">Create Campaign</a>
-              </li>
+          
+                <li class="logged-in" style="display: none;">
+                  <a href="#" class="grey-text" id="logout">Logout</a>
+                </li>
               <li class="logged-out" style="display: none;">
                 <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
               </li>
               <li class="logged-out" style="display: none;">
-                <a href="#" class="grey-text modal-trigger" data-target="modal-signup">Sign up</a>
+                <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
               </li>
             </span>
           </ul>
@@ -62,96 +65,12 @@
         </ul>
       </nav>
       </div>
-<!---
-    <nav class="navbar fixed-top navbar-expand-sm navbar-light bg-light">
-        <div class="container">
-                <a href = "#" class="navbar-brand mb-0 h1">
-        
-                    <img 
-                    class = "d-inline-block align-top"
-                    src ="KPesaLogoJPEG.jfif" width = "30" height = "30">
-                    KPesa
-                </a>
-        
-               
-                    The button below toggles the navigation bar when
-                    the window collapses. The aria contorls are in place for
-                    users with additional accessibility needs
-                
-                <a>
-                    <button 
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                    class="navbar-toggler"
-        
-                    aria-controls="#navbarNav"
-                    aria-expanded="False"
-                    aria-label="Toggle navigation">
-                
-                <span class="navbar-toggler-icon"></span></button>
-                </a>
-        
-                <div class="collapse navbar-collapse"
-                id = "navbarNav">
-        
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a href="index.html" class="nav-link">
-                            Home
-                        </a>
-                    </li>
-        
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            Explore
-                        </a>
-                    </li>
-        
-                    <li class="nav-item">
-                        <a href="forum.html" class="nav-link active">
-                            Community Forum
-                        </a>
-                    </li>
-                </ul>
-                </div>
-        
-                <form class ="d-flex">
-                    <input type="text" class="form-control me-2">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </form>
-            </div>
-             
-            </nav>-->
     
 
     <div class = "row-container">
- <iframe width="100%" height = "600" src="http://pub30.bravenet.com/forum/2549579052/" title="KPesa Forum" frameborder="0" scrolling="Yes"></iframe>
+ <iframe width="100%" height = "700" src="https://pub30.bravenet.com/forum/static/show.php?usernum=2549579052&frmid=0&msgid=0" title="KPesa Forum" frameborder="0" scrolling="Yes"></iframe>
 </div>
 
-
-
-          <!-- SIGN UP MODAL -->
-          <div id="modal-signup" class="modal">
-            <div class="modal-content">
-              <h4>Sign up</h4><br />
-              <form id="signup-form">
-                <div class="input-field">
-                  <input type="email" id="signup-email" required />
-                  <label for="signup-email">Email address</label>
-                </div>
-                <div class="input-field">
-                  <input type="password" id="signup-password" required />
-                  <label for="signup-password">Choose password</label>
-                </div>
-                <div class ="input-field">
-                  <input type ="text" id ="signup-bio" required/>
-                  <label for ="signup-bio">One Line Bio</label>
-                </div>
-                <button class="btn yellow darken-2 z-depth-0">Sign up</button>
-              </form>
-            </div>
-          </div>
         
         
                 <!-- LOGIN MODAL -->
@@ -172,13 +91,7 @@
                   </div>
                 </div>
               
-                <!-- ACCOUNT MODAL -->
-                <div id="modal-account" class="modal">
-                  <div class="modal-content center-align">
-                    <h4>Account details</h4><br />
-                    <div class="account-details"></div>
-                  </div>
-                </div>
+             
 
 <footer>
     <div class = "footer">
