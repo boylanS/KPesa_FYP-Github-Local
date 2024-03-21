@@ -420,7 +420,7 @@ function renderCampaignCard(doc, divId) {
     card.setAttribute("class","card");
 
     let image = document.createElement("IMG");
-    image.setAttribute("style","width:100%");
+    image.setAttribute("style","width:100%; height: 40%");
     image.src = doc.data().image;
 
     let container = document.createElement("div");
@@ -605,7 +605,7 @@ function fillPage(campaignItem){
             deleteBtn.addEventListener("click", () => {
               let currentCampaign = localStorage.getItem("updateCampaignId");
               let rewardId = docSnap.data().uid;
-              alert(rewardId);
+              
   
               let rewardDocRef = doc(db, "campaigns",currentCampaign,"rewards",rewardId);
   
@@ -1490,6 +1490,7 @@ function campaignSummary(doc){
   //Edit button
   let editButton = document.createElement("button");
   editButton.textContent = "Edit";
+
   
   //Store id
   let idCurrent = doc.id;
@@ -1505,6 +1506,8 @@ function campaignSummary(doc){
     window.location.href = "campaignEdit.html";
 
     });
+
+
 
     //Add elements to page
     campContainer.appendChild(name);
@@ -1856,8 +1859,6 @@ if (document.querySelector("#createCampaignFormSteps")){
     nextPrevCamp(1);
   })
 
-  
-
   //Sets the count of number of rewards available to 0
   localStorage.setItem("numberOfRewards",0);
 
@@ -2149,14 +2150,19 @@ function nextPrevCamp(n) {
        raised: 0.00,
        target: addCampaignForm.campaignTarget.value,
        createdAt: serverCreationTime,
-       user: auth.currentUser.uid
+       user: campaignOwner
    }).then(() => {
-    
-    //The rewards subcollection is filled
-      const noOfRewards = localStorage.getItem("numberOfRewards");
+
+      const newUserRef = doc(db,"users",campaignOwner,"campaigns",idNew);
+     
+      setDoc(newUserRef, {
+       name: addCampaignForm.campaignName.value,
+       createdAt: serverCreationTime,
+      }).then(() =>  {
+          //The rewards subcollection is filled
+        const noOfRewards = localStorage.getItem("numberOfRewards");
   
       if (noOfRewards != 0){
-    
         for (let i = 1; i <= noOfRewards; i++){
     
           var rewardForm = document.querySelector("#reward"+i);
@@ -2168,31 +2174,39 @@ function nextPrevCamp(n) {
             name: rewardForm.rewardName.value,
             donation: parseFloat(rewardForm.rewardDonation.value),
             description: rewardForm.rewardDesc.value,
-        })
-          .then(() => {
-            const userIDCurrent = auth.currentUser.uid;
-            const newUserRef = doc(db,"users",userIDCurrent,"campaigns",idNew);
+        }).then(() => {
+                  addCampaignForm.reset();
 
-            setDoc(newUserRef, {
-             name: addCampaignForm.name.value,
-            createdAt: serverCreationTime,
-           }).then(() =>  {
-            addCampaignForm.reset();
-            addCampaignForm.removeChild(rewardForm);
+                  const rewardsFormDiv = document.querySelector(".rewardForms");
+                  rewardsFormDiv.removeChild(rewardForm);
+                 //Ensures the form is reset correctly
+                  document.getElementById("removeReward").style.visibility = "hidden";
 
-              })
+                 //Popup appears alerting the user that the campaign has been created
+                 openPopupCampaign();
+
             
           }).catch(err => {
             console.log(err.message);
           })
         } 
-      }
-    
-      //Ensures the form is reset correctly
-      document.getElementById("removeReward").style.visibility = "hidden";
+      }else{
 
-    //Popup appears alerting the user that the campaign has been created
-      openPopupCampaign();
+        addCampaignForm.reset();
+      //Ensures the form is reset correctly
+
+     //Popup appears alerting the user that the campaign has been created
+     openPopupCampaign();
+
+      }
+      
+
+
+      })
+    
+   
+    
+     
    });
   })
 
