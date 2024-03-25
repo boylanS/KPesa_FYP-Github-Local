@@ -1,119 +1,114 @@
+<!-- This is the user account page, which displays user information, campaigns, and previous donations.
+      Users can access edit functionality from this page -->
+
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KPesa Firebase</title>
+    <title>Account Page</title>
 
-     <!-- Boostrap and style sheet -->
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Boostrap and style sheet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
  
-     <link rel="stylesheet" href="kpesa.css">
+    <link rel="stylesheet" href="kpesa.css">
 
-      <!-- Compiled and minified CSS -->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   
-   <!-- Font Awesome Kit Link -->
-   <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
+    <!-- Font Awesome Kit Link -->
+    <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
  
-   <!-- Google Fonts -->
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
 
  
-  </head>
+</head>
 <body>
 
-    <body>
-
-           <!-- NAVBAR -->
-        <div class = "entireNav">
-          <nav class="z-depth-0 white">
-            <div class="nav-wrapper container">
-              <a href="index.html" class="brand-logo">
-                  <img src="img\KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
-                </a>
-              <ul id="nav-mobile" class="right hide-on-med-and-down">
-                  <li class="logged-in" style="display: none;">
-                    <a href="account.html" class="grey-text">Account</a>
-                  </li>
+   <!-- NAVBAR -->
+   <div class = "entireNav">
+      <nav class="z-depth-0 white">
+        <div class="nav-wrapper container">
+          <a href="index.html" class="brand-logo">
+            <img src="img\KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
+          </a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li class="logged-in" style="display: none;">
+              <a href="account.html" class="grey-text">Account</a>
+            </li>
                 
-                  <li >
-                    <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
-                  </li>
+            <li >
+              <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
+            </li>
                 
-                  <li class="logged-in" style="display: none;">
-                      <a href="forum.html" class="grey-text" id="forum">Community Forum</a>
-                    </li>
+            <li class="logged-in" style="display: none;">
+              <a href="forum.html" class="grey-text" id="forum">Community Forum</a>
+            </li>
 
-                    <li class="logged-in" style="display: none;">
-                      <a href="#" class="grey-text" id="logout">Logout</a>
-                    </li>
+            <li class="logged-in" style="display: none;">
+              <a href="#" class="grey-text" id="logout">Logout</a>
+            </li>
               
-                  <li class="logged-out" style="display: none;">
-                    <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
-                  </li>
-                  <li class="logged-out" style="display: none;">
-                    <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
-                  </li>
-                </span>
-              </ul>
-            </div>
+            <li class="logged-out" style="display: none;">
+              <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
+            </li>
+
+            <li class="logged-out" style="display: none;">
+              <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
+            </li>
+          </ul>
+        </div>
   
-            <ul id="dropdownCampaign" class="dropdown-content">
-              <li><a href="campaignExplore.html">Explore</a></li>
-              <li class = "logged-in" style="display: none;"><a href="createCampaign.html">Create</a></li>
-  
-            </ul>
-          </nav>
-          </div>
+        <ul id="dropdownCampaign" class="dropdown-content">
+          <li><a href="campaignExplore.html">Explore</a></li>
+          <li class = "logged-in" style="display: none;"><a href="createCampaign.html">Create</a></li>
+        </ul>
 
+      </nav>
+    </div>
 
-            <div id="userAccountInfo">
+  <!-- User Account Information -->
+  <div id="userAccountInfo">
 
-              <div id="userFullName">
+    <div id="userFullName">
 
-              </div>
-              <h4>About</h4>
-              <div id="userBio"></div>
+    </div>
 
-              <h4>User Campaigns</h4>
+    <h4>About</h4>
+
+    <div id="userBio">
+
+    </div>
+
+    <h4>User Campaigns</h4>
              
   
-              <div id="userCampaigns"></div>
-              <ul id = "campaignList"></ul>
+    <div id="userCampaigns">
 
-              <h4>Previous Donations</h4>
+    </div>
+    <ul id = "campaignList">
+
+
+    </ul>
+
+    <h4>Previous Donations</h4>
              
-  
-              <div id="userDonations"></div>
-              <ul id = "donationsList"></ul>
+    <div id="userDonations">
+
+    </div>
+    <ul id = "donationsList">
+
+    </ul>
 
 
-            </div>
-
-          
-          </div>
-
-              <!--<div class="row">
-                <div class="column">
-                   <h4>About</h4>
-                    <div id="userBio"></div>
-                  </div>
-      
-                <div class="column">
-                    
-                    <div id="userCountry">
-      
-                  </div>
-
-                </div>
-              </div>-->
-             
-
-
+  </div>
+     
+  <!-- Popup Error -->
   <div class="popupErrorAccount" id = "popupErrorAccount">
     <img src="img\red-x-icon.png" id = "x" >
     
@@ -122,73 +117,80 @@
     <button type="button" id="continueAccount">Continue</button>
   </div>
 
+  <!-- Popup Error Backdrop -->
   <div class = "modalBackdrop"></div>
 
 
         
-        <!-- LOGIN MODAL -->
-        <div id="modal-login" class="modal">
-          <div class="modal-content">
-            <h4>Login</h4><br />
-            <form id="login-form" class = "loginForm">
-              <div class="input-field">
-                <input type="email" id="login-email" required />
-                <label for="login-email">Email address</label>
-              </div>
-              <div class="input-field">
-                <input type="password" id="login-password" required />
-                <label for="login-password">Your password</label>
-              </div>
-              <button>Login</button>
-              <p class="error pink-text center-align"></p>
-            </form>
-          </div>
+  <!-- LOGIN MODAL -->
+  <div id="modal-login" class="modal">
+    <div class="modal-content">
+      <h4>Login</h4><br />
+      <form id="login-form" class = "loginForm">
+
+        <div class="input-field">
+          <input type="email" id="login-email" required />
+          <label for="login-email">Email address</label>
         </div>
+
+        <div class="input-field">
+          <input type="password" id="login-password" required />
+          <label for="login-password">Your password</label>
+        </div>
+
+        <button>Login</button>
+        <p class="error pink-text center-align"></p>
+      </form>
+    </div>
+   </div>
         
-      
-         
-          
-  
-          <footer>
-            <div class = "footer">
-            <div class = "col-1">
-              <h3>USEFUL LINKS</h3>
-              <a href="#">Landing Page</a>
-              <a href="#">Campaigns</a>
-              <a href="#">Adding Campaigns</a>
-              <a href="#">Community Forum</a>
-            </div>
-            <div class = "col-2">
-                <h3>NEWSLETTER</h3>
-                <form>
-                
-                  <input type="email" placeholder="Your Email Address" required>
-                  <br>
-                  <button type="submit">SUBSCRIBE NOW</button>
-                </form>
-            </div>
-            <div class = "col-3">
-              <h3>CONTACT</h3>
-              <p>123, XYZ Road, Dublin 02
-                <br>co. Dublin,
-                <br>Ireland
-              </p>
-              <div class="social-icons">
-                <i class="fa-brands fa-facebook"></i>
-                <i class="fa-brands fa-twitter"></i>
-                <i class="fa-brands fa-instagram"></i>
-                <i class="fa-brands fa-linkedin"></i>
-              </div>
+  <!--  Page Footer -->
+  <footer>
+    <div class = "footer">
+      <div class = "col-1">
+        <h3>USEFUL LINKS</h3>
+        <a href="#">Landing Page</a>
+        <a href="#">Campaigns</a>
+        <a href="#">Adding Campaigns</a>
+        <a href="#">Community Forum</a>
+      </div>
+
+      <div class = "col-2">
+        <h3>NEWSLETTER</h3>
+
+        <form>   
+          <input type="email" placeholder="Your Email Address" required>
+          <br>
+          <button type="submit">SUBSCRIBE NOW</button>
+        </form>
+
+      </div>
+
+      <div class = "col-3">
+        <h3>CONTACT</h3>
+        <p>123, XYZ Road, Dublin 02
+          <br>co. Dublin,
+          <br>Ireland
+        </p>
+
+        <div class="social-icons">
+          <i class="fa-brands fa-facebook"></i>
+          <i class="fa-brands fa-twitter"></i>
+          <i class="fa-brands fa-instagram"></i>
+          <i class="fa-brands fa-linkedin"></i>
+        </div>
+
+      </div>
              
-            </div>
-          </div>
-          </footer>
-  
-      <!-- Compiled and minified JavaScript -->
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-      <script src="materialise.js"></script>
-      <script src = "bundle.js"></script>
-      <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
+          
+    </div>
+  </footer>
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="materialise.js"></script>
+  <script src = "bundle.js"></script>
+  <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
   
   </body>
   </html>

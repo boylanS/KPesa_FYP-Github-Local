@@ -1,3 +1,5 @@
+<!-- This page allows a user to sign up and create an account on KPesa -->
+
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -11,106 +13,74 @@
  
      <link rel="stylesheet" href="kpesa.css">
 
-      <!-- Compiled and minified CSS -->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+     <!-- Compiled and minified CSS -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   
-   <!-- Font Awesome Kit Link -->
-   <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
+     <!-- Font Awesome Kit Link -->
+     <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
  
-      <!-- Google Fonts -->
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+     <!-- Google Fonts -->
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
 
   </head>
-<body>
+<body class="grey lighten-3">
 
-    <body class="grey lighten-3">
-
-           <!-- NAVBAR -->
-        <div class = "entireNav">
-          <nav class="z-depth-0 white">
-            <div class="nav-wrapper container">
-              <a href="index.html" class="brand-logo">
-                  <img src="img\KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
-                </a>
-              <ul id="nav-mobile" class="right hide-on-med-and-down">
-
-                  <li class="logged-in" style="display: none;">
-                    <a href="account.html" class="grey-text">Account</a>
-                  </li>
-                
-                  <li >
-                    <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
-                  </li>
-                  <li class="logged-in" style="display: none;">
-                    <a href="#" class="grey-text" id="logout">Logout</a>
-                  </li>
-                  <li class="logged-in" style="display: none;">
-                      <a href="forum.html" class="grey-text" id="logout">Community Forum</a>
-                    </li>
+       <!-- NAVBAR -->
+  <div class = "entireNav">
+    <nav class="z-depth-0 white">
+      <div class="nav-wrapper container">
+        <a href="index.html" class="brand-logo">
+          <img src="img\KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
+        </a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li class="logged-in" style="display: none;">
+            <a href="account.html" class="grey-text">Account</a>
+          </li>
               
-                  <li class="logged-out" style="display: none;">
-                    <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
-                  </li>
-                  <li class="logged-out" style="display: none;">
-                    <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
-                  </li>
-                </span>
-              </ul>
-            </div>
-        
-  
-            <ul id="dropdownCampaign" class="dropdown-content">
-              <li><a href="campaignExplore.html">Explore</a></li>
-              <li class = "logged-in" style="display: none;"><a href="createCampaign.html">Create</a></li>
-  
-            </ul>
-          </nav>
-          </div>
-      
-        <!-- LOGIN MODAL -->
-        <div id="modal-login" class="modal">
-          <div class="modal-content">
-            <h4>Login</h4><br />
-            <form id="login-form" class = "loginForm">
-              <div class="input-field">
-                <input type="email" id="login-email" required />
-                <label for="login-email">Email address</label>
-              </div>
-              <div class="input-field">
-                <input type="password" id="login-password" required />
-                <label for="login-password">Your password</label>
-              </div>
-              <button>Login</button>
-              <p class="error pink-text center-align"></p>
-            </form>
-          </div>
-        </div>
-        <!-- ACCOUNT MODAL  
-        <div id="modal-account" class="modal">
-          <div class="modal-content center-align">
-            <h4>Account details</h4><br />
-            <div class="account-details"></div>
-          </div>
-        </div>-->
+          <li >
+            <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
+          </li>
+              
+          <li class="logged-in" style="display: none;">
+            <a href="forum.html" class="grey-text" id="forum">Community Forum</a>
+          </li>
 
-        <div class="popupSignupError" id = "popupSignupError">
-          <img src="img\red-x-icon.png" id = "x" >
-          
-          <h2>Sign up could not be completed.</h2>
-          <p id="signupError"></p>
-          <button type="button" id="continueSignup">Continue</button>
-        </div>
-      
+          <li class="logged-in" style="display: none;">
+            <a href="#" class="grey-text" id="logout">Logout</a>
+          </li>
+            
+          <li class="logged-out" style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
+          </li>
+
+          <li class="logged-out" style="display: none;">
+            <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
+          </li>
+        </ul>
+      </div>
+
+      <ul id="dropdownCampaign" class="dropdown-content">
+        <li><a href="campaignExplore.html">Explore</a></li>
+        <li class = "logged-in" style="display: none;"><a href="createCampaign.html">Create</a></li>
+      </ul>
+
+    </nav>
+  </div>
+
+  <!-- User Sign up Page -->
        
+  <!-- Sign up Error Popup -->
+  <div class="popupSignupError" id = "popupSignupError">
+    <img src="img\red-x-icon.png" id = "x" >  
+    <h2>Sign up could not be completed.</h2>
+    <p id="signupError"></p>
+    <button type="button" id="continueSignup">Continue</button>
+  </div> 
       
-        <div class = "modalBackdrop"></div>
+  <div class = "modalBackdrop"></div>
      
-
-  
-  
-
     <form id="regForm" action="">
 
       <h1>Sign up:</h1>
@@ -128,41 +98,43 @@
       
       <div class="tab">
         <label for="countryUser">Country:</label>
-             <p><input list ="countryUserList" autocomplete="off" placeholder="Country" oninput="this.className = ''" name = "countryUser" type="text"></p>
-             <datalist id ="countryUserList">
-             <option value="Ireland">Ireland</option>
-              <option value="UK">UK</option>
-              <option value="Algeria">Algeria</option>
-              <option value="Angola">Angola</option>
-              <option value="Botswana">Botswana</option>
-              <option value="Cameroon">Cameroon</option>
-              <option value="Central African Republic">Central African Republic</option>
-              <option value="Chad">Chad</option>
-              <option value="Congo, Democratic Republic of the">Congo, Democratic Republic of the</option>
-              <option value="Egypt">Egypt</option>
-              <option value="Ethiopia">Ethiopia</option>
-              <option value="Ghana">Ghana</option>
-              <option value="Guinea">Guinea</option>
-              <option value="Kenya">Kenya</option>
-              <option value="Libya">Libya</option>
-              <option value="Mali">Mali</option>
-              <option value="Mauritius">Mauritius</option>
-              <option value="Morocco">Morocco</option>
-              <option value="Nigeria">Nigeria</option>
-              <option value="South Africa">South Africa</option>
-              <option value="Tanzania">Tanzania</option>
-              <option value="Uganda">Uganda</option>
-              <option value="Zambia">Zambia</option>
-              <option value="Zimbabwe">Zimbabwe</option>
-             </datalist>
-
+             <p>
+             <input list ="countryUserList" autocomplete="off" placeholder="Country" oninput="this.className = ''" name = "countryUser" type="text"></p>
+              <datalist id ="countryUserList">
+                <option value="Ireland">Ireland</option>
+                <option value="UK">UK</option>
+                <option value="Algeria">Algeria</option>
+                <option value="Angola">Angola</option>
+                <option value="Botswana">Botswana</option>
+                <option value="Cameroon">Cameroon</option>
+                <option value="Central African Republic">Central African Republic</option>
+                <option value="Chad">Chad</option>
+                <option value="Congo, Democratic Republic of the">Congo, Democratic Republic of the</option>
+                <option value="Egypt">Egypt</option>
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Ghana">Ghana</option>
+                <option value="Guinea">Guinea</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Libya">Libya</option>
+                <option value="Mali">Mali</option>
+                <option value="Mauritius">Mauritius</option>
+                <option value="Morocco">Morocco</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="South Africa">South Africa</option>
+                <option value="Tanzania">Tanzania</option>
+                <option value="Uganda">Uganda</option>
+                <option value="Zambia">Zambia</option>
+                <option value="Zimbabwe">Zimbabwe</option>
+              </datalist>
       </div>
 
-      <div class="tab">   <label for="bio">Bio:</label>
+      <div class="tab">  
+        <label for="bio">Bio:</label>
         <p><input placeholder="User Bio..." oninput="this.className = ''" name = "bio" type="text"></p>
       </div>
       
-      <div class="tab">   <label for="username">Login Info:</label>
+      <div class="tab">
+        <label for="username">Login Info:</label>
         <p><input placeholder="Username..." oninput="this.className = ''" name = "username" type="text"></p>
         <p><input placeholder="Password..." oninput="this.className = ''" name = "password" type="password"></p>
       </div>
@@ -183,50 +155,77 @@
         <span class="step"></span>
       </div>
       
-      </form>
+    </form>
 
-      <div class="popup" id = "popup">
-        <img src="img\tickTransparent.png" id = "tick" >
+    <div class="popup" id = "popup">
+      <img src="img\tickTransparent.png" id = "tick" >
+      <h2>Welcome to KPesa!</h2>
+      <p>Sign up has been successful.</p>
+      <button type="button" id="continueNewUser">Continue</button>
+    </div>
+  
+  <!-- LOGIN MODAL -->
+  <div id="modal-login" class="modal">
+    <div class="modal-content">
+      <h4>Login</h4><br />
+      <form id="login-form" class = "loginForm">
+  
+        <div class="input-field">
+          <input type="email" id="login-email" required />
+          <label for="login-email">Email address</label>
+        </div>
+  
+        <div class="input-field">
+          <input type="password" id="login-password" required />
+          <label for="login-password">Your password</label>
+        </div>
+  
+        <button>Login</button>
+        <p class="error pink-text center-align"></p>
+      </form>
+    </div>
+   </div>
         
-        <h2>Welcome to KPesa!</h2>
-        <p>Sign up has been successful.</p>
-        <button type="button" id="continueNewUser">Continue</button>
+  <!--  Page Footer -->
+  <footer>
+    <div class = "footer">
+      <div class = "col-1">
+        <h3>USEFUL LINKS</h3>
+        <a href="#">Landing Page</a>
+        <a href="#">Campaigns</a>
+        <a href="#">Adding Campaigns</a>
+        <a href="#">Community Forum</a>
       </div>
   
-      <footer>
-        <div class = "footer">
-        <div class = "col-1">
-          <h3>USEFUL LINKS</h3>
-          <a href="#">Landing Page</a>
-          <a href="#">Campaigns</a>
-          <a href="#">Adding Campaigns</a>
-          <a href="#">Community Forum</a>
-        </div>
-        <div class = "col-2">
-            <h3>NEWSLETTER</h3>
-            <form>
-            
-              <input type="email" placeholder="Your Email Address" required>
-              <br>
-              <button type="submit">SUBSCRIBE NOW</button>
-            </form>
-        </div>
-        <div class = "col-3">
-          <h3>CONTACT</h3>
-          <p>123, XYZ Road, Dublin 02
-            <br>co. Dublin,
-            <br>Ireland
-          </p>
-          <div class="social-icons">
-            <i class="fa-brands fa-facebook"></i>
-            <i class="fa-brands fa-twitter"></i>
-            <i class="fa-brands fa-instagram"></i>
-            <i class="fa-brands fa-linkedin"></i>
-          </div>
-         
-        </div>
+      <div class = "col-2">
+        <h3>NEWSLETTER</h3>
+  
+        <form>   
+          <input type="email" placeholder="Your Email Address" required>
+          <br>
+          <button type="submit">SUBSCRIBE NOW</button>
+        </form>
+  
       </div>
-      </footer>
+  
+      <div class = "col-3">
+        <h3>CONTACT</h3>
+        <p>123, XYZ Road, Dublin 02
+          <br>co. Dublin,
+          <br>Ireland
+        </p>
+  
+        <div class="social-icons">
+          <i class="fa-brands fa-facebook"></i>
+          <i class="fa-brands fa-twitter"></i>
+          <i class="fa-brands fa-instagram"></i>
+          <i class="fa-brands fa-linkedin"></i>
+        </div>
+  
+      </div>
+              
+    </div>
+    </footer>
 
    <!-- Compiled and minified JavaScript -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>

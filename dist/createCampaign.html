@@ -1,275 +1,268 @@
+<!-- This page allows a user to create a campaign on the platform -->
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KPesa Firebase</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create a Campaign</title>
 
-     <!-- Boostrap and style sheet -->
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <!-- Boostrap and style sheet -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="kpesa.css">
+
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!-- Font Awesome Kit Link -->
+  <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
  
-     <link rel="stylesheet" href="kpesa.css">
-
-      <!-- Compiled and minified CSS -->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-     <!-- Font Awesome Kit Link -->
-   <script src="https://kit.fontawesome.com/8f4ab44401.js" crossorigin="anonymous"></script>
- 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
  
   </head>
-<body>
 
-    <body class="grey lighten-3">
+<body class="grey lighten-3">
 
-        <!-- NAVBAR -->
-        <div class = "entireNav">
-          <nav class="z-depth-0 white">
-            <div class="nav-wrapper container">
-              <a href="index.html" class="brand-logo">
-                  <img src="img\KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
-                </a>
-              <ul id="nav-mobile" class="right hide-on-med-and-down">
-                  <li class="logged-in" style="display: none;">
-                    <a href="account.html" class="grey-text">Account</a>
-                  </li>
-                
-                  <li >
-                    <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
-                  </li>
-                 
-                  <li class="logged-in" style="display: none;">
-                      <a href="forum.html" class="grey-text" id="forum">Community Forum</a>
-                    </li>
-                    <li class="logged-in" style="display: none;">
-                      <a href="#" class="grey-text" id="logout">Logout</a>
-                    </li>
-                  <li class="logged-out" style="display: none;">
-                    <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
-                  </li>
-                  <li class="logged-out" style="display: none;">
-                    <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
-                  </li>
-                </span>
-              </ul>
-            </div>
-  
-            <ul id="dropdownCampaign" class="dropdown-content">
-              <li><a href="campaignExplore.html">Explore</a></li>
-              <li class = "logged-in" style="display: none;"><a href="createCampaign.html">Create</a></li>
-  
-            </ul>
-          </nav>
-          </div>
-      
+  <!-- NAVBAR -->
+  <div class = "entireNav">
+    <nav class="z-depth-0 white">
+      <div class="nav-wrapper container">
+        <a href="index.html" class="brand-logo">
+          <img src="img\KPesaLogoJPEG.jfif" style="width: 50px; margin-top: 3px;">
+        </a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li class="logged-in" style="display: none;">
+            <a href="account.html" class="grey-text">Account</a>
+          </li>
+              
+          <li >
+            <a class="dropdown-trigger grey-text" href="#" data-target="dropdownCampaign">Campaigns</a>
+          </li>
+              
+          <li class="logged-in" style="display: none;">
+            <a href="forum.html" class="grey-text" id="forum">Community Forum</a>
+          </li>
 
-          <div class = "modalBackdrop"></div>
+          <li class="logged-in" style="display: none;">
+            <a href="#" class="grey-text" id="logout">Logout</a>
+          </li>
+            
+          <li class="logged-out" style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
+          </li>
+
+          <li class="logged-out" style="display: none;">
+            <a href="signup.html" class="grey-text modal-trigger" >Sign up</a>
+          </li>
+        </ul>
+      </div>
+
+      <ul id="dropdownCampaign" class="dropdown-content">
+        <li><a href="campaignExplore.html">Explore</a></li>
+        <li class = "logged-in" style="display: none;"><a href="createCampaign.html">Create</a></li>
+      </ul>
+
+    </nav>
+  </div>
+
+  <!-- Create a Campaign Page -->
+
+  <!-- Campaign Created Successfully Popup -->
+  <div class="popupCamp" id = "popupCamp">
+    <img src="img\tickTransparent.png" id = "tick" >
+    <h2>Campaign created!</h2>
+    <p>Congratulations on launching your campaign with KPesa!</p>
+    <button type="button" id="continueNewCampaign">Continue</button>
+  </div>
+
+  <!-- Campaign Creation Error -->
+  <div class="popupCreateCampaignError" id = "popupCreateCampaignError">
+    <img src="img\red-x-icon.png" id = "x" >
+    <h2>Campaign could not be created.</h2>
+    <p id="createCampaignError"></p>
+    <button type="button" id="continueCreateCampaign">Continue</button>
+  </div>
+
+  <div class = "modalBackdrop">
+
+  </div>
+            
+  <form id="createCampaignFormSteps" action="">
+  <h1>Create Campaign:</h1>
+              
+  <div class="tab"><label for="campaignName">Name</label>
+    <p>Campaign name is permanent and cannot be edited later.</p>
+    <p><input placeholder="Campaign Name..." oninput="this.className = ''" name = "campaignName" type="text"></p>
+  </div>
+
+  <div class="tab" id ="updateCategory-form">
+    <label for="campaignCategory">Category:</label>
+      <input list = "campaignCategoryList" name="campaignCategory" type="text">
+
+        <datalist id = "campaignCategoryList">
+
+          <option value="Food & Drink">Food & Drink</option>
+          <option value="Clothing & Accessories">Clothing & Accessories</option>
+          <option value="Homeware">Homeware</option>
+          <option value="Health & Wellness">Health & Wellness</option>
+          <option value="Technology">Technology</option>
+          <option value="Service">Service</option>
+          <option value="Other">Other</option>
+
+        </datalist>
+      </input>
+
+      <p class="invalidCategory">
+
+      </p>
+
+      <label for="campaignDescription">Description:</label>
+        <p><input placeholder="Campaign Description..." oninput="this.className = ''" name = "campaignDescription" type="text" width="48" height="48"></p>
+      </div>
+          
+       <div class="tab" id ="countryTab">
+
+        <label for="campaignCountry">Country:</label>
+        <p>Enter country in which operations are based or the country in which the associated bank account is located if different.</p>
+        <p>
+
+        <input list = "campaignCountryList" name = "campaignCountry" type="text"></p>
+        <datalist id = "campaignCountryList">
+          <option value="Ireland">Ireland</option>
+          <option value="UK">UK</option>
+          <option value="Algeria">Algeria</option>
+          <option value="Angola">Angola</option>
+          <option value="Botswana">Botswana</option>
+          <option value="Cameroon">Cameroon</option>
+          <option value="Central African Republic">Central African Republic</option>
+          <option value="Chad">Chad</option>
+          <option value="Congo, Democratic Republic of the">Congo, Democratic Republic of the</option>
+          <option value="Egypt">Egypt</option>
+          <option value="Ethiopia">Ethiopia</option>
+          <option value="Ghana">Ghana</option>
+          <option value="Guinea">Guinea</option>
+          <option value="Kenya">Kenya</option>
+          <option value="Libya">Libya</option>
+          <option value="Mali">Mali</option>
+          <option value="Mauritius">Mauritius</option>
+          <option value="Morocco">Morocco</option>
+          <option value="Nigeria">Nigeria</option>
+          <option value="South Africa">South Africa</option>
+          <option value="Tanzania">Tanzania</option>
+          <option value="Uganda">Uganda</option>
+          <option value="Zambia">Zambia</option>
+          <option value="Zimbabwe">Zimbabwe</option>
+        </datalist>
+      </input>
     
-          <div class="popupCamp" id = "popupCamp">
-            <img src="img\tickTransparent.png" id = "tick" >
-            
-            <h2>Campaign created!</h2>
-            <p>Congratulations on launching your campaign with KPesa!</p>
-            <button type="button" id="continueNewCampaign">Continue</button>
-          </div>
-
-          <div class="popupCreateCampaignError" id = "popupCreateCampaignError">
-            <img src="img\red-x-icon.png" id = "x" >
-            
-            <h2>Campaign could not be created.</h2>
-            <p id="createCampaignError"></p>
-            <button type="button" id="continueCreateCampaign">Continue</button>
-          </div>
-        
-
-
-          
-
-          <form id="createCampaignFormSteps" action="">
-
-            <h1>Create Campaign:</h1>
-            
-           
-            <div class="tab"><label for="campaignName">Name</label>
-              <p>Campaign name is permanent and cannot be edited later.</p>
-              <p><input placeholder="Campaign Name..." oninput="this.className = ''" name = "campaignName" type="text"></p>
-            </div>
-
-            <div class="tab" id ="updateCategory-form">
-              <label for="campaignCategory">Category:</label>
-              <input list = "campaignCategoryList" name="campaignCategory" type="text">
-
-                <datalist id = "campaignCategoryList">
-
-             
-              <option value="Food & Drink">Food & Drink</option>
-              <option value="Clothing & Accessories">Clothing & Accessories</option>
-              <option value="Homeware">Homeware</option>
-              <option value="Health & Wellness">Health & Wellness</option>
-              <option value="Technology">Technology</option>
-              <option value="Service">Service</option>
-              <option value="Other">Other</option>
-             </datalist>
-            </input>
-            <p class="invalidCategory"></p>
-
-
-        
-
-            <label for="campaignDescription">Description:</label>
-              <p><input placeholder="Campaign Description..." oninput="this.className = ''" name = "campaignDescription" type="text" width="48" height="48"></p>
-            </div>
-          
-            
-            <div class="tab" id ="countryTab">
-
-            
-           <label for="campaignCountry">Country:</label>
-           <p>Enter country in which operations are based or the country in which the associated bank account is located if different.</p>
-             <p><input list = "campaignCountryList" name = "campaignCountry" type="text"></p>
-             <datalist id = "campaignCountryList">
-             <option value="Ireland">Ireland</option>
-              <option value="UK">UK</option>
-              <option value="Algeria">Algeria</option>
-              <option value="Angola">Angola</option>
-              <option value="Botswana">Botswana</option>
-              <option value="Cameroon">Cameroon</option>
-              <option value="Central African Republic">Central African Republic</option>
-              <option value="Chad">Chad</option>
-              <option value="Congo, Democratic Republic of the">Congo, Democratic Republic of the</option>
-              <option value="Egypt">Egypt</option>
-              <option value="Ethiopia">Ethiopia</option>
-              <option value="Ghana">Ghana</option>
-              <option value="Guinea">Guinea</option>
-              <option value="Kenya">Kenya</option>
-              <option value="Libya">Libya</option>
-              <option value="Mali">Mali</option>
-              <option value="Mauritius">Mauritius</option>
-              <option value="Morocco">Morocco</option>
-              <option value="Nigeria">Nigeria</option>
-              <option value="South Africa">South Africa</option>
-              <option value="Tanzania">Tanzania</option>
-              <option value="Uganda">Uganda</option>
-              <option value="Zambia">Zambia</option>
-              <option value="Zimbabwe">Zimbabwe</option>
-              
-             </datalist>
-          </input>
-
-          
-            </div>
+    </div>
       
-            <div class="tab">
-              <label for="campaignTarget">Target:</label>
-              <p><input placeholder="Campaign Target..." oninput="this.className = ''" name = "campaignTarget" type="number" step="0.01"></p>
-            </div>
+    <div class="tab">
+      <label for="campaignTarget">Target:</label>
+      <p><input placeholder="Campaign Target..." oninput="this.className = ''" name = "campaignTarget" type="number" step="0.01"></p>
+    </div>
             
-            <div class="tab">
-              <br>
-          
-            
-              <label for="campaignImageFile" id="campaignImageFileLabel">Upload Campaign Image</label>
-             
-              <input type="file" id="campaignImageFile" name ="campaignImageFile" accept = "image/jpeg, image/png, image/jpg">
-            
-              <centre> <img id="campaignImage" src="#" width="50%" style="visibility:hidden"></centre>
-              
-            </div>
+    <div class="tab">
+      <br>     
+      <label for="campaignImageFile" id="campaignImageFileLabel">Upload Campaign Image</label>
+      <input type="file" id="campaignImageFile" name ="campaignImageFile" accept = "image/jpeg, image/png, image/jpg">
+      <centre> <img id="campaignImage" src="#" width="50%" style="visibility:hidden"></centre> 
+    </div>
 
-          <div class="tab">
-            <label for="rewardForms">Rewards:</label>
-            <div class = "rewardForms"></div>
-              <button class="addCamp" type="button"><i class="fa fa-plus"></i>Add Reward</button>
-              <button class="removeCamp" id="removeReward" style = "visibility: hidden" type="button"><i class="fa fa-minus"></i>Remove Reward</button>
-            </div>
-            
-            <div style="overflow:auto;">
-              <div style="float:right;">
-                <button type="button" id="prevBtnCamp">Previous</button>
-                <button type="button" id="nextBtnCamp" >Next</button>
-              </div>
-            </div>
-            
-         
-            <div style="text-align:center;margin-top:40px;">
-              <span class="step"></span>
-              <span class="step"></span>
-              <span class="step"></span>
-              <span class="step"></span>
-              <span class="step"></span>
-              <span class="step"></span>
-            </div>
-            
-            </form>
-
-
-
-        <!-- LOGIN MODAL -->
-        <div id="modal-login" class="modal">
-          <div class="modal-content">
-            <h4>Login</h4><br />
-            <form id="login-form" class = "loginForm">
-              <div class="input-field">
-                <input type="email" id="login-email" required />
-                <label for="login-email">Email address</label>
-              </div>
-              <div class="input-field">
-                <input type="password" id="login-password" required />
-                <label for="login-password">Your password</label>
-              </div>
-              <button>Login</button>
-              <p class="error pink-text center-align"></p>
-            </form>
-          </div>
+    <div class="tab">
+      <label for="rewardForms">Rewards:</label>
+        <div class = "rewardForms"></div>
+          <button class="addCamp" type="button"><i class="fa fa-plus"></i>Add Reward</button>
+          <button class="removeCamp" id="removeReward" style = "visibility: hidden" type="button"><i class="fa fa-minus"></i>Remove Reward</button>
         </div>
-
-
-         
-        <footer>
-          <div class = "footer">
-          <div class = "col-1">
-            <h3>USEFUL LINKS</h3>
-            <a href="#">Landing Page</a>
-            <a href="#">Campaigns</a>
-            <a href="#">Adding Campaigns</a>
-            <a href="#">Community Forum</a>
+            
+        <div style="overflow:auto;">
+          <div style="float:right;">
+            <button type="button" id="prevBtnCamp">Previous</button>
+            <button type="button" id="nextBtnCamp" >Next</button>
           </div>
-          <div class = "col-2">
-              <h3>NEWSLETTER</h3>
-              <form>
-              
-                <input type="email" placeholder="Your Email Address" required>
-                <br>
-                <button type="submit">SUBSCRIBE NOW</button>
-              </form>
-          </div>
-          <div class = "col-3">
-            <h3>CONTACT</h3>
-            <p>123, XYZ Road, Dublin 02
-              <br>co. Dublin,
-              <br>Ireland
-            </p>
-            <div class="social-icons">
-              <i class="fa-brands fa-facebook"></i>
-              <i class="fa-brands fa-twitter"></i>
-              <i class="fa-brands fa-instagram"></i>
-              <i class="fa-brands fa-linkedin"></i>
-            </div>
-           
-          </div>
+         </div>
+            
+        <div style="text-align:center;margin-top:40px;">
+          <span class="step"></span>
+          <span class="step"></span>
+          <span class="step"></span>
+          <span class="step"></span>
+          <span class="step"></span>
+          <span class="step"></span>
         </div>
-        </footer>
-  
+      </form>
 
+ <!-- LOGIN MODAL -->
+ <div id="modal-login" class="modal">
+  <div class="modal-content">
+    <h4>Login</h4><br />
+    <form id="login-form" class = "loginForm">
 
-    <!-- Compiled and minified JavaScript -->
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="materialise.js"></script>
-    <script src = "bundle.js"></script>
+      <div class="input-field">
+        <input type="email" id="login-email" required />
+        <label for="login-email">Email address</label>
+      </div>
+
+      <div class="input-field">
+        <input type="password" id="login-password" required />
+        <label for="login-password">Your password</label>
+      </div>
+
+      <button>Login</button>
+      <p class="error pink-text center-align"></p>
+    </form>
+  </div>
+ </div>
+      
+<!--  Page Footer -->
+<footer>
+  <div class = "footer">
+    <div class = "col-1">
+      <h3>USEFUL LINKS</h3>
+      <a href="#">Landing Page</a>
+      <a href="#">Campaigns</a>
+      <a href="#">Adding Campaigns</a>
+      <a href="#">Community Forum</a>
+    </div>
+
+    <div class = "col-2">
+      <h3>NEWSLETTER</h3>
+
+      <form>   
+        <input type="email" placeholder="Your Email Address" required>
+        <br>
+        <button type="submit">SUBSCRIBE NOW</button>
+      </form>
+
+    </div>
+
+    <div class = "col-3">
+      <h3>CONTACT</h3>
+      <p>123, XYZ Road, Dublin 02
+        <br>co. Dublin,
+        <br>Ireland
+      </p>
+
+      <div class="social-icons">
+        <i class="fa-brands fa-facebook"></i>
+        <i class="fa-brands fa-twitter"></i>
+        <i class="fa-brands fa-instagram"></i>
+        <i class="fa-brands fa-linkedin"></i>
+      </div>
+
+    </div>
+            
+  </div>
+  </footer>
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="materialise.js"></script>
+  <script src = "bundle.js"></script>
 
 </body>
 </html>
