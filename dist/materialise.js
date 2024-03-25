@@ -1,19 +1,20 @@
 
 
-// setup materialize components
+// This file ensures that the Materialise UI elements will be initiated upon page load
+
 document.addEventListener('DOMContentLoaded', function() {
 
+  // Modals
     var modals = document.querySelectorAll('.modal');
     M.Modal.init(modals);
   
     var items = document.querySelectorAll('.collapsible');
     M.Collapsible.init(items);
-  
-  });
 
-document.addEventListener('DOMContentLoaded', function() {
+    //Dropdown menu
     var elems = document.querySelectorAll('.dropdown-trigger');
-    var instances = M.Dropdown.init(elems);
+    M.Dropdown.init(elems);
+  
   });
 
 
