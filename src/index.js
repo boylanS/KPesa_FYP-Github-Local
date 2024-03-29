@@ -1,4 +1,6 @@
-// IMPORTING FIREBASE FUNCTIONS
+// #############################################################################
+// ##################### IMPORTING FIREBASE FUNCTIONS ##########################
+// #############################################################################
 
 //Firebase App
 
@@ -11,7 +13,7 @@ import {
     addDoc, deleteDoc, doc, setDoc,
     query, where, orderBy, serverTimestamp,
     getDoc, updateDoc, getDocs, limit
-} from "firebase/firestore"
+} from "firebase/firestore";
 
 //Auth Functions
 
@@ -21,7 +23,7 @@ import{
     signOut,
     signInWithEmailAndPassword,
     onAuthStateChanged,
-} from "firebase/auth"
+} from "firebase/auth";
 
 //Storage Functions
 
@@ -29,7 +31,7 @@ import{
   getStorage, ref,
   uploadBytes, getDownloadURL
 
-} from "firebase/storage"
+} from "firebase/storage";
 
 
 //Firebase configuration for KPesa Database
@@ -60,29 +62,34 @@ const colRef = collection(db, "campaigns");
 //initialising explore campaigns page div
 const campaignDiv = document.querySelector("#exploreCampaigns");
 
-//AUTHENTICATION JAVASCRIPT
+// #############################################################################
+// ####################### AUTHENTICATION JAVASCRIPT ###########################
+// #############################################################################
 
 
 // listen for auth state changes
-// This will dictate if a user receives the "logged in" UI or "not logged in" UI
+// This will dictate if a user receives the "logged in" UI or 
+// "not logged in" UI
 onAuthStateChanged(auth, (user) =>{
   if (user){
-    db.collection
     console.log("user logged in: ",user);
     setupUI(user);
-
 
   }else{
     console.log("user logged out.");
     setupUI();
 }
 
+// #############################################################################
+// ##################### FILLING EXPLORE CAMPAIGNS PAGE  #######################
+// ############################################################################# 
 
-// ##################### FILLING EXPLORE CAMPAIGNS PAGE  ###############################################
-
-//This will update explore campaigns page when a new doc is added or a doc is removed
+//This will update explore campaigns page when a new doc is added 
+//or a doc is removed
   if (document.querySelector("#exploreCampaigns")){
-    campaignDiv.innerHTML= ""; //clears div to initialise reuploading all campaigns
+
+    //clears div to initialise reuploading all campaigns
+    campaignDiv.innerHTML= ""; 
    
     //get collection data
     //onSnapshot ensures the collection will update
@@ -91,23 +98,25 @@ onAuthStateChanged(auth, (user) =>{
       snapshot.docs.forEach(doc =>{
         renderCampaignCard(doc,"exploreCampaigns");
       })
-    })
-    
+    }) 
   }
-
 });
 
-// ############################ HIDING NAV BAR LINKS ########################################
+// #############################################################################
+// ############################ HIDING NAV BAR LINKS ###########################
+// #############################################################################
 
+//Selects all navbar links with class logged out
 const loggedOutLinks = document.querySelectorAll(".logged-out");
 
+//Selects all navbar links with class logged in
 const loggedInLinks = document.querySelectorAll(".logged-in");
 
 const setupUI = (user) => {
 
   //If a user is logged in
   if (user) {
-    const userRef = doc(db, "users", user.uid)
+    const userRef = doc(db, "users", user.uid);
     //toggle UI elements
     loggedInLinks.forEach(item => item.style.display = "block");
     loggedOutLinks.forEach(item => item.style.display = "none");
@@ -122,8 +131,9 @@ const setupUI = (user) => {
   }
 }
 
-
-//  ################   SIGNING USERS UP ################################################
+// #############################################################################
+//  ################   SIGNING USERS UP ########################################
+// #############################################################################
 
 //First, it is established if the user is on the page with the registration form
 if (document.querySelector("#regForm")){
@@ -153,15 +163,21 @@ if (document.querySelector("#regForm")){
 function openSignupErrorPopup(){
   const popup = document.querySelector(".popupSignupError");
   popup.classList.add("open-popupSignupError");
-  const continueBtn = popup.querySelector("#continueSignup")
+  const continueBtn = popup.querySelector("#continueSignup");
 
   //Adds an event listener to the continue button so that it will
   //close the popup and reset the form when clicked
   continueBtn.addEventListener("click", () => {
+
+    //Closes popup
     closeSignupErrorPopup();
+
+    //Resets form
     const regForm = document.querySelector("#regForm");
     regForm.reset();
-    window.location.href = "signup.html"; //redirects user to beginning of form
+
+    //redirects user to beginning of form
+    window.location.href = "signup.html"; 
   })
 }
 
@@ -171,13 +187,15 @@ function closeSignupErrorPopup(){
   popup.classList.remove("open-popupSignupError");
 }
 
-//Opens a popup in the event that a user is successful in signing up for the platform
+
+//Opens a popup in the event that a user is successful 
+//in signing up for the platform
 function openPopup(){
   const popup = document.querySelector(".popup");
   popup.classList.add("open-popup");
-  const continueBtn = popup.querySelector("#continueNewUser")
+  const continueBtn = popup.querySelector("#continueNewUser");
 
-    //Adds an event listener to the continue button so that it will
+  //Adds an event listener to the continue button so that it will
   //close the popup and redirect the user when clicked
   continueBtn.addEventListener("click", () => {
     closePopup();
@@ -191,11 +209,12 @@ function closePopup(){
   popup.classList.remove("open-popup");
 }
 
-// This function will display the specified tab of the user sign up form ...
+//This function will display the specified tab of the user sign up form
 function showTab(n) {
   var x = document.getElementsByClassName("tab");
   x[n].style.display = "block";
-  // ... and fix the Previous/Next buttons:
+
+  // and will adjust the previous/next buttons as required
   if (n == 0) {
     document.getElementById("prevBtn").style.display = "none";
   } else {
@@ -206,18 +225,19 @@ function showTab(n) {
   } else {
     document.getElementById("nextBtn").innerHTML = "Next";
   }
-  // ... and run a function that displays the correct step indicator:
+  // It will run a function that displays the correct step indicator:
   fixStepIndicator(n)
 }
 
-//Will check if an email has been provided in the correct form - returns a boolean value
+//Will check if an email has been provided in the 
+//correct form - returns a boolean value
 function validateEmail(email){
   const emailRegex =  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return emailRegex.test(email);
-
 }
 
- // This function will figure out which tab to display in the user sign up form
+
+// This function will figure out which tab to display in the user sign up form
 function nextPrev(n) {
   var x = document.getElementsByClassName("tab");
   // Exit the function if any field in the current tab is invalid:
@@ -230,18 +250,19 @@ function nextPrev(n) {
   if (currentTab >= x.length) {
     //...the form gets submitted:
     const regForm = document.getElementById("regForm");
-    
     // get user info is pulled from the form to be validated
-   const email = regForm.email.value;
-   const password = regForm.password.value;
+    const email = regForm.email.value;
+    const password = regForm.password.value;
 
-   //If at least one of the email or password is formatted incorrectly, the user
-   //will be presented with a popup error message. They will be required to resubmit
-   //to create their account
+   //If at least one of the email or password is formatted incorrectly, 
+   //the user will be presented with a popup error message. 
+   //They will be required to resubmit to create their account
 
    //Both email and password are incorrect
    if (!validateEmail(email) && password.length <= 6){
-      const errorMessage = "Invalid email format. Must be in form xx@xx.xxx. Password must be greater than 6 characters.";
+      const errorMessage = 
+      "Invalid email format. Must be in form xx@xx.xxx." +
+      "Password must be greater than 6 characters.";
       const errParagraph = document.querySelector("#signupError");
       errParagraph.innerText = "Error message: "+errorMessage;
       openSignupErrorPopup();
@@ -263,11 +284,11 @@ function nextPrev(n) {
       openSignupErrorPopup();
    }
 
-   //If both are correct, sign up can proceed and an account can be created for the user
+   //If both are correct, sign up can proceed and an account 
+   //can be created for the user
    else{
-
- // sign up the user with Firebase auth
-   createUserWithEmailAndPassword(auth, email, password).then(async cred => {
+   // sign up the user with Firebase auth
+    createUserWithEmailAndPassword(auth, email, password).then(async cred => {
      
     //Create a user record in the firestore database
      return await setDoc(doc(db, "users",cred.user.uid),{
@@ -282,12 +303,12 @@ function nextPrev(n) {
    }).then(() => {
       //Open successful signup popup
       openPopup();
-      
       //Backdrop is darkened
       const modalBackground = document.querySelector(".modalBackdrop");
       modalBackground.style.display = "block";
 
-      //Continue button set to clear registration form and redirect user on click
+      //Continue button set to clear registration form 
+      //and redirects user on click
       const continueBtn = popup.querySelector("#continueNewUser")
       continueBtn.addEventListener("click", () => {
         closePopup();
@@ -296,22 +317,20 @@ function nextPrev(n) {
         document.getElementById("regForm").submit();
         modalBackground.style.display = "none";
         window.location.href = "index.html";
-  })
-     
-  // In the event of an error with the Firebase auth sign up, the user is presented with an error message that
+      }) 
+  // In the event of an error with the Firebase auth sign up, 
+  //the user is presented with an error message that
   //explains the error (e.g. account with email already exists)
-   }).catch(error => {
+    }).catch(error => {
       const errorMessage = error.message;
       const errParagraph = document.querySelector("#signupError");
       errParagraph.innerText = "Error message: "+errorMessage;
       openSignupErrorPopup();
-      
-   });
-
+    });
+   }
   }
-   // return false;
-  }
-  // Otherwise, display the correct tab:
+  // Otherwise,if the user has not reached
+  //the end of the form, display the correct tab:
   showTab(currentTab);
 }
 
@@ -347,7 +366,9 @@ function fixStepIndicator(n) {
   x[n].className += " active";
 }
 
-//  ################   LOGGING USER IN ################################################
+// #############################################################################
+//  ################   LOGGING USER IN #########################################
+// #############################################################################
 
 //On every page there is a login modal, this code will run
 if (document.querySelector("#modal-login")){
@@ -374,18 +395,23 @@ if (document.querySelector("#modal-login")){
       loginForm.querySelector(".error").innerHTML = "";
 
 
-      //If logged in on the sign up page, the user will be redirected to the landing page
+      //If logged in on the sign up page, the user will be 
+      //redirected to the landing page
       if (document.querySelector("#regForm")){
         window.location.href="index.html";
       }
     }).catch(err => {
-      //If login is unsuccessful, the user is presented with an error message within the modal
-      loginForm.querySelector(".error").innerHTML = "Error - email and/or password is incorrect.";
+      //If login is unsuccessful, the user is presented with 
+      //an error message within the modal
+      loginForm.querySelector(".error").innerHTML = 
+      "Error - email and/or password is incorrect.";
     })
   })
 };
 
-//  ################   LOGGING USER IN ################################################
+// #############################################################################
+// ################   LOGGING USER OUT #########################################
+// #############################################################################
 
 //On every page there is a logout tab, this code will run
 if (document.querySelector("#logout")){
@@ -400,7 +426,9 @@ if (document.querySelector("#logout")){
   })
 };
   
-//  ################ RENDER CAMPAIGN EXPLORE PAGE ################################################
+// #############################################################################
+//  ################ RENDER CAMPAIGN EXPLORE PAGE ##############################
+// #############################################################################
 
 // Renders campaign cards for the explore page
 
@@ -440,7 +468,7 @@ function renderCampaignCard(doc, divId) {
 
     pageButton.addEventListener("click", () => {
       localStorage.setItem("currentCampaign", idCurrent);
-      localStorage.setItem("currentCampaignName",doc.data().name)
+      localStorage.setItem("currentCampaignName",doc.data().name);
       renderCampaignPage();
     });
 
@@ -460,7 +488,9 @@ function renderCampaignCard(doc, divId) {
   }
 }
 
-//  ################ RENDER INDIVIDUAL CAMPAIGN PAGE ################################################
+// #############################################################################
+//  ################ RENDER INDIVIDUAL CAMPAIGN PAGE ###########################
+// #############################################################################
 
 //redirects user to individual campaign page
 function renderCampaignPage(){
@@ -521,15 +551,18 @@ function fillPage(campaignItem){
        outerProgressBar.textContent = "0% raised";
      }
      //If target has been met or exceeded
-     else if (Math.round((docCamp.data().raised/docCamp.data().target)*100,2) >= 100){
+     else if (Math.round((docCamp.data().raised/docCamp.data().target)*100,2)
+      >= 100){
        progressBar.textContent = "100% raised";
        progressBar.setAttribute("style","height: 24px; width: 100%");
 
      }
      //All other cases
      else{
-       let percentageComplete = (Math.round((docCamp.data().raised/docCamp.data().target)*100,2))+"%";
-       progressBar.setAttribute("style","height: 24px; width:"+percentageComplete);
+       let percentageComplete = 
+       (Math.round((docCamp.data().raised/docCamp.data().target)*100,2))+"%";
+       progressBar.
+       setAttribute("style","height: 24px; width:"+percentageComplete);
        progressBar.textContent = percentageComplete+" raised";
      }
      
@@ -559,7 +592,7 @@ function fillPage(campaignItem){
            
            //Clears no rewards message if necessary 
            let noRewardsMsg = document.querySelector("#rewardsMsg");
-           noRewardsMsg.textContent = ""
+           noRewardsMsg.textContent = "";
 
            //Each reward document in the subcollection is fetched and
            //presented on the interface
@@ -583,7 +616,8 @@ function fillPage(campaignItem){
            let donation = document.createElement("button");
            donation.disabled = true;
            donation.setAttribute("class","donationAmount");
-           const donationRounded = (Math.round(docSnap.data().donation * 100) / 100).toFixed(2);
+           const donationRounded = 
+           (Math.round(docSnap.data().donation * 100) / 100).toFixed(2);
            donation.textContent = donationRounded + " ";
 
            let rewardButtonDivCenter = document.createElement("div");
@@ -593,7 +627,8 @@ function fillPage(campaignItem){
            rewardButtonDivCenter.appendChild(donation);
 
 
-           //If the function is called to the edit page, delete buttons are added to each reward
+           //If the function is called to the edit page, delete buttons 
+           //are added to each reward
            if (campaignItem == "updateCampaignId"){
             let deleteBtn = document.createElement("button");
             deleteBtn.setAttribute("id","deleteRewardBtn");
@@ -605,7 +640,8 @@ function fillPage(campaignItem){
             deleteBtn.addEventListener("click", () => {
               let currentCampaign = localStorage.getItem("updateCampaignId");
               let rewardId = docSnap.data().uid;
-              let rewardDocRef = doc(db, "campaigns",currentCampaign,"rewards",rewardId);
+              let rewardDocRef = 
+              doc(db, "campaigns",currentCampaign,"rewards",rewardId);
   
               deleteDoc(rewardDocRef)
               .then(() => {
@@ -636,7 +672,9 @@ function fillPage(campaignItem){
  }
 }
 
-//  ################ PROCESSING DONATIONS ################################################
+// #############################################################################
+//  ################ PROCESSING DONATIONS ######################################
+// #############################################################################
 
 //Pages that have a donate button will have access to this functionality
 
@@ -661,8 +699,8 @@ if (document.querySelector("#donationButton")){
   })
 }
 
-//The user is presented with an error popup if they attempt to donate to a campaign when they are not
-//logged in
+//The user is presented with an error popup if they attempt to 
+//donate to a campaign when they are not logged in
 function openDonationPopup(){
   const modalBackground = document.querySelector(".modalBackdrop");
   modalBackground.style.display = "block";
@@ -670,7 +708,8 @@ function openDonationPopup(){
   const popup = document.querySelector(".popupError");
   popup.classList.add("open-popupError");
 
-  //When the continue button is clicked within the popup, the modal will close
+  //When the continue button is clicked within the popup, 
+  //the modal will close
   const continueBtn = popup.querySelector("#continueDonate")
   continueBtn.addEventListener("click", () => {
     modalBackground.style.display = "none";
@@ -688,7 +727,7 @@ function closeDonationPopup(){
 function validateFormReward(){
 
   //Pull values from the form and document
-  const donationForm = document.querySelector("#donateForm")
+  const donationForm = document.querySelector("#donateForm");
   const rewardSelected = donationForm.donationReward.value;
   const rewardsList = document.querySelector("#rewardDatalist");
 
@@ -701,12 +740,12 @@ function validateFormReward(){
   return false;
 }
 
-//This function checks if a user has donated a sufficient amount to avail of their selected
-//reward
+//This function checks if a user has donated a sufficient amount 
+//to avail of their selected reward
 function validateFormDonation() {
 
   //Pulls necessary information from the form.
-  const donationForm= document.querySelector("#donateForm")
+  const donationForm= document.querySelector("#donateForm");
   const rewardSelected = donationForm.donationReward.value;
 
   //If the reward selected is none, there is no lower bound on the donation
@@ -714,23 +753,25 @@ function validateFormDonation() {
     return true;
   }
 
-  //The proposed donations and required donations are parsed to be able to compare them as
-  //float numbers to two decimal places
-  const donationProposed = parseFloat(donationForm.donationInput.value).toFixed(2);
+  //The proposed donations and required donations are parsed 
+  //to be able to compare them as float numbers to two decimal places
+  const donationProposed = parseFloat(donationForm.donationInput.value).
+  toFixed(2);
   var donationRequired = rewardSelected.split(":");
   var donationAmountSplit = donationRequired[1];
   donationAmountSplit = donationAmountSplit.slice(0, -1);
   var donationAmountFloat = donationAmountSplit.trim();
   donationAmountFloat = parseFloat(donationAmountFloat).toFixed(2);
 
-  if (Math.round(parseFloat(donationAmountFloat)*100000) > Math.round(parseFloat(donationProposed)*100000)){
+  if (Math.round(parseFloat(donationAmountFloat)*100000) > 
+  Math.round(parseFloat(donationProposed)*100000)){
     return false;
   }
-
   return true;
 }
 
-// If a page contains the donation modal, it will have access to this functionality
+// If a page contains the donation modal, it will have 
+//access to this functionality
   if (document.querySelector("#modal-donate")){
 
     // Alter donation form heading to reflect campaign being donated to
@@ -739,17 +780,20 @@ function validateFormDonation() {
     donationHeading.innerText = "Donate to "+ campaignDonate;
 
     const donateForm = document.querySelector('#donateForm');
-    let collectionRef = collection(db, "campaigns",localStorage.getItem("currentCampaign"),"rewards");
+    let collectionRef = 
+    collection(db, "campaigns",localStorage.getItem("currentCampaign"),"rewards");
 
-    //Fill the datalist for rewards (i.e. the options in a drop down menu) depending on the
-    //rewards made available by the campaign in question
+    //Fill the datalist for rewards (i.e. the options in a drop down menu) 
+    //depending on the rewards made available by the campaign in question
     onSnapshot(collectionRef, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
          
         let rewardDatalist = document.querySelector("#rewardDatalist");
         
-        // Note: Here, reward name includes the donation required to avoid the user having to check back
-        let rewardName = doc.data().name + " (Required Donation: "+parseFloat(doc.data().donation).toFixed(2)+")";
+        // Note: Here, reward name includes the donation required to avoid 
+        //the user having to check back
+        let rewardName = doc.data().name + " (Required Donation: "+
+        parseFloat(doc.data().donation).toFixed(2)+")";
 
         let rewardOption = document.createElement("option");
         rewardOption.setAttribute("value",rewardName);
@@ -777,33 +821,40 @@ function validateFormDonation() {
           invalidRewardDiv.classList.remove("display-error");
           invalidRewardDiv.innerHTML = "";
 
-          //Checks if the user's donation amount is valid for the reward selected
+          //Checks if the user's donation amount is valid for 
+          //the reward selected
           var validDonationForm = validateFormDonation();
         
         //If it is valid
         if (validDonationForm){
 
           //Ensures any previous errors are cleared
-          let insufficientErrorDiv = document.querySelector(".insufficientDonation");
+          let insufficientErrorDiv = document.
+          querySelector(".insufficientDonation");
           insufficientErrorDiv.classList.remove("display-error");
           insufficientErrorDiv.innerHTML = "";
 
-          // Information is pulled to store a record of the donation under the user's donation subcollection
+          // Information is pulled to store a record of the donation 
+          //under the user's donation subcollection
           
           //User ID
           const userID = auth.currentUser.uid;
 
           //Processing time
           var processingTimeDate = new Date();
-          var date = processingTimeDate.getFullYear()+"-"+(processingTimeDate.getMonth()+1)+"-"+processingTimeDate.getDate();
-          var time = processingTimeDate.getHours() + ":" + processingTimeDate.getMinutes() + ":" + processingTimeDate.getSeconds();
+          var date = processingTimeDate.getFullYear()+"-"+
+          (processingTimeDate.getMonth()+1)+"-"+
+          processingTimeDate.getDate();
+          var time = processingTimeDate.getHours() + ":" +
+          processingTimeDate.getMinutes() + ":" + 
+          processingTimeDate.getSeconds();
           const processingTime = date+"_"+time;
 
           //Donation ID
           const donationID = userID+"_"+campaignDonate+"_"+processingTime;
 
           //Constructs new reference
-          const userRef = doc(db, "users", userID, "donations",donationID)
+          const userRef = doc(db, "users", userID, "donations",donationID);
 
           //Donation Amount
           const donationAmountFromForm = donateForm.donationInput.value;
@@ -818,11 +869,14 @@ function validateFormDonation() {
         
         }).then(() => {
           
-          //Constructs new reference to store donation record under the campaign's donations subcollection
+          //Constructs new reference to store donation record under the 
+          //campaign's donations subcollection
           const campaignID = localStorage.getItem("currentCampaign");
-          const campRef = doc(db, "campaigns", campaignID, "donations",donationID);
+          const campRef = 
+          doc(db, "campaigns", campaignID, "donations",donationID);
 
-          //Sets new donation document in the campaign's donations subcollection
+          //Sets new donation document in the campaign's 
+          //donations subcollection
           setDoc(campRef, {
               donationAmount: parseFloat(donateForm.donationInput.value),
               donationFrom: userID,
@@ -841,11 +895,13 @@ function validateFormDonation() {
           const updateDocFetch = await getDoc(updateAmountRef);
           const currentRaised = updateDocFetch.data().raised;
 
-          //Parses current amount raised to a float number of two decimal places
+          //Parses current amount raised to a float number of 
+          //two decimal places
           const currentRaisedFloat = parseFloat(currentRaised).toFixed(2);
 
           //Updates the amount raised
-           nowRaisedFloat = (parseFloat(currentRaisedFloat)+ parseFloat(donationAmountFromForm)).toFixed(2);
+           nowRaisedFloat = (parseFloat(currentRaisedFloat)+ 
+           parseFloat(donationAmountFromForm)).toFixed(2);
     
           //Updates the campaign document with the new amount raised
           updateDoc(updateAmountRef, {
@@ -869,19 +925,23 @@ function validateFormDonation() {
 
       //If the donation is insufficient an error will be displayed
       } else{
-        let insufficientErrorDiv = document.querySelector(".insufficientDonation");
+        let insufficientErrorDiv = document.
+        querySelector(".insufficientDonation");
         insufficientErrorDiv.classList.add("display-error");
-        insufficientErrorDiv.innerHTML = "Donation amount insufficient for reward selected.";
+        insufficientErrorDiv.innerHTML = 
+        "Donation amount insufficient for reward selected.";
       }
       
       //If the reward is invalid an error will be displayed
       } else{
         let invalidRewardDiv = document.querySelector(".invalidReward");
         invalidRewardDiv.classList.add("display-error");
-        invalidRewardDiv.innerHTML = "Please select a reward from the list provided."; 
+        invalidRewardDiv.innerHTML = 
+        "Please select a reward from the list provided."; 
       }
     
-    // If the user is not logged in, they will be presented with the error popup
+    // If the user is not logged in, they will be presented 
+    // with the error popup
     } else{
       openDonationPopup();
       const modal = document.querySelector('#modal-donate');
@@ -915,8 +975,9 @@ function closePopupDonationSuccess(){
   popup.classList.remove("open-popupDonateSuccess");
 }
 
-
-//  ################ RENDERING LANDING PAGE ################################################
+// #############################################################################
+//  ################ RENDERING LANDING PAGE ####################################
+// #############################################################################
 
 // Sign up Button
 
@@ -926,8 +987,8 @@ if (document.querySelector(".signupButton")){
   const signupButton = document.querySelector(".signupButton");
   signupButton.addEventListener("click", () => {
 
-  //If a user is already signed in, they will be presented with a popup explaining they
-  //cannot sign up
+  //If a user is already signed in, they will be presented with a 
+  //popup explaining that they cannot sign up
     if (auth.currentUser){
       openLandingPopup();
 
@@ -963,11 +1024,13 @@ function closeLandingPopup(){
 // Displaying the three most recent campaigns
 if (document.querySelector(".landingPageCampaigns")){
 
-  //Queries the campaigns collection for the most recent documents to be added
+  //Queries the campaigns collection for the most 
+  //recent documents to be added
   const colRef = collection(db, "campaigns");
   const landingQ = query(colRef, orderBy("createdAt", "desc"), limit(3));
 
-  //Fetches each document and renders them for display on the interface
+  //Fetches each document and renders them for display 
+  //on the interface
   const querySnapshot = onSnapshot(landingQ, (querySnapshot) => {
     querySnapshot.forEach((doc) => {
 
@@ -977,7 +1040,10 @@ if (document.querySelector(".landingPageCampaigns")){
   })  
 }
 
-//  ################ RENDERING ACCOUNT PAGE ################################################
+// #############################################################################
+// ################# RENDERING ACCOUNT PAGE ####################################
+// #############################################################################
+
 if (document.querySelector("#userAccountInfo")){
 
   //When a user logs in or logs out, the account page is updated accordingly
@@ -986,6 +1052,7 @@ if (document.querySelector("#userAccountInfo")){
   })
 }
 
+//Opens a popup error message
 function openAccountPopup(){
   const modalBackground = document.querySelector(".modalBackdrop");
   modalBackground.style.display = "block";
@@ -993,7 +1060,8 @@ function openAccountPopup(){
   const popup = document.querySelector(".popupErrorAccount");
   popup.classList.add("open-popupErrorAccount");
 
-  //When the continue button is clicked within the popup, the modal will close
+  //When the continue button is clicked within the popup,
+  // the modal will close
   const continueBtn = popup.querySelector("#continueAccount")
   continueBtn.addEventListener("click", () => {
     modalBackground.style.display = "none";
@@ -1014,32 +1082,32 @@ function fillAccountPage(user){
   if (user) {
 
     //Fetching user account information
-    const userRef = doc(db, "users", user.uid)
+    const userRef = doc(db, "users", user.uid);
 
     getDoc(userRef).then((doc) =>{
 
-    //Name
-    let nameDiv = document.querySelector("#userFullName");
-    let name = document.createElement("h2");
-    name.textContent = doc.data().firstName+" "+doc.data().lastName;
-    nameDiv.appendChild(name);
+      //Name
+      let nameDiv = document.querySelector("#userFullName");
+      let name = document.createElement("h2");
+      name.textContent = doc.data().firstName+" "+doc.data().lastName;
+      nameDiv.appendChild(name);
 
-    //Username
-    let username = document.createElement("h3");
-    username.textContent = "@"+doc.data().username;
-    nameDiv.appendChild(username);
+      //Username
+      let username = document.createElement("h3");
+      username.textContent = "@"+doc.data().username;
+      nameDiv.appendChild(username);
 
-    //User bio
-    let bioDiv = document.querySelector("#userBio");
-    let bioTxt = document.createElement("p");
-    bioTxt.textContent = doc.data().bio;
-    bioDiv.appendChild(bioTxt);
+      //User bio
+      let bioDiv = document.querySelector("#userBio");
+      let bioTxt = document.createElement("p");
+      bioTxt.textContent = doc.data().bio;
+      bioDiv.appendChild(bioTxt);
 
    })
 
 
   //Fetches any campaigns a user has started
-  const campRef = collection(db, "users", user.uid,"campaigns")
+  const campRef = collection(db, "users", user.uid,"campaigns");
   onSnapshot(campRef, (snapshotDocs) => {
 
     // If the user has not started any campaigns
@@ -1047,26 +1115,26 @@ function fillAccountPage(user){
       let docDiv = document.querySelector("#userCampaigns");
       let messageNoCampaigns = document.createElement("h5");
       messageNoCampaigns.setAttribute("id","noUserCampaigns");
-      messageNoCampaigns.textContent = "You have no active campaigns :("
+      messageNoCampaigns.textContent = "You have no active campaigns :(";
       docDiv.appendChild(messageNoCampaigns);
     }else{
 
       //Removes no campaigns message if the user has started a campaign
       if (document.querySelector("#noUserCampaigns")){
+
         let noCampaignsMsg = document.querySelector("#noUserCampaigns");
         document.removeChild(noCampaignsMsg);
       }
-    // Presents a campaign summary on the screen for each campaign
-    // a user has started
+      // Presents a campaign summary on the screen for each campaign
+      // a user has started
       snapshotDocs.docs.forEach(docSnap =>{
         campaignSummary(docSnap);
       })
     } 
   })
 
-    //Fetches any donations a user has made
+  //Fetches any donations a user has made
   const donationsRef = collection(db, "users",user.uid,"donations");
-
   onSnapshot(donationsRef, (snapshotDons) => {
 
     // If the user has not made any donations
@@ -1074,7 +1142,7 @@ function fillAccountPage(user){
       let docDiv = document.querySelector("#userDonations");
       let messageNoDonations = document.createElement("h5");
       messageNoDonations.setAttribute("id","noUserDonations");
-      messageNoDonations.textContent = "You have not donated to any campaigns :("
+      messageNoDonations.textContent = "You have not donated to any campaigns :(";
       docDiv.appendChild(messageNoDonations);
 
     }else{
@@ -1114,7 +1182,6 @@ function campaignSummary(doc){
   let editButton = document.createElement("button");
   editButton.textContent = "Edit";
 
-  
   //Store id
   let idCurrent = doc.id;
 
@@ -1128,14 +1195,13 @@ function campaignSummary(doc){
     //User is redirected to campaignEdit page
     window.location.href = "campaignEdit.html";
 
-    });
+  });
 
 
-
-    //Add elements to page
-    campContainer.appendChild(name);
-    campContainer.appendChild(editButton);
-    docDiv.appendChild(campContainer);
+  //Add elements to page
+  campContainer.appendChild(name);
+  campContainer.appendChild(editButton);
+  docDiv.appendChild(campContainer);
 }
 
 function donationSummary(doc){
@@ -1164,7 +1230,8 @@ function donationSummary(doc){
   let donation = document.createElement("button");
   donation.disabled = true;
   donation.setAttribute("class","donationAmount");
-  const donationRounded = (Math.round(doc.data().donationAmount * 100) / 100).toFixed(2);
+  const donationRounded = 
+  (Math.round(doc.data().donationAmount * 100) / 100).toFixed(2);
   donation.textContent = donationRounded + " ";
 
   //Reward gained
@@ -1176,7 +1243,6 @@ function donationSummary(doc){
   let timeObj = doc.data().processedAt;
   var timeObjArr = timeObj.split("_");
   donationTime.textContent = timeObjArr[0];
-
 
   //Adding to document
    donationDivDescription.appendChild(title);
@@ -1190,10 +1256,12 @@ function donationSummary(doc){
    donationList.appendChild(listElement);
 }
 
+// #############################################################################
+// ################# EDITING A CAMPAIGN ########################################
+// #############################################################################
 
-//  ################ EDITING A CAMPAIGN ################################################
-
-// If the page contains the editCampaignPage div, it will have access to this functionality
+// If the page contains the editCampaignPage div, it will have access 
+//to this functionality
 if (document.querySelector("#editCampaignPage")){
  
   //Same function used to fill individual campaign called here
@@ -1210,7 +1278,8 @@ if (document.querySelector("#editCampaignPage")){
   //On a change to the input file
   inputFile.addEventListener("change", () => {
 
-    //The image is stored to the firebase cloud storage in the campaign images folder
+    //The image is stored to the firebase cloud storage in the
+    // campaign images folder
     campaignImage.src = URL.createObjectURL(inputFile.files[0]);
     let file = inputFile.files[0];
     let fileName = Math.round(Math.random() * 9999) + file.name;
@@ -1241,47 +1310,52 @@ if (document.querySelector("#editCampaignPage")){
         
       ).then(() => {
 
-      //Updates the campaign doc to refer back to the new image
-      const imageSrc = ref(storage, localStorage.getItem("imageStorageRef"));
-      let imageURL = "";
-      getDownloadURL(imageSrc)
-      .then((url) => {
-        imageURL = url.toString();
-        const docId = localStorage.getItem("updateCampaignId");
-        const editDocRef = doc(db, "campaigns",docId);
-        const newImage = imageURL;
+        //Updates the campaign doc to refer back to the new image
+        const imageSrc = 
+        ref(storage, localStorage.getItem("imageStorageRef"));
+        let imageURL = "";
+        getDownloadURL(imageSrc)
+        .then((url) => {
+          imageURL = url.toString();
+          const docId = localStorage.getItem("updateCampaignId");
+          const editDocRef = doc(db, "campaigns",docId);
+          const newImage = imageURL;
 
-        //When the document has been uploaded, the page is refreshed to
-        //smoothly implement the changes
-        updateDoc(editDocRef, {
-          image: newImage
+          //When the document has been uploaded, the page is refreshed to
+          //smoothly implement the changes
+          updateDoc(editDocRef, {
+            image: newImage
+          })
+          .then(() => {
+            location.reload();
+          })
         })
-        .then(() => {
-          location.reload();
-        })
-      })
     })
   })
-   
-//Adds an event listener to the editBioBtn so the editBio form is opened when clicked
+
+//Adds an event listener to the editBioBtn so the editBio form 
+//is opened when clicked
   editBioBtn.addEventListener("click", () => {
      const updateBioForm = document.querySelector("#modal-updateBio");
      M.Modal.getInstance(updateBioForm).open();
   })
 
-  //Adds an event listener to the editTargetBtn so the editTarget form is opened when clicked
+  //Adds an event listener to the editTargetBtn so the editTarget 
+  //form is opened when clicked
   editTargetBtn.addEventListener("click", () => {
     const updateTargetForm = document.querySelector("#modal-updateTarget");
     M.Modal.getInstance(updateTargetForm).open();
   })
 
-  //Adds an event listener to the editRewardBtn so the editReward form is opened when clicked
+  //Adds an event listener to the editRewardBtn so the editReward 
+  //form is opened when clicked
   addRewardBtn.addEventListener("click", () => {
     const addRewardFormModal = document.querySelector("#modal-updateReward");
     M.Modal.getInstance(addRewardFormModal).open();
   })
 
-  //Adds an event listener to the editCategoryBtn so the editCategory form is opened when clicked
+  //Adds an event listener to the editCategoryBtn so the 
+  //editCategory form is opened when clicked
   editCategoryBtn.addEventListener("click", () => {
     const editCategoryModal = document.querySelector("#modal-updateCategory");
     M.Modal.getInstance(editCategoryModal).open();
@@ -1338,9 +1412,11 @@ if (document.querySelector("#modal-updateTarget")){
       target: newTarget
     })
     .then(() => {
-    //The form is reset, the modal is closed, and the window is reloaded
+    //The form is reset, the modal is closed, 
+    //and the window is reloaded
       updateTargetForm.reset();
-      const updateTargetFormModal = document.querySelector("#modal-updateTarget");
+      const updateTargetFormModal = document.
+      querySelector("#modal-updateTarget");
       M.Modal.getInstance(updateTargetFormModal).close();
       location.reload();
     })
@@ -1361,7 +1437,7 @@ if (document.querySelector("#modal-updateCategory")){
     e.preventDefault();
 
     //A check is performed to verify the category is valid
-    var validFormCat = validateFormCategory()
+    var validFormCat = validateFormCategory();
 
     if (validFormCat){
       //Ensures any previous errors are cleared
@@ -1379,7 +1455,8 @@ if (document.querySelector("#modal-updateCategory")){
       .then(() => {
       //The form is reset, the modal is closed, and the window is reloaded
       updateCategoryForm.reset();
-      const updateCategoryFormModal = document.querySelector("#modal-updateCategory");
+      const updateCategoryFormModal = 
+      document.querySelector("#modal-updateCategory");
       M.Modal.getInstance(updateCategoryFormModal).close();
       location.reload();
     })
@@ -1388,30 +1465,38 @@ if (document.querySelector("#modal-updateCategory")){
     }else{
       let invalidCategoryDiv = document.querySelector(".invalidCategory");
       invalidCategoryDiv.classList.add("display-error");
-      invalidCategoryDiv.innerHTML = "Please select a reward from the list provided."; 
+      invalidCategoryDiv.innerHTML = 
+      "Please select a reward from the list provided."; 
     }
   })
-};
+}
 
-//This function checks that a user has selected a valid reward from the list
+//This function checks that a user has selected a valid category
+// from the list
 function validateFormCategory(){
-
   var categoryForm;
-  //Pull values from the form and document
+ 
+  //Checks firstly which page it is pulling the form from to ensure
+  //the ID used is correct
   if (document.querySelector("#createCampaignFormSteps")){
-     categoryForm = document.querySelector("#createCampaignFormSteps")
+     categoryForm = document.querySelector("#createCampaignFormSteps");
   }else{
-     categoryForm = document.querySelector("#updateCategory-form")
+     categoryForm = document.querySelector("#updateCategory-form");
   }
+
+  //It then pulls the category list and selected value from
+  //the form
   const categorySelected = categoryForm.campaignCategory.value;
   const categoryList = document.querySelector("#campaignCategoryList");
 
-   // Checks if the user selection is an option in the datalist
-   for (var j = 0; j < categoryList.options.length; j++) {
+  // Checks if the user selection is an option in the datalist
+  for (var j = 0; j < categoryList.options.length; j++) {
     if (categorySelected == categoryList.options[j].value) {
+      //Returns true if it is a valid selection
       return true;
     }
   }
+  //Returns false otherwise
   return false;
 }
 
@@ -1444,17 +1529,17 @@ if (document.querySelector("#modal-updateReward")){
     .then(() => {
       // The form is reset, the modal is closed, and the page is reloaded
       updateRewardForm.reset();
-      const updateRewardFormModal = document.querySelector("#modal-updateReward");
+      const updateRewardFormModal = document.
+      querySelector("#modal-updateReward");
       M.Modal.getInstance(updateRewardFormModal).close();
       location.reload();
     })
-
   })
+}
 
-};
-
-
-// ######################## CREATE A CAMPAIGN FORM #################################################
+// #############################################################################
+// ######################## CREATE A CAMPAIGN FORM #############################
+// #############################################################################
 
 var storageRefCamp, folderRefCamp, fileRefCamp, fileCamp;
 
@@ -1493,11 +1578,11 @@ if (document.querySelector("#createCampaignFormSteps")){
     var newRewardForm = document.createElement("form");
 
     //The number of rewards is incremented by 1
-    var currentRewards = parseInt(localStorage.getItem("numberOfRewards"));
+    var currentRewards = 
+    parseInt(localStorage.getItem("numberOfRewards"));
     currentRewards = currentRewards + 1;
     localStorage.setItem("numberOfRewards",currentRewards);
     
-
     var rewardFormName = "reward"+currentRewards;
     newRewardForm.setAttribute("id",rewardFormName);
 
@@ -1507,7 +1592,8 @@ if (document.querySelector("#createCampaignFormSteps")){
     rewardName.setAttribute("name","rewardName");
     rewardName.setAttribute("class","name");
     rewardName.setAttribute("siz",50);
-    rewardName.setAttribute("placeholder","Reward #"+currentRewards+" Name");
+    rewardName.
+    setAttribute("placeholder","Reward #"+currentRewards+" Name");
     newRewardForm.appendChild(rewardName);
 
     //Reward amount input
@@ -1517,7 +1603,8 @@ if (document.querySelector("#createCampaignFormSteps")){
     rewardAmount.setAttribute("name","rewardDonation");
     rewardAmount.setAttribute("class","donation");
     rewardAmount.setAttribute("siz",50);
-    rewardAmount.setAttribute("placeholder","Required Donation");
+    rewardAmount.
+    setAttribute("placeholder","Required Donation");
     newRewardForm.appendChild(rewardAmount);
 
     //Reward description input
@@ -1526,11 +1613,13 @@ if (document.querySelector("#createCampaignFormSteps")){
     rewardDesc.setAttribute("name","rewardDesc");
     rewardDesc.setAttribute("class","desc");
     rewardDesc.setAttribute("siz",150);
-    rewardDesc.setAttribute("placeholder","Reward #"+currentRewards+" Description");
+    rewardDesc.
+    setAttribute("placeholder","Reward #"+currentRewards+" Description");
     newRewardForm.appendChild(rewardDesc);
 
     rewardFormsDiv.appendChild(newRewardForm);
-    document.getElementById("removeReward").style.visibility = "visible";
+    document.
+    getElementById("removeReward").style.visibility = "visible";
 
   })
 
@@ -1538,13 +1627,18 @@ if (document.querySelector("#createCampaignFormSteps")){
   removeRewardBtn.addEventListener("click", () =>{
     
     //Defines constants
-    const rewardFormsDiv = document.querySelector(".rewardForms");
-    const addCampaignForm = document.getElementById("createCampaignFormSteps");
+    const rewardFormsDiv = 
+    document.querySelector(".rewardForms");
+    const addCampaignForm = 
+    document.getElementById("createCampaignFormSteps");
 
     //Initialises variables
-    var input_tags = addCampaignForm.getElementsByTagName("input");
-    var deleteFormName = "#reward"+localStorage.getItem("numberOfRewards");
-    var rewardForm = addCampaignForm.querySelector(deleteFormName);
+    var input_tags = 
+    addCampaignForm.getElementsByTagName("input");
+    var deleteFormName = 
+    "#reward"+localStorage.getItem("numberOfRewards");
+    var rewardForm = 
+    addCampaignForm.querySelector(deleteFormName);
     
     //If there is an existing rewardForm on the page
     if (input_tags.length > 8) {
@@ -1552,23 +1646,25 @@ if (document.querySelector("#createCampaignFormSteps")){
       //The reward form is removed from the page
       rewardFormsDiv.removeChild(rewardForm);
       //The number of rewards decrements by 1
-      var currentRewards = parseInt(localStorage.getItem("numberOfRewards"));
+      var currentRewards = 
+      parseInt(localStorage.getItem("numberOfRewards"));
       currentRewards = currentRewards - 1;
       localStorage.setItem("numberOfRewards",currentRewards);
 
       //If there are currently no rewards to remove, the button is hidden
       if (currentRewards == 0){
-        document.getElementById("removeReward").style.visibility = "hidden";
+        document.
+        getElementById("removeReward").style.visibility = "hidden";
       }
     
-      //If the button has been clicked outside of this case, there has been an error
+      //If the button has been clicked outside of this case, 
+      //there has been an error
     }else{
       (console.log(error));
     }
   })
 
   // Uploading User Image
-
   let inputFile = document.querySelector("#campaignImageFile");
   let campaignImage = document.querySelector("#campaignImage");
   
@@ -1585,9 +1681,7 @@ if (document.querySelector("#createCampaignFormSteps")){
     fileRefCamp = "campaignImages/"+fileNameCamp;
     const docRefCamp = ref(storage, fileRefCamp);
     localStorage.setItem("imageStorageRef",docRefCamp);
-    
   })
-
 }
 
 //Pop up appears when a campaign has been created successfully
@@ -1595,8 +1689,9 @@ function openPopupCampaign(){
   const popup = document.querySelector(".popupCamp");
   popup.classList.add("open-popupCamp");
 
-  //When the continue button is clicked, the popup is closed and the user is redirected
-  const continueBtn = popup.querySelector("#continueNewCampaign")
+  //When the continue button is clicked, the popup is 
+  //closed and the user is redirected
+  const continueBtn = popup.querySelector("#continueNewCampaign");
   continueBtn.addEventListener("click", () => {
     closePopupCampaign();
     window.location.href = "campaignExplore.html";
@@ -1612,32 +1707,42 @@ function closePopupCampaign(){
 
 //Opens a popup in the event of a create campaign error
 function openCreateCampaignErrorPopup(){
-  const popup = document.querySelector(".popupCreateCampaignError");
+  const popup = document.
+  querySelector(".popupCreateCampaignError");
   popup.classList.add("open-popupCreateCampaignError");
-  const continueBtn = popup.querySelector("#continueCreateCampaign")
+  const continueBtn = popup.
+  querySelector("#continueCreateCampaign");
 
   //Adds an event listener to the continue button so that it will
   //close the popup and reset the form when clicked
   continueBtn.addEventListener("click", () => {
+
+    //Closes the popup
     closeCreateCampaignErrorPopup();
-    const createCampForm = document.querySelector("#createCampaignFormSteps");
+
+    //Resets the form
+    const createCampForm = document.
+    querySelector("#createCampaignFormSteps");
     createCampForm.reset();
-    window.location.href = "createCampaign.html"; //redirects user to beginning of form
+
+    //Redirects user to start
+    window.location.href = "createCampaign.html";
   })
 }
 
 //Closes the popup when called
 function closeCreateCampaignErrorPopup(){
-  const popup = document.querySelector(".popupCreateCampaignError");
-  popup.classList.remove("open-popupCreateCampaignError");
+  const popup = document.
+  querySelector(".popupCreateCampaignError");
+  popup.classList.
+  remove("open-popupCreateCampaignError");
 }
-
 
 function showTabCamp(n) {
   // This function will display the specified tab of the form ...
   var x = document.getElementsByClassName("tab");
   x[n].style.display = "block";
-  // ... and fix the Previous/Next buttons:
+  // and adjust the Previous/Next buttons as required:
   if (n == 0) {
     document.getElementById("prevBtnCamp").style.display = "none";
   } else {
@@ -1648,11 +1753,12 @@ function showTabCamp(n) {
   } else {
     document.getElementById("nextBtnCamp").innerHTML = "Next";
   }
-  // ... and run a function that displays the correct step indicator:
+  // It will run a function that displays the correct step indicator:
   fixStepIndicatorCamp(n)
 }
 
-//This function checks that a user has selected a valid country from the list
+//This function checks that a user has selected a 
+//valid country from the list
 function validateFormCountry(){
 
   var countryForm = document.querySelector("#createCampaignFormSteps");
@@ -1667,6 +1773,7 @@ function validateFormCountry(){
   }
   return false;
 }
+
 function nextPrevCamp(n) {
   // This function will figure out which tab to display
   var x = document.getElementsByClassName("tab");
@@ -1689,30 +1796,32 @@ function nextPrevCamp(n) {
 
     //If both are invalid an error is presented
     if (!validateCategory && !validateCountry){
-      errMsg.textContent = "Invalid category, please select from list provided. Invalid country, please select from list provided.";
+      errMsg.textContent = 
+      "Invalid category, please select from list provided"+ 
+      "Invalid country, please select from list provided.";
       openCreateCampaignErrorPopup()
     
    // If either are invalid an error is presented
     }else if (validateCategory && !validateCountry){
-      errMsg.textContent = "Invalid country, please select from list provided.";
+      errMsg.textContent = 
+      "Invalid country, please select from list provided.";
       openCreateCampaignErrorPopup()
 
     }else if (!validateCategory && validateCountry){
-      errMsg.textContent = "Invalid category, please select from list provided."; 
+      errMsg.textContent = 
+      "Invalid category, please select from list provided."; 
       openCreateCampaignErrorPopup()
     }
-
   //Otherwise, the form is submitted
     else{
     errMsg.textContent = "";
-
     //The image file is uploaded to firebase cloud storage
 
     //Calls elements from document
     let inputFile = document.querySelector("#campaignImageFile");
-    const addCampaignForm = document.getElementById("createCampaignFormSteps");
+    const addCampaignForm =
+     document.getElementById("createCampaignFormSteps");
     let campaignImage = document.querySelector("#campaignImage");
-
 
     //Creates URL for the first ffile
     campaignImage.src = URL.createObjectURL(inputFile.files[0]);
@@ -1722,7 +1831,8 @@ function nextPrevCamp(n) {
 
     //New storage reference created and stored locally
     let fileCamp = inputFile.files[0];
-    let fileNameCamp = Math.round(Math.random() * 9999) + fileCamp.name;
+    let fileNameCamp = 
+    Math.round(Math.random() * 9999) + fileCamp.name;
     storageRefCamp = ref(storage, "campaignImages");
     folderRefCamp = ref(storageRefCamp, fileNameCamp);
     fileRefCamp = "campaignImages/"+fileNameCamp;
@@ -1748,7 +1858,8 @@ function nextPrevCamp(n) {
       console.log("File Uploaded Successfully");
     }
   ).then(() => {
-    const imageSrc = ref(storage,localStorage.getItem("imageStorageRef"));
+    const imageSrc = 
+    ref(storage,localStorage.getItem("imageStorageRef"));
     let imageURL = "";
   
     //The URL will be stored in the campaign document
@@ -1759,7 +1870,8 @@ function nextPrevCamp(n) {
       //Values from the form are pulled 
       const campaignName = addCampaignForm.campaignName.value;
       const campaignOwner = auth.currentUser.uid;
-      const idNew = campaignName+campaignOwner+(Math.round(Math.random() * 9999));
+      const idNew = 
+      campaignName+campaignOwner+(Math.round(Math.random() * 9999));
       localStorage.setItem("newCampaign",idNew);
 
       const colRef = collection(db, "campaigns");
@@ -1767,7 +1879,7 @@ function nextPrevCamp(n) {
       const serverCreationTime = serverTimestamp();
 
     //A new document is created for the campaign
-     setDoc(newCampRef, {
+      setDoc(newCampRef, {
        country: addCampaignForm.campaignCountry.value,
        category: addCampaignForm.campaignCategory.value,
        description: addCampaignForm.campaignDescription.value,
@@ -1777,10 +1889,10 @@ function nextPrevCamp(n) {
        target: addCampaignForm.campaignTarget.value,
        createdAt: serverCreationTime,
        user: campaignOwner
+      }).then(() => {
 
-   }).then(() => {
-
-    // A record of the campaign is stored in the user's campaigns subcollection
+    // A record of the campaign is stored in 
+    //the user's campaigns subcollection
       const newUserRef = doc(db,"users",campaignOwner,"campaigns",idNew);
       setDoc(newUserRef, {
        name: addCampaignForm.campaignName.value,
@@ -1794,23 +1906,29 @@ function nextPrevCamp(n) {
           for (let i = 1; i <= noOfRewards; i++){
     
             var rewardForm = document.querySelector("#reward"+i);
-            let rewardId = Math.round(Math.random() * 9999) + rewardForm.rewardName.value;
-            let rewardSubRef = doc(db, "campaigns",idNew,"rewards",rewardId);
+            let rewardId = 
+            Math.round(Math.random() * 9999) +
+             rewardForm.rewardName.value;
+            let rewardSubRef = 
+            doc(db, "campaigns",idNew,"rewards",rewardId);
     
             setDoc(rewardSubRef, {
               uid: rewardId,
               name: rewardForm.rewardName.value,
               donation: parseFloat(rewardForm.rewardDonation.value),
               description: rewardForm.rewardDesc.value,
-          }).then(() => {
+            }).then(() => {
                   addCampaignForm.reset();
-                  const rewardsFormDiv = document.querySelector(".rewardForms");
+                  const rewardsFormDiv = 
+                  document.querySelector(".rewardForms");
                   rewardsFormDiv.removeChild(rewardForm);
 
                  //Ensures the form is reset correctly
-                  document.getElementById("removeReward").style.visibility = "hidden";
+                  document.getElementById("removeReward").style.visibility = 
+                  "hidden";
 
-                 //Popup appears alerting the user that the campaign has been created
+                 //Popup appears alerting the user that the campaign 
+                 //has been created
                  openPopupCampaign();
             }).catch(err => {
               console.log(err.message);
@@ -1826,10 +1944,9 @@ function nextPrevCamp(n) {
       });
      })
     })
-    return false;
     }
   }
-  // Otherwise, display the correct tab:
+  // Otherwise, if it is not the final step, display the correct tab:
   showTabCamp(currentTabCamp);
   }
 
@@ -1851,9 +1968,11 @@ function validateFormCamp() {
   }
 
   
-  // If the valid status is true, mark the step as finished and valid:
+  // If the valid status is true, mark the 
+  //step as finished and valid:
   if (valid) {
-    document.getElementsByClassName("step")[currentTabCamp].className += " finish";
+    document.getElementsByClassName("step")[currentTabCamp].className +=
+     " finish";
   }
   return valid; // return the valid status
 }
